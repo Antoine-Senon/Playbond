@@ -1,0 +1,2820 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Playbond — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   PLAYBOND — Design tokens (palette dérivée du logo)
+   ============================================================ */
+:root{
+  --bg-0:#090E12;            /* fond principal, noir teinté pétrole */
+  --bg-1:#101820;            /* surfaces */
+  --bg-2:#18242E;            /* surfaces élevées / hover */
+  --line:rgba(160,210,230,.09);
+  --text:#EDF4F7;
+  --muted:#8CA3B0;
+  --faint:#56707E;
+  --brand:#006181;           /* bleu pétrole du logo */
+  --accent:#29A9CF;          /* teal lumineux — CTA */
+  --accent-soft:rgba(41,169,207,.13);
+  --accent-line:rgba(41,169,207,.42);
+  --premium:#FFC56D;
+  --danger:#FF5D6C;
+  --ok:#4FE0A3;
+  --r-s:10px; --r-m:14px; --r-l:20px;
+  --shadow:0 12px 32px rgba(0,0,0,.5);
+  --grad-brand:linear-gradient(135deg,#29A9CF,#006181);
+  --font-display:"Bricolage Grotesque",sans-serif;
+  --font-body:"Inter",sans-serif;
+  --font-mono:"JetBrains Mono",monospace;
+  --sidebar-w:248px; --feed-w:336px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scrollbar-color:var(--bg-2) transparent}
+body{
+  overflow-x:hidden;
+  background:var(--bg-0);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:14.5px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  min-height:100dvh;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(900px 420px at 18% -10%, rgba(41,169,207,.08), transparent 60%),
+    radial-gradient(700px 380px at 95% -8%, rgba(0,97,129,.12), transparent 60%);
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit;text-decoration:none}
+svg{display:block;flex:none}
+img{display:block}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
+}
+
+/* ============================================================
+   Layout
+   ============================================================ */
+.app{position:relative;z-index:1;display:grid;grid-template-columns:1fr;min-height:100dvh}
+.main{display:flex;flex-direction:column;min-width:0;overflow-x:clip;padding:0 18px calc(86px + env(safe-area-inset-bottom))}
+@media (min-width:900px){
+  .app{grid-template-columns:var(--sidebar-w) 1fr}
+  .main{padding:0 32px 48px}
+}
+
+
+/* ============================================================
+   Sidebar
+   ============================================================ */
+.sidebar{
+  display:none;position:sticky;top:0;height:100dvh;
+  flex-direction:column;gap:8px;
+  padding:24px 16px;border-right:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(160,220,240,.015),transparent 30%);
+}
+@media (min-width:900px){.sidebar{display:flex}}
+.logo{display:flex;align-items:center;padding:6px 10px 24px}
+.logo img{height:21px;width:auto}
+.nav-label{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--faint);padding:18px 12px 8px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:12px;width:100%;
+  padding:10px 12px;border-radius:var(--r-s);
+  color:var(--muted);font-weight:500;font-size:14px;
+  transition:background .15s,color .15s;text-align:left;
+}
+.nav-item:hover{background:var(--bg-1);color:var(--text)}
+.nav-item.is-active{
+  background:var(--accent-soft);color:var(--text);
+  box-shadow:inset 0 0 0 1px var(--accent-line);
+}
+.nav-item.is-active svg{color:var(--accent)}
+.nav-item .spacer{margin-left:auto}
+.nav-item{min-width:0;white-space:nowrap}
+.nav-item .badge-premium{flex:none;padding:2px 6px;font-size:8.5px}
+.badge-premium{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;
+  color:var(--premium);background:rgba(255,197,109,.1);
+  border:1px solid rgba(255,197,109,.28);
+  padding:2px 7px;border-radius:99px;
+}
+.badge-count{font-family:var(--font-mono);font-size:10.5px;color:var(--faint)}
+.list-dot{width:8px;height:8px;border-radius:3px;flex:none;margin:0 2px}
+
+.me{
+  margin-top:auto;display:flex;align-items:center;gap:11px;width:100%;
+  padding:12px;border-radius:var(--r-m);text-align:left;
+  background:var(--bg-1);border:1px solid var(--line);
+  transition:border-color .15s,background .15s;
+}
+.me:hover{border-color:rgba(160,220,240,.2);background:var(--bg-2)}
+.me-info{min-width:0;line-height:1.25}
+.me-name{font-weight:600;font-size:13.5px}
+.me-tag{font-family:var(--font-mono);font-size:10.5px;color:var(--faint)}
+.me svg{margin-left:auto;color:var(--faint)}
+
+/* Avatars — anneau d'identité */
+.avatar{
+  width:36px;height:36px;border-radius:50%;flex:none;
+  display:grid;place-items:center;
+  font-family:var(--font-display);font-weight:700;font-size:12.5px;color:#fff;
+  position:relative;
+}
+.avatar::after{
+  content:"";position:absolute;inset:-3px;border-radius:50%;
+  background:conic-gradient(from 210deg,var(--accent),var(--brand),transparent 55%);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1.6px));
+          mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1.6px));
+  opacity:.9;
+}
+.avatar.sm{width:22px;height:22px;font-size:9px}
+.avatar.sm::after{inset:-2px}
+</style>
+<style>
+/* ============================================================
+   Header
+   ============================================================ */
+.header{
+  position:sticky;top:0;z-index:30;
+  display:flex;align-items:center;gap:10px;
+  padding:14px 0 12px;
+  background:linear-gradient(180deg,var(--bg-0) 78%,transparent);
+}
+.header .m-logo{display:block}
+.header .m-logo img{height:16px;width:auto}
+@media (min-width:900px){.header{padding-top:22px}.header .m-logo{display:none}}
+.search{
+  flex:1;display:flex;align-items:center;gap:9px;min-width:0;
+  background:var(--bg-1);border:1px solid var(--line);border-radius:12px;
+  padding:9px 13px;color:var(--muted);
+  transition:border-color .15s,box-shadow .15s;
+}
+.search:focus-within{border-color:var(--accent-line);box-shadow:0 0 0 3px var(--accent-soft)}
+.search input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--text);font:inherit;font-size:14px}
+.search input::placeholder{color:var(--faint)}
+.search kbd{font-family:var(--font-mono);font-size:10px;color:var(--faint);border:1px solid var(--line);border-radius:5px;padding:1px 6px;display:none}
+@media (min-width:900px){.search kbd{display:block}}
+.icon-btn{
+  position:relative;display:grid;place-items:center;
+  width:40px;height:40px;border-radius:12px;flex:none;
+  background:var(--bg-1);border:1px solid var(--line);color:var(--muted);
+  transition:color .15s,border-color .15s;
+}
+.icon-btn:hover{color:var(--text);border-color:rgba(160,220,240,.22)}
+.icon-btn .dot{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;background:var(--danger);border:2px solid var(--bg-0)}
+.btn-sync{display:flex;align-items:center;gap:8px;width:auto;padding:0 14px;font-size:13px;font-weight:600;color:var(--text)}
+.btn-sync span{display:none}
+@media (min-width:640px){.btn-sync span{display:block}}
+.btn-sync.is-syncing svg{animation:spin 1s linear infinite;color:var(--accent)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-feed-toggle{display:grid}
+@media (min-width:1240px){body[data-view="library"] .btn-feed-toggle{display:none}}
+
+/* ============================================================
+   En-têtes de page / filtres / grille
+   ============================================================ */
+.page-head{padding:14px 2px 4px}
+.eyebrow{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.page-title{font-family:var(--font-display);font-weight:800;letter-spacing:-.025em;font-size:clamp(24px,4.5vw,32px);margin-top:4px}
+.page-sub{color:var(--muted);font-size:13.5px;margin-top:4px}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:16px 2px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.filters::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;display:flex;align-items:center;gap:7px;
+  padding:8px 15px;border-radius:99px;font-size:13px;font-weight:500;
+  background:var(--bg-1);border:1px solid var(--line);color:var(--muted);transition:all .15s;
+}
+.chip:hover{color:var(--text);border-color:rgba(160,220,240,.22)}
+.chip.is-active{background:var(--text);color:var(--bg-0);border-color:var(--text);font-weight:600}
+
+.grid{display:grid;gap:12px;padding-top:14px;grid-template-columns:1fr}
+.card-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:9px}
+@media (max-width:639px){
+  .grid{gap:16px}
+  .card{padding:10px 10px 14px}
+  .cover{width:100%;aspect-ratio:16/10}
+  .cover-letter{font-size:58px}
+  .card-title{font-size:15.5px}
+  .card-info{padding:2px 4px 0}
+}
+@media (min-width:640px){.grid{grid-template-columns:repeat(3,1fr);gap:18px}.card-info{gap:10px}}
+@media (min-width:1500px){.grid{grid-template-columns:repeat(4,1fr)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{
+  display:flex;flex-direction:column;gap:10px;border-radius:var(--r-l);padding:10px 10px 13px;
+  background:var(--bg-1);border:1px solid var(--line);cursor:pointer;
+  transition:transform .22s cubic-bezier(.2,.8,.3,1),border-color .22s,box-shadow .22s;
+}
+.card:hover{transform:translateY(-4px);border-color:var(--accent-line);box-shadow:var(--shadow)}
+.cover{position:relative;aspect-ratio:3/4;border-radius:var(--r-m);overflow:hidden;display:grid;place-items:center}
+.cover::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 70% at 30% 0%,rgba(255,255,255,.13),transparent 55%)}
+.cover-letter{font-family:var(--font-display);font-weight:800;font-size:clamp(54px,9vw,84px);color:rgba(255,255,255,.16);letter-spacing:-.04em;user-select:none;transform:translateY(4%)}
+.tag{
+  position:absolute;top:9px;left:9px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.05em;
+  padding:4px 9px;border-radius:99px;color:var(--text);
+  background:rgba(7,12,16,.62);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);
+}
+.tag::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.tag[data-status="playing"]::before{background:var(--ok)}
+.tag[data-status="done"]::before{background:var(--accent)}
+.tag[data-status="backlog"]::before{background:var(--premium)}
+.platform-ic{
+  position:absolute;bottom:9px;right:9px;display:grid;place-items:center;width:28px;height:28px;border-radius:9px;
+  background:rgba(7,12,16,.62);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);color:#fff;
+}
+.card-title{font-weight:600;font-size:14px;letter-spacing:-.01em;line-height:1.3}
+.card-social{display:flex;align-items:center;gap:8px;min-height:22px;flex-wrap:wrap}
+.stack{display:flex}
+.stack .avatar.sm{margin-left:-7px;border:2px solid var(--bg-1)}
+.stack .avatar.sm:first-child{margin-left:0}
+.stack .avatar.sm::after{display:none}
+.card-social .who{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stars{display:flex;gap:2px;color:var(--premium)}
+.stars + .who{color:var(--faint)}
+.grid-empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:48px 20px;border:1px dashed var(--line);border-radius:var(--r-l)}
+.grid-empty strong{display:block;color:var(--text);font-family:var(--font-display);font-size:17px;margin-bottom:4px}
+
+/* ============================================================
+   Panneau social compact (colonne droite)
+   ============================================================ */
+.feed-panel{
+  display:none;position:sticky;top:0;height:100dvh;overflow-y:auto;
+  padding:24px 22px;border-left:1px solid var(--line);flex-direction:column;gap:14px;
+}
+@media (min-width:1240px){body[data-view="library"] .feed-panel{display:flex}}
+.feed-head{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;border-radius:var(--r-s)}
+.feed-head h2{font-family:var(--font-display);font-weight:700;font-size:17px;letter-spacing:-.01em}
+.live{display:inline-flex;align-items:center;gap:6px;margin-left:8px;vertical-align:2px;font-family:var(--font-mono);font-size:9.5px;color:var(--ok);letter-spacing:.1em}
+.live i{width:6px;height:6px;border-radius:50%;background:var(--ok);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(79,224,163,.45)}55%{box-shadow:0 0 0 6px transparent}}
+.feed-head .open-link{display:flex;align-items:center;gap:5px;color:var(--accent);font-size:12px;font-weight:600;white-space:nowrap}
+.feed-head:hover .open-link{text-decoration:underline}
+.event{display:flex;gap:12px;padding:13px;border-radius:var(--r-m);background:var(--bg-1);border:1px solid var(--line);transition:border-color .15s}
+.event:hover{border-color:rgba(160,220,240,.18)}
+.event-body{min-width:0;flex:1}
+.event-text{font-size:13px;color:var(--muted);line-height:1.45}
+.event-text b{color:var(--text);font-weight:600}
+.event-text .hl{color:var(--accent);font-weight:600}
+.event-time{font-family:var(--font-mono);font-size:10px;color:var(--faint);margin-top:3px}
+.event-actions{display:flex;gap:14px;margin-top:9px}
+.react{display:flex;align-items:center;gap:5px;color:var(--faint);font-family:var(--font-mono);font-size:11px;border-radius:6px;transition:color .15s,transform .15s}
+.react:hover{color:var(--text)}
+.react.is-liked{color:var(--danger)}
+.react.is-liked svg{fill:var(--danger)}
+.react:active{transform:scale(1.15)}
+.mini-stars{display:inline-flex;gap:1px;color:var(--premium);vertical-align:-2px;margin-left:2px}
+
+/* ============================================================
+   FEED — réseau social (page plein écran)
+   ============================================================ */
+.feed-page{flex-direction:column;gap:0;padding-top:6px;max-width:700px;width:100%;margin:0 auto;display:flex}
+.tabs{display:flex;border-bottom:1px solid var(--line);margin-top:10px;position:sticky;top:64px;z-index:20;background:var(--bg-0)}
+.tab{
+  flex:1;padding:13px 4px;text-align:center;font-weight:600;font-size:14px;color:var(--faint);
+  position:relative;transition:color .15s;
+}
+.tab:hover{color:var(--muted)}
+.tab.is-active{color:var(--text)}
+.tab.is-active::after{
+  content:"";position:absolute;left:50%;bottom:-1px;transform:translateX(-50%);
+  width:56px;height:3px;border-radius:99px;background:var(--grad-brand);
+}
+.composer{display:flex;gap:12px;padding:18px 4px 16px;border-bottom:1px solid var(--line)}
+.composer-body{min-width:0;overflow:hidden}
+.composer-body{flex:1;min-width:0}
+.composer textarea{
+  width:100%;background:none;border:none;outline:none;resize:none;
+  color:var(--text);font:inherit;font-size:15.5px;min-height:52px;
+}
+.composer textarea::placeholder{color:var(--faint)}
+.composer-bar{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap}
+.composer-tool{display:flex;align-items:center;gap:5px;color:var(--accent);font-size:12px;font-weight:600;padding:6px 9px;border-radius:99px;transition:background .15s;flex:none}
+.composer-tool:hover{background:var(--accent-soft)}
+.btn-primary{
+  margin-left:auto;padding:9px 20px;border-radius:99px;
+  background:var(--grad-brand);color:#fff;font-weight:700;font-size:13.5px;
+  box-shadow:0 6px 18px rgba(41,169,207,.28);
+  transition:transform .15s,opacity .15s,box-shadow .15s;
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(41,169,207,.4)}
+.btn-primary:disabled{opacity:.35;cursor:default;transform:none;box-shadow:none}
+
+.post{display:flex;gap:12px;padding:18px 4px;border-bottom:1px solid var(--line);animation:cardIn .35s backwards}
+.post-body{flex:1;min-width:0}
+.post-reco{
+  display:flex;align-items:center;gap:6px;margin-bottom:6px;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.04em;color:var(--accent);
+}
+.post-meta{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;font-size:14px}
+.post-meta .name{font-weight:700}
+.post-meta .handle,.post-meta .when{color:var(--faint);font-size:13px}
+.post-text{margin-top:4px;font-size:14.5px;line-height:1.55;color:var(--text)}
+.post-text .hl{color:var(--accent);font-weight:600}
+.post-action-label{
+  display:inline-flex;align-items:center;gap:6px;margin-top:8px;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;
+  padding:4px 10px;border-radius:99px;color:var(--muted);
+  background:var(--bg-1);border:1px solid var(--line);
+}
+.post-action-label::before{content:"";width:6px;height:6px;border-radius:50%}
+.post-action-label[data-kind="backlog"]::before{background:var(--premium)}
+.post-action-label[data-kind="done"]::before{background:var(--accent)}
+.post-action-label[data-kind="playing"]::before{background:var(--ok)}
+.post-game{
+  display:flex;gap:12px;align-items:center;margin-top:12px;padding:11px;
+  border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg-1);
+  transition:border-color .15s;cursor:pointer;
+}
+.post-game:hover{border-color:var(--accent-line)}
+.post-game .mini-cover{
+  width:44px;height:58px;border-radius:8px;flex:none;display:grid;place-items:center;
+  font-family:var(--font-display);font-weight:800;font-size:22px;color:rgba(255,255,255,.25);
+}
+.post-game-info{min-width:0;line-height:1.35}
+.post-game-info .g-title{font-weight:600;font-size:13.5px}
+.post-game-info .g-sub{font-size:11.5px;color:var(--faint)}
+.post-game svg.chev{margin-left:auto;color:var(--faint)}
+.post-actions{display:flex;gap:26px;margin-top:12px;max-width:340px}
+.post-actions .react{font-size:12px}
+.back-btn{
+  display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
+  color:var(--muted);font-size:13px;font-weight:600;
+  padding:8px 13px 8px 9px;border-radius:99px;background:var(--bg-1);border:1px solid var(--line);
+  transition:color .15s,border-color .15s;
+}
+.back-btn:hover{color:var(--text);border-color:rgba(160,220,240,.22)}
+</style>
+<style>
+/* ============================================================
+   PREMIUM — paywall Statistiques
+   ============================================================ */
+.stats-page,.billing-page,.game-page,.disc-page{display:flex;flex-direction:column;gap:16px;max-width:760px;width:100%;margin:0 auto;padding-top:6px}
+.disc-page{max-width:none}
+.locked-zone{position:relative;border-radius:var(--r-l);overflow:hidden;border:1px solid var(--line);margin-top:8px}
+.fake-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:22px;
+  filter:blur(7px) saturate(.8);opacity:.55;pointer-events:none;user-select:none;background:var(--bg-1);
+}
+.fake-kpi{border:1px solid var(--line);border-radius:var(--r-m);padding:16px;background:var(--bg-0)}
+.fake-kpi .k{font-family:var(--font-display);font-weight:800;font-size:26px}
+.fake-kpi .l{font-size:11px;color:var(--muted)}
+.fake-bars{grid-column:1/-1;display:flex;align-items:flex-end;gap:10px;height:140px;padding:16px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg-0)}
+.fake-bars i{flex:1;border-radius:6px 6px 2px 2px;background:var(--grad-brand);opacity:.8}
+.lock-overlay{position:absolute;inset:0;display:grid;place-items:center;padding:22px;background:linear-gradient(180deg,rgba(9,14,18,.35),rgba(9,14,18,.78))}
+.locked-blur{filter:blur(7px) saturate(.8);opacity:.55;pointer-events:none;user-select:none;padding:4px 8px 8px;max-height:72vh;overflow:hidden}
+.lock-card{
+  max-width:400px;width:100%;text-align:center;padding:26px 24px;
+  background:rgba(16,24,32,.92);backdrop-filter:blur(14px);
+  border:1px solid var(--accent-line);border-radius:var(--r-l);box-shadow:var(--shadow);
+}
+.lock-ic{width:46px;height:46px;margin:0 auto 12px;border-radius:14px;display:grid;place-items:center;background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent)}
+.lock-card h3{font-family:var(--font-display);font-weight:800;font-size:19px;letter-spacing:-.01em}
+.lock-card p{color:var(--muted);font-size:13px;margin-top:6px}
+.btn-premium{
+  display:inline-flex;align-items:center;gap:8px;margin-top:16px;
+  padding:11px 22px;border-radius:99px;font-weight:700;font-size:14px;color:#fff;
+  background:var(--grad-brand);
+  box-shadow:0 8px 24px rgba(41,169,207,.3);transition:transform .15s,box-shadow .15s;
+}
+.btn-premium:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(41,169,207,.42)}
+
+/* comparaison Gratuit / Premium */
+.compare{display:grid;gap:12px;margin-top:8px}
+@media (min-width:700px){.compare{grid-template-columns:1fr 1.2fr}}
+.compare-col{border:1px solid var(--line);border-radius:var(--r-l);background:var(--bg-1);padding:18px}
+.compare-col.is-premium{border-color:var(--accent-line);background:linear-gradient(180deg,var(--accent-soft),var(--bg-1) 55%)}
+.compare-col h4{font-family:var(--font-display);font-weight:800;font-size:16px;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.compare-col .c-price{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-bottom:12px}
+.compare-col.is-premium .c-price{color:var(--accent)}
+.c-item{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
+.c-item svg{margin-top:3px;color:var(--faint)}
+.compare-col.is-premium .c-item svg{color:var(--accent)}
+.c-item b{display:block;font-size:13.5px}
+.c-item span{color:var(--muted);font-size:12px}
+.plans{display:grid;gap:12px;margin-top:8px}
+@media (min-width:760px){.plans{grid-template-columns:1fr 1fr 1fr}}
+.plan{position:relative;padding:20px 18px;border:1px solid var(--line);border-radius:var(--r-l);background:var(--bg-1);display:flex;flex-direction:column;gap:6px}
+.plan.is-featured{border-color:var(--accent-line);background:linear-gradient(180deg,var(--accent-soft),var(--bg-1) 60%)}
+.plan .p-name{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.plan .p-price{font-family:var(--font-display);font-weight:800;font-size:26px;margin-top:2px}
+.plan .p-price small{font-size:12px;color:var(--faint);font-weight:500;font-family:var(--font-body)}
+.plan .p-desc{font-size:12px;color:var(--muted);flex:1}
+.plan .p-cta{margin-top:10px;padding:9px;border-radius:99px;font-weight:600;font-size:13px;border:1px solid var(--line);transition:all .15s;text-align:center}
+.plan .p-cta:hover{border-color:rgba(160,220,240,.3)}
+.plan.is-featured .p-cta{background:var(--grad-brand);color:#fff;border:none;font-weight:700}
+.plan .p-flag{position:absolute;top:-9px;right:14px;font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;padding:3px 9px;border-radius:99px;background:var(--accent);color:#06222C;font-weight:600}
+
+/* ============================================================
+   BILLING
+   ============================================================ */
+.panel{border:1px solid var(--line);border-radius:var(--r-l);background:var(--bg-1);padding:18px}
+.panel h3{font-family:var(--font-display);font-weight:700;font-size:15.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.plan-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.plan-pill{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;padding:5px 12px;border-radius:99px;background:var(--bg-2);border:1px solid var(--line);color:var(--muted)}
+.plan-row .grow{flex:1;min-width:160px}
+.plan-row .t{font-weight:700;font-size:15px}
+.plan-row .s{font-size:12px;color:var(--muted)}
+.row-line{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);font-size:13.5px}
+.row-line:first-of-type{border-top:none}
+.row-line .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--bg-2);color:var(--muted);flex:none}
+.row-line .grow{flex:1;min-width:0}
+.row-line .s{font-size:12px;color:var(--faint)}
+.btn-ghost{padding:8px 15px;border-radius:99px;border:1px solid var(--line);font-size:12.5px;font-weight:600;color:var(--muted);transition:all .15s;white-space:nowrap}
+.btn-ghost:hover{color:var(--text);border-color:rgba(160,220,240,.3)}
+.empty-line{font-size:12.5px;color:var(--faint);padding:6px 0 2px;font-style:italic}
+
+/* ============================================================
+   PAGE JEU
+   ============================================================ */
+.game-hero{display:flex;gap:18px;align-items:flex-start;margin-top:6px}
+.g-cover{width:118px;aspect-ratio:3/4;border-radius:var(--r-m);flex:none;position:relative;display:grid;place-items:center;overflow:hidden}
+.g-cover::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 70% at 30% 0%,rgba(255,255,255,.13),transparent 55%)}
+.g-cover .cover-letter{font-size:46px}
+@media (min-width:640px){.g-cover{width:164px}.g-cover .cover-letter{font-size:64px}}
+.g-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.g-meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap;color:var(--muted);font-size:12.5px}
+.g-meta .sep{color:var(--faint)}
+.g-rating{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.g-rating .n{font-family:var(--font-display);font-weight:800;font-size:16px;color:var(--text)}
+.status-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.status-chip{padding:7px 13px;font-size:12px}
+.status-chip.is-active[data-status="playing"]{background:rgba(79,224,163,.14);color:var(--ok);border-color:rgba(79,224,163,.4)}
+.status-chip.is-active[data-status="done"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-line)}
+.status-chip.is-active[data-status="backlog"]{background:rgba(255,197,109,.12);color:var(--premium);border-color:rgba(255,197,109,.4)}
+.g-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
+.g-stat{border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg-1);padding:13px;text-align:center}
+.g-stat .k{font-family:var(--font-display);font-weight:800;font-size:18px}
+.g-stat .l{font-size:10.5px;color:var(--faint);font-family:var(--font-mono);letter-spacing:.05em;text-transform:uppercase;margin-top:2px}
+.g-desc{color:var(--muted);font-size:14px;line-height:1.65}
+.g-section-title{font-family:var(--font-display);font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:8px;margin-top:4px}
+.friends-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:4px 0}
+.friends-row .who{font-size:12.5px;color:var(--muted)}
+.my-rating{display:flex;align-items:center;gap:10px;padding:13px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg-1)}
+.my-rating .lbl{font-size:13px;font-weight:600}
+.rate-stars{display:flex;gap:4px;margin-left:auto}
+.rate-stars button{color:var(--faint);transition:color .12s,transform .12s}
+.rate-stars button:hover{transform:scale(1.18)}
+.rate-stars button.on{color:var(--premium)}
+.review{padding:14px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg-1)}
+.review-head{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.review-head .name{font-weight:700;font-size:13px}
+.review-head .when{font-family:var(--font-mono);font-size:10px;color:var(--faint)}
+.review p{font-size:13.5px;color:var(--muted);line-height:1.55}
+.match-badge{
+  position:absolute;top:9px;right:9px;
+  font-family:var(--font-mono);font-size:10px;font-weight:600;padding:4px 9px;border-radius:99px;
+  background:rgba(7,12,16,.66);backdrop-filter:blur(8px);border:1px solid var(--accent-line);color:var(--accent);
+}
+.reason-line{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.03em;color:var(--accent);min-height:14px}
+.btn-add-lib{
+  display:inline-flex;align-items:center;gap:8px;align-self:flex-start;white-space:nowrap;
+  padding:10px 19px;border-radius:99px;background:var(--grad-brand);color:#fff;font-weight:700;font-size:13.5px;
+  box-shadow:0 6px 18px rgba(41,169,207,.28);transition:transform .15s,box-shadow .15s;margin-top:4px;
+}
+.btn-add-lib:hover{transform:translateY(-1px)}
+@media (max-width:639px){.btn-add-lib{padding:8px 14px;font-size:12.5px;gap:6px}.btn-add-lib svg{width:13px;height:13px}}
+.btn-add-lib.is-added{background:var(--bg-2);color:var(--ok);box-shadow:none;border:1px solid rgba(79,224,163,.35);cursor:default}
+
+/* ============================================================
+   MODAL — ajouter un jeu
+   ============================================================ */
+.modal-veil{position:fixed;inset:0;z-index:80;background:rgba(4,8,11,.62);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .2s}
+.modal{
+  position:fixed;z-index:81;left:50%;top:50%;width:min(440px,calc(100vw - 32px));
+  transform:translate(-50%,-50%) scale(.96);opacity:0;pointer-events:none;
+  background:var(--bg-1);border:1px solid var(--line);border-radius:var(--r-l);
+  padding:22px;box-shadow:var(--shadow);transition:transform .2s cubic-bezier(.2,.8,.3,1),opacity .2s;
+}
+body.modal-open .modal{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
+body.modal-open .modal-veil{opacity:1;pointer-events:auto}
+.modal h3{font-family:var(--font-display);font-weight:800;font-size:18px;letter-spacing:-.01em}
+.modal .f-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:16px 0 7px}
+.modal input[type="text"]{
+  width:100%;background:var(--bg-0);border:1px solid var(--line);border-radius:11px;
+  padding:11px 13px;color:var(--text);font:inherit;font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s;
+}
+.modal input[type="text"]:focus{border-color:var(--accent-line);box-shadow:0 0 0 3px var(--accent-soft)}
+.modal .chip-row{display:flex;gap:8px;flex-wrap:wrap}
+.modal-foot{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+</style>
+<style>
+/* ============================================================
+   MENU PROFIL (popover desktop / sheet mobile)
+   ============================================================ */
+.menu-veil{position:fixed;inset:0;z-index:64;background:rgba(4,8,11,.45);opacity:0;pointer-events:none;transition:opacity .2s}
+.profile-menu{
+  position:fixed;z-index:65;left:14px;right:14px;bottom:calc(86px + env(safe-area-inset-bottom));
+  background:var(--bg-1);border:1px solid var(--line);border-radius:var(--r-l);
+  padding:8px;box-shadow:var(--shadow);
+  transform:translateY(12px) scale(.98);opacity:0;pointer-events:none;
+  transition:transform .2s cubic-bezier(.2,.8,.3,1),opacity .2s;
+}
+body.menu-open .profile-menu{transform:none;opacity:1;pointer-events:auto}
+body.menu-open .menu-veil{opacity:1;pointer-events:auto}
+@media (min-width:900px){
+  .profile-menu{left:16px;right:auto;width:248px;bottom:96px}
+}
+.pm-head{display:flex;align-items:center;gap:11px;padding:12px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.pm-head .me-info{line-height:1.3}
+.pm-item{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  padding:11px 12px;border-radius:var(--r-s);font-size:13.5px;font-weight:500;color:var(--muted);
+  transition:background .12s,color .12s;
+}
+.pm-item:hover{background:var(--bg-2);color:var(--text)}
+.pm-item svg{color:var(--faint)}
+.pm-item:hover svg{color:var(--accent)}
+.pm-item.danger{color:var(--danger)}
+.pm-item.danger svg{color:var(--danger)}
+.pm-item .badge-premium{margin-left:auto}
+.pm-sep{height:1px;background:var(--line);margin:6px 4px}
+
+/* ============================================================
+   Drawer social mobile + bottom nav + toast
+   ============================================================ */
+.drawer-veil{position:fixed;inset:0;z-index:60;background:rgba(4,8,11,.6);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s}
+.drawer{
+  position:fixed;z-index:61;left:0;right:0;bottom:0;max-height:78dvh;
+  background:var(--bg-1);border:1px solid var(--line);border-bottom:none;
+  border-radius:var(--r-l) var(--r-l) 0 0;
+  padding:10px 18px calc(20px + env(safe-area-inset-bottom));
+  overflow-y:auto;display:flex;flex-direction:column;gap:13px;
+  transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.8,.25,1);
+  box-shadow:0 -20px 60px rgba(0,0,0,.5);
+}
+.drawer::before{content:"";width:40px;height:4px;border-radius:99px;background:var(--bg-2);margin:2px auto 4px;flex:none}
+body.drawer-open .drawer{transform:translateY(0)}
+body.drawer-open .drawer-veil{opacity:1;pointer-events:auto}
+@media (min-width:1240px){body[data-view="library"] .drawer,body[data-view="library"] .drawer-veil{display:none}}
+
+.bottom-nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  display:flex;justify-content:space-around;align-items:stretch;
+  padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+  background:rgba(11,17,22,.84);backdrop-filter:blur(16px);
+  border-top:1px solid var(--line);
+}
+.bnav-item{
+  display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;padding:6px 0;
+  border-radius:12px;color:var(--faint);font-size:10px;font-weight:600;transition:color .15s;
+}
+.bnav-item.is-active{color:var(--accent)}
+.bnav-item:active{color:var(--text)}
+.bnav-avatar{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:9.5px;color:#fff}
+@media (min-width:900px){.bottom-nav{display:none}}
+
+.toast{
+  position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));z-index:70;
+  transform:translateX(-50%) translateY(16px);opacity:0;pointer-events:none;
+  background:var(--bg-2);border:1px solid var(--accent-line);color:var(--text);
+  font-size:13px;font-weight:500;padding:10px 18px;border-radius:99px;
+  box-shadow:var(--shadow);transition:all .3s;max-width:calc(100vw - 40px);text-align:center;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+@media (min-width:900px){.toast{bottom:32px}}
+</style>
+<style>
+/* ============================================================
+   V4 — Drawer de notifications (droite)
+   ============================================================ */
+.ndrawer-veil{position:fixed;inset:0;z-index:60;background:rgba(4,8,11,.55);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s}
+.ndrawer{
+  position:fixed;z-index:61;top:0;right:0;bottom:0;width:min(420px,100vw);
+  background:var(--bg-1);border-left:1px solid var(--line);
+  display:flex;flex-direction:column;
+  transform:translateX(105%);transition:transform .3s cubic-bezier(.2,.8,.25,1);
+  box-shadow:-20px 0 60px rgba(0,0,0,.45);
+}
+body.ndrawer-open .ndrawer{transform:none}
+body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
+.ndrawer-head{display:flex;align-items:center;gap:10px;padding:18px 18px 12px}
+.ndrawer-head h2{font-family:var(--font-display);font-weight:800;font-size:18px;letter-spacing:-.01em;flex:1}
+.ndrawer .tabs{position:static;background:none;margin:0;padding:0 18px}
+.ndrawer-body{flex:1;overflow-y:auto;padding:14px 18px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:11px}
+.notif{display:flex;gap:12px;padding:13px;border-radius:var(--r-m);background:var(--bg-0);border:1px solid var(--line);position:relative}
+.notif.unread{border-color:var(--accent-line);background:linear-gradient(90deg,var(--accent-soft),var(--bg-0) 55%)}
+.notif.unread::after{content:"";position:absolute;top:14px;right:12px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.ndrawer .event{background:var(--bg-0)}
+
+/* ============================================================
+   V4 — Avis : composer + tri + like
+   ============================================================ */
+.review-composer{display:flex;gap:12px;padding:15px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg-1)}
+.review-composer .rc-body{flex:1;min-width:0}
+.review-composer textarea{width:100%;background:none;border:none;outline:none;resize:none;color:var(--text);font:inherit;font-size:14px;min-height:46px}
+.review-composer textarea::placeholder{color:var(--faint)}
+.rc-bar{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+.rc-bar .rate-stars{margin-left:0}
+.rc-bar .btn-primary{margin-left:auto;padding:8px 17px;font-size:13px}
+.review-tools{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.review-tools::-webkit-scrollbar{display:none}
+.review-tools .chip{padding:6px 13px;font-size:12px}
+.review .event-actions{margin-top:10px}
+
+/* ============================================================
+   V4 — Profil joueur
+   ============================================================ */
+.profile-page{display:flex;flex-direction:column;gap:16px;max-width:860px;width:100%;margin:0 auto;padding-top:6px}
+.banner{position:relative;height:118px;border-radius:var(--r-l);border:1px solid var(--line);overflow:hidden}
+.banner::before{content:"";position:absolute;inset:0;background:radial-gradient(130% 120% at 80% -20%,rgba(255,255,255,.16),transparent 55%)}
+.banner .banner-hint{
+  position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.05em;color:var(--premium);
+  background:rgba(7,12,16,.62);backdrop-filter:blur(8px);border:1px solid rgba(255,197,109,.3);
+  padding:5px 10px;border-radius:99px;cursor:pointer;
+}
+.profile-head{display:flex;gap:16px;align-items:flex-end;margin-top:-46px;padding:0 18px;position:relative;z-index:2;flex-wrap:wrap}
+.avatar.xl{width:84px;height:84px;font-size:28px;border:4px solid var(--bg-0)}
+.avatar.xl::after{inset:-5px}
+.profile-id{flex:1;min-width:180px;padding-bottom:4px}
+.profile-id .p-name{font-family:var(--font-display);font-weight:800;font-size:22px;letter-spacing:-.02em}
+.profile-id .p-handle{font-family:var(--font-mono);font-size:11.5px;color:var(--faint)}
+.btn-follow{padding:9px 22px;border-radius:99px;background:var(--grad-brand);color:#fff;font-weight:700;font-size:13px;transition:all .15s}
+.btn-follow.is-on{background:var(--bg-2);color:var(--ok);border:1px solid rgba(79,224,163,.35)}
+.profile-bio{color:var(--muted);font-size:13.5px;padding:0 18px;max-width:640px}
+.profile-stats{display:flex;gap:10px;padding:0 2px}
+.profile-stats .g-stat{flex:1}
+[data-user]{cursor:pointer}
+.post-meta [data-user]:hover .name{text-decoration:underline}
+
+/* ============================================================
+   V4 — Listes / popover / réglages / légal
+   ============================================================ */
+.list-pop-wrap{position:relative;display:inline-block}
+.list-pop{
+  position:absolute;top:calc(100% + 8px);left:0;z-index:40;width:230px;
+  background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r-m);
+  padding:7px;box-shadow:var(--shadow);display:none;
+}
+.list-pop.open{display:block}
+.list-pop .pm-item{padding:9px 10px;font-size:13px}
+.list-pop .pm-item .lcheck{margin-left:auto;color:var(--ok);opacity:0}
+.list-pop .pm-item.in-list .lcheck{opacity:1}
+.color-row{display:flex;gap:9px}
+.color-dot{width:30px;height:30px;border-radius:10px;border:2px solid transparent;transition:transform .12s,border-color .12s}
+.color-dot.is-active{border-color:#fff;transform:scale(1.08)}
+.settings-page,.legal-page{display:flex;flex-direction:column;gap:14px;max-width:680px;width:100%;margin:0 auto;padding-top:6px}
+.f-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:12px 0 6px}
+.f-label:first-of-type{margin-top:0}
+.settings-page input[type="text"],.settings-page input[type="email"]{
+  width:100%;background:var(--bg-0);border:1px solid var(--line);border-radius:11px;
+  padding:11px 13px;color:var(--text);font:inherit;font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s;
+}
+.settings-page input:focus{border-color:var(--accent-line);box-shadow:0 0 0 3px var(--accent-soft)}
+.switch{position:relative;width:42px;height:24px;flex:none;cursor:pointer}
+.switch input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.switch i{position:absolute;inset:0;border-radius:99px;background:var(--bg-2);border:1px solid var(--line);transition:background .2s}
+.switch i::after{content:"";position:absolute;top:50%;left:3px;width:16px;height:16px;border-radius:50%;background:var(--faint);transform:translateY(-50%);transition:all .2s}
+.switch input:checked + i{background:var(--brand);border-color:var(--accent-line)}
+.switch input:checked + i::after{left:21px;background:#fff}
+.legal-page h2{font-family:var(--font-display);font-weight:700;font-size:16px;margin:10px 0 4px}
+.legal-page p{color:var(--muted);font-size:13px;line-height:1.65}
+.link-line{color:var(--accent);font-size:13px;font-weight:600;cursor:pointer}
+.link-line:hover{text-decoration:underline}
+</style>
+<style>
+/* ============================================================
+   V5 — abonnés / sélection de jeux / divers
+   ============================================================ */
+.g-stat.click{cursor:pointer;transition:border-color .15s}
+.g-stat.click:hover{border-color:var(--accent-line)}
+.user-row{display:flex;align-items:center;gap:13px;padding:13px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg-1)}
+.user-row .u-info{flex:1;min-width:0;line-height:1.35;cursor:pointer}
+.user-row .u-name{font-weight:700;font-size:14px}
+.user-row .u-sub{font-family:var(--font-mono);font-size:10.5px;color:var(--faint)}
+.user-row .u-bio{font-size:12px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-row .btn-follow{padding:8px 16px;font-size:12px;flex:none}
+.pick-list{max-height:46vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-top:4px;padding-right:2px}
+.pick-row{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--r-s);border:1px solid var(--line);background:var(--bg-0);cursor:pointer;transition:border-color .12s}
+.pick-row:hover{border-color:rgba(160,220,240,.25)}
+.pick-row .mini-cover{width:32px;height:42px;border-radius:6px;flex:none;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:15px;color:rgba(255,255,255,.3)}
+.pick-row .p-info{flex:1;min-width:0;line-height:1.3}
+.pick-row .p-t{font-weight:600;font-size:13px}
+.pick-row .p-s{font-size:10.5px;color:var(--faint);font-family:var(--font-mono)}
+.pick-row .lcheck{color:var(--ok);opacity:0;flex:none}
+.pick-row.in-list{border-color:rgba(79,224,163,.35)}
+.pick-row.in-list .lcheck{opacity:1}
+.list-actions{display:flex;gap:8px;flex-wrap:wrap}
+.review-mine-tools{display:flex;gap:14px;margin-left:auto}
+.review-mine-tools .react:hover{color:var(--accent)}
+.review-mine-tools .react.del:hover{color:var(--danger)}
+.review.is-mine{border-color:var(--accent-line)}
+.friend-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 13px 6px 7px;border-radius:99px;background:var(--bg-1);border:1px solid var(--line);font-size:12.5px;font-weight:600;cursor:pointer;transition:border-color .15s}
+.friend-chip:hover{border-color:var(--accent-line)}
+.friend-chip .avatar.sm::after{display:none}
+</style>
+<style>
+/* ============================================================
+   V7 — premium actif, onboarding, défis, commentaires, images
+   ============================================================ */
+.cover-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.cover .tag,.cover .platform-ic,.cover .match-badge,.g-cover .tag,.g-cover .match-badge{z-index:2}
+.missing-cta{display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap;color:var(--faint);font-size:12.5px;padding:18px 0 4px}
+.missing-cta .sep{color:var(--faint)}
+.onboard{display:flex;gap:14px;align-items:flex-start;margin:14px 0 2px;padding:16px;border:1px solid var(--accent-line);border-radius:var(--r-l);background:linear-gradient(120deg,var(--accent-soft),var(--bg-1) 65%);position:relative}
+.onboard .ob-ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--grad-brand);color:#fff;flex:none}
+.onboard h4{font-family:var(--font-display);font-weight:700;font-size:15px}
+.onboard p{font-size:12.5px;color:var(--muted);margin:3px 0 10px}
+.onboard .chip-row{display:flex;gap:8px;flex-wrap:wrap}
+.onboard .ob-close{position:absolute;top:10px;right:10px;color:var(--faint);padding:4px;border-radius:6px}
+.onboard .ob-close:hover{color:var(--text)}
+.challenge{display:flex;gap:13px;align-items:center;margin:12px 0 2px;padding:13px 15px;border:1px solid rgba(79,224,163,.3);border-radius:var(--r-l);background:linear-gradient(120deg,rgba(79,224,163,.08),var(--bg-1) 60%)}
+.challenge .stack .avatar.sm{border-color:var(--bg-1)}
+.challenge .c-txt{flex:1;min-width:0;font-size:13px}
+.challenge .c-txt b{font-family:var(--font-display)}
+.challenge .c-txt .s{font-size:11px;color:var(--muted)}
+.badge-chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:99px;background:var(--bg-1);border:1px solid var(--line);font-size:12px;font-weight:600}
+.badge-chip.sel{border-color:var(--accent-line);background:var(--accent-soft)}
+.badge-chip.pick{cursor:pointer;transition:border-color .12s}
+.badge-row{display:flex;gap:7px;flex-wrap:wrap;padding:2px 18px}
+.banner-edit{position:absolute;left:10px;bottom:10px;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#fff;background:rgba(7,12,16,.62);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);padding:6px 12px;border-radius:99px;cursor:pointer;z-index:2}
+.banner img.banner-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.comment{display:flex;gap:11px;padding:14px 4px;border-bottom:1px solid var(--line)}
+.comment .event-body{flex:1;min-width:0}
+.compare-table{border:1px solid var(--line);border-radius:var(--r-l);background:var(--bg-1);overflow:hidden}
+.compare-table .ct-head{display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);align-items:center}
+.compare-table .ct-row{display:grid;grid-template-columns:1fr 86px 86px;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;align-items:center}
+.compare-table .ct-row:last-child{border-bottom:none}
+.compare-table .ct-row .l{color:var(--muted)}
+.compare-table .v{font-family:var(--font-display);font-weight:800;text-align:center;font-size:15px}
+.compare-table .v.win{color:var(--accent)}
+.ct-who{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;justify-content:center;width:86px}
+.premium-banner{display:flex;gap:14px;align-items:center;padding:16px;border:1px solid var(--accent-line);border-radius:var(--r-l);background:linear-gradient(120deg,var(--accent-soft),var(--bg-1) 60%)}
+.premium-banner .pb-ic{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--grad-brand);color:#fff;flex:none}
+.premium-banner h4{font-family:var(--font-display);font-weight:800;font-size:16px}
+.premium-banner .s{font-size:12.5px;color:var(--muted)}
+.tag-premium-on{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:2px 8px;border-radius:99px}
+.journal{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg-1);overflow:hidden}
+.journal .j-row{display:flex;gap:12px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);font-size:13px}
+.journal .j-row:last-child{border-bottom:none}
+.journal .j-dot{width:8px;height:8px;border-radius:50%;flex:none}
+.journal .j-when{margin-left:auto;font-family:var(--font-mono);font-size:10px;color:var(--faint);white-space:nowrap}
+.clist-chip{display:flex;gap:11px;align-items:center;padding:11px 13px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg-1);cursor:pointer;transition:border-color .15s}
+.clist-chip:hover{border-color:var(--accent-line)}
+.clist-chip .cl-info{flex:1;min-width:0;line-height:1.35}
+.clist-chip .cl-name{font-weight:700;font-size:13.5px}
+.clist-chip .cl-sub{font-size:11px;color:var(--faint)}
+.pub-ic{color:var(--accent);flex:none}
+</style>
+</head>
+<body data-view="library">
+
+<!-- ====================== SVG sprite ====================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-lib" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 4h5v16H4zM11 4h5v16h-5zM18.5 5.2l3.4 14.4-3.9 1z"/></symbol>
+  <symbol id="i-feed" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 21l2-5.6A8.5 8.5 0 1 1 21 11.5Z"/></symbol>
+  <symbol id="i-discover" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="currentColor" d="m15.5 8.5-2 5-5 2 2-5z"/></symbol>
+  <symbol id="i-stats" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Zm7.7-3.2c0 .5 0 .9-.1 1.4l2 1.6-1.9 3.3-2.4-1a7.7 7.7 0 0 1-2.4 1.4l-.4 2.6h-3.8l-.4-2.6a7.7 7.7 0 0 1-2.4-1.4l-2.4 1-1.9-3.3 2-1.6a8 8 0 0 1 0-2.8l-2-1.6 1.9-3.3 2.4 1A7.7 7.7 0 0 1 10.3 5l.4-2.6h3.8l.4 2.6c.9.3 1.7.8 2.4 1.4l2.4-1 1.9 3.3-2 1.6c.1.5.1.9.1 1.4Z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="m20.5 20.5-4-4"/></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M20.5 8A9 9 0 0 0 4.6 7.5M3.5 16a9 9 0 0 0 15.9.5M20.5 3v5h-5M3.5 21v-5h5"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9ZM10 20a2.3 2.3 0 0 0 4 0"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 20.5S3 15.5 3 9.3A4.8 4.8 0 0 1 12 7a4.8 4.8 0 0 1 9 2.3c0 6.2-9 11.2-9 11.2Z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12Z"/></symbol>
+  <symbol id="i-repost" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M17 2.5 21 6.5l-4 4M21 6.5H8a4 4 0 0 0-4 4v1M7 21.5l-4-4 4-4M3 17.5h13a4 4 0 0 0 4-4v-1"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5 14 9l6.5 2L14 13l-2 6.5L10 13l-6.5-2L10 9z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m6 6-6-6 6-6"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path stroke="currentColor" stroke-width="1.8" d="M2.5 10h19"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M6.5 15h4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.5 5 5L19.5 7"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="9" r="1.8" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="m4 17 5-5 4 4 3-3 4 4"/></symbol>
+  <symbol id="i-pc" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 5h18v11H3zM9 21h6m-3-5v5"/></symbol>
+  <symbol id="i-ps" viewBox="0 0 24 24"><path fill="currentColor" d="M9.2 2.8v17.4l3.9 1.3V7.1c0-.7.3-1.2.8-1 .7.2.9.9.9 1.6v5.6c2.5 1.2 4.4.1 4.4-3.1 0-3.3-1.2-4.8-4.6-6C13.3 3.7 10.6 3 9.2 2.8ZM10 18.7l-5.8-2c-1.5-.5-1.8-1.4-.8-2 .8-.5 2.2-.9 2.2-.9l4.4-1.5v2.3l-2.4.9c-.5.2-.6.4-.1.6l2.5.8Zm9.7-3.4c1.3-.6 1.2-1.6-.4-2.1a9 9 0 0 0-4.3-.3v2.2l1.4-.5c.5-.2 1-.2 1.1 0 .1.3-.2.5-.7.7l-1.8.7v2.2Z"/></symbol>
+  <symbol id="i-xbox" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21.5a9.4 9.4 0 0 1-5.6-1.9c-.5-.5.9-2.7 2.8-4.9 1.2-1.4 2.8-3 2.8-3s1.7 1.7 2.9 3.1c1.9 2.2 3.2 4.3 2.7 4.8a9.4 9.4 0 0 1-5.6 1.9ZM4.5 18A9.5 9.5 0 0 1 4 6.3c.8-.8 3 .4 3.8 1-1.6 2-4 6.7-3.3 10.7Zm15 0c.7-4-1.7-8.7-3.3-10.7.9-.6 3-1.8 3.8-1A9.5 9.5 0 0 1 19.5 18ZM12 6.6S9.6 4.7 8 4.2c-.4-.2-.8-.2-1-.2a9.6 9.6 0 0 1 10 0c-.2 0-.6 0-1 .2-1.6.5-4 2.4-4 2.4Z"/></symbol>
+</svg>
+
+<div class="app">
+
+  <!-- ====================== SIDEBAR ====================== -->
+  <aside class="sidebar">
+    <div class="logo" data-nav="library" role="button" style="cursor:pointer"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAbgAAAA8CAMAAAAjQl/7AAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAAAA/1BMVEUlUloOFyAbUmEKF1wTSlsji6BNFBESS1wMOEoFHSkNNkhfYmMFJzYAAP8te5I1e4sKN0oOXqVJJEktfIwKpaVSYp5QnaMbXScngY0Af/8wgot/f///AP8HLz1Ie4RVqv+ZraP/AAD///8AqlVISCRBeYRVlH9AgIZ/////qqoAAAABYoIDYnwOWHAEXoMUh6MAVVUAOzsUh5wAf38AO3gAZmYPVGkSS2MTWnERWG8OSFkA//8CJTMkJAAKOEkzZpkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADxdwSUAAAAQHRSTlMXHVoLnvkG1Z1YZQWVAXiO0goG4gMOEQVzApsCAcxMAwgBAQMH8gzTAgMA/v73/v0DBP0CBAXO9Ii08wFqBvMFa/FJNQAAFGBJREFUeNrtXYl627ayJkhKlCylUWo7adKe/a4gAJOmLMWU477/Wx3MYLCQBKnN6bn57kEbxzZFLPNj9gGS8H+3H7IlP+rEsz9ikLrePtV19eMB12zr7z6D5g9ba3PGYurtv2yaYduOAoDAJcmnT58S237GNmeM4YSrkQ3HXDt/PmzFfrYt9nyVZKtMzyr7eTXWxTJb2VYvuZ0jyxL9X38tejHzuSF/dQqnVg1Ncr3O8/ViuZqz4+/ifJJEfxn7xMq3v/Ye/TyPNdoyTRUFruapjLf9a5oucfsNl8YX7lOyYIez5A9fFsEoaWQzt+5pseCr6LTz2e2M2n+mnNGsOj13W7tJb05iHRSNL+lmD2+J0ixykcIQ2wnJnfuhsgjF9JTT2e3tLfy5nf3Efw8A9cQMqb9vXzepmXNEMST8iX8VpRBltCm5y4Ep3w2A2wl4C94T8oWfI1F/460olRtCRpBduOkIuY50/utqNXt8eHh4hDYrlm7j/JeU8YWUMFu5K27YEfUIgyWLnTRr0xRQyrwtC8BujJ22/LmU8AK8t2MRevzO3+s56/k+PM5m70PgOH8tR5vcFws94W0TA46W1m+Gunq5CzbkuELPkqh/HnA1f5HBcGUMGQY0IMoVkc4/8PeAm2mzPx+cpk4IuMhaNADwjUz41Gz1FljnFjQHOu3Qfc7GOHbLcwMzfj6P2A4AnJvyL5PA+T2D20buN9lgXAscLWuwXtPaPnE1cJJ6Phe4rRYMRAwpQBi9RuyVBfCzwUCuqz6tVs29o8Hjw+3/3PnlSBXFTRARYNDXcaWsn6xb6detgt6Q8bRg59UYcAr2Mr4rl0OKEHCPBNxdFzgZpT78bwQfyL0sApyIykravnr6+5vufIHjhJNm5wCXWXbywnAgurQZIEsEDibQDvr4SAxnJGWuGdADJ8YWQ6Np+rcvo8KApcSxAaPZaaIglEUS5TkQlcpoD/hYy0Y47tHMecBxgxlbzCylpOZ2Ngqc6ik7mr+mn1yzqqfjfJ/nAFfxVJQqIIoQ6UDpo5bDDwGX9DaNxv4eSYBkeJgFuGng7FL9l1DgGeEeYwiymmhW0mg2IUKhbr6XixjPAXDCAVeWww8hcKiYtZL76aioVF5uEPcULNwyDjjcjUArpYbg68f7zmsaOKKLOBu4QjjBTHs5aQZmKWvNLodP9rfvX1bvDWbwZZb2gbPUthvPqmIUzro7/bPuMYsp370Rkw5hv8McVXQfOb87RIELhdVLVl8CnHDAKfeX+b1SWmFlMeCE2eT0hiWAUvQ0D/niYuC2/GZg9+n3h3v4T47owJIhmRuWzIykhC+3/J5HgLPmSEgP+60WaeuhvAOjydoxoVktpQjsHfz7efh2Dzgh9vwSjkPFH5omugliHd3njZeWXeB6wkWKkqwx2P3LrLkeuAqsL9UZRYkiZBrLcgWKC2kYJAQuWb5HOYlUmKUs4XGOkz2Nb1WV3pqijUxMG7v4IeMAlEoFXBb2gsgd4zihN3p9qagc2Jd24P3SbeGOqNT/73wz/qdhOVS4/C1EJZN94HQHSVYNbU9BOld/CTXGx/uPMwJOf/nS0dgd4NqblNpiUxSS3Btp9sNwylUhFH5GGdQQdSk1GRzuRD/93XNfLQ+A04vqypETgVMhAN2B9cOCf44Cp0ILjy3TPcl3SSr9auA0w1lBVhqbEVe5GMqehu0NcPhB5gNv2qR8cMDNFj3vxgEHsj1sN9JpfIUjdim/ZYVz94jrpNyk2l9fvqRfrVtvBBnIoL5B1QcOJ93xmk8DTgYIsJe0dQMTB+WWUgFw6JIlh88HahAQzM1iDHA3XtVcBZyRvVJIp4Ei1nMFvpy1cjWdPzgf74N1hzRwxXI1DlxlW3PQq13rAZ3+Lr/qdXcM1YVXjGaLP69r8sg1Cde5NDaOEtRLzyvoAwef2XRY7jTglEbgzgPAs7ywZELgHK1D4MBvSoLoVq21R45PjL7Orwaugo1PnpJ0ah8t/r6Vl2Vsb0NxWluxIGgys1GTx9nHnlnT5biO9gPknL8jvnYeNnwpy9LZ1FrZFejrJXXGs3oLm+ZmbxRgSWZ3T1hGgOsZXScD53dEDQMnO0smHLelqFsAHDzvAKc5jrHW2iwi5IsLgdvyAq0GPQkhXyURUWrzZBinRl8OwxDwsQUhm/EPt4/WNJm9Z0lUVEpjBj91+3u2HrjWXx2Oy/iyJUYi/bToJYHqz5y9CorymV2edPbaUFSKXujgRB0nu6zcbHm2C8IBSsu9OmJV9oBjNQafDG4ieHgZcBVsbIEiUpU78HalkT6gPweO1d9g0yiKWUj2t0+4/NWXmbMpH1MeB05EgHMxWdwLHY7TPorx8UqKmi+G8cyas1yE/vFz9TQCnHA2eigsLwMOBq4L3GsC/dqyYJhe6hgnog+cNtlAwFDY7GrgDnxjyAYvFhBCMcyHHFXzmGEJbICiwlgTK/6RgiYgKG+X/WB9AFzZA26b5Wh/lRTZ6Eg6oIiwNIeAZGzX6dnjpxROqGs1EnCitCLC9HTjl3UpcLBlpKESKNhSZTjuEeAoUF++EXBgKZI3INeMG4WPP0bME23Qtd7/lwxcho/8iwNO+3CDILwDTg2Aq2idGD3pBb1M+NTqkXQk8fMP1pbS2Xiao6sox4kgdLNjV3McSPKN2SwY9lGL04DDzTh4eBFwmZZINhpS7tlvbEMYGpO1GiZvFsLaE8IYwnd85oG7Haa9nHGiVE9U1gfwICWFvdqeSWndWDAqn3k1nZAiau2yo8AJbQ6zq4HDAKBwoeTdycCVbwQcRk3Im5Igq1ITq8DAcDGcb1YzaX0vMCwPFQD3YIGbfdAMOAVc5loF2f+NybqAXu2GvFaYXCTgwGfMxjNSzjrReyDM3XvgSFtadXljZfIVwGlKuRi3KvdL2AxHgMNNFnDcdVYlk84BBj+zqnYou5SZcBNNhQtrMqAa9MA9zt4nw2ylBU6gKOuMvRHCpT/ykDiNSQaRilI9CdtT0jsKd5bYy90QOFBGr9Iz3v4tOK5Odt4RlyjKjwD3STtyymJ9JcfV6OQa/aMZDDpZ+xC+JkPEC9eGpbKRFvDlKv6LFZW3yZKNA6fb69LXMyXpq/Ribt9JDjQkwQ3v6x2VTVSkbQKbv53zOHCLhQ2Nld6RuQa4RrtRaBdhvxuICkwDx4ByFKoU5etVIa+Ma9NEEHBoHFTEguZPG8caoxnowIDSIqsSBGWsPCAQlVpg7dt2bxo4+xRy1V5/u+6YlJT8K406bdmksH8RPt0gecSqhMl+0FRzORBprMCrgIPABdloNrM8AVwGimFNigEeBkLkAuAaHNwqCJxdxQrIm5AEWEeLqFoCDlTHsmL3vNCgPUI6J1pt6IAbFguVGKkRMu/5jFsMw5mwCaSQJkpNm6be+RSlZH3ghO1D+6vSW5Z1czVwifTeIY4bAge+cXJIkidoRnyn0ns3WrbWVwD3QbN74Bw3iGWqgVMkCnPGRvLlil4roHRujeUmeunJBHDdjIwL4GouzLNYRsaYQPAlnajBAy/+2VuOYZmT5TiKQLtYulnsr7bK65FCdWcDl0mfepPzCHAsKHhNFntv2aqOZDgfuOodmeNoIWTW5JauVAxkSly6O3VhfAbw5B5myeEwxXGD7KL5sYXIcV0PgTPGruq4zBPA2aTGtq/jMDCe8o//u/PKVmCfd2biFwGXoQ9e0sYYcpyWI695nn/F1mIeHzwbigZtripdaHigsQvW2CLRQJqlkXxq1aylt2BeDefOZnrlH/lx4IYpUIn1UlHgUMkdWYsGLrBOgoBnD7gnTPTbCg00hoLyvEuAa8uOlRYAZ3en6iZgpckZ9ypsLrEqpS+4sd721rq02HZxKQWGpRK+nqzh9+//e7WaTwPXS14HP8q8WyoRAFeeBVzo4veAq03+iqaNCZ57/ucZFRReAtzeAFcOdZzX6bQIV7Bift2J8JwNXE12kalOrL15sA+InGSxYvcktPnot38dGSaMVXZLsgOt15OHFjjUSN5hPg6cXAx0nAOON1DuZDNBwmyVW1NTeImOA1FpN+AIx3V3qS2e6ZVZnA1cRaaJMju1dhZLGnDDc6xkcTt/9u6fxIzq4QM/AbggU1u66huzCTU8TQQ4gfJ6e6qOixgnHjhtRUmnOYX89Y4nzU+zh8utSl/wEdFx3bK20lam6Vfa+VXAZURSEzN2pgmUMnpZCaZRFokzvRiDBjvQ6qKyeeljwO3DMxQYWEfgVK9+xhQh41IwTdFMuQNsF9YmDB1wB5ye5sbsNiy30nu1ofrry4DzAKk9HwLXrZo3aXr4ZZvW1TXAVRjHpdq/tpdajZppoVmTCxXE/qbOGYb5uA1LanfeKkl3gZ0pRFCHDhEdC5zyIar4MpKAPBEHPACugZwDZRwUlDpU9yZ5f5kDbsPzmgRR4PoliEbN5WzQ01nAaRm9t3Yd1ClsA6qtg4M70bBFZeqTpQmfFKw+Ebi8Fyh1Pqkw8YzGT0Eql4boZbaje8iGvCaBgw0hvX27Xzaf7u+pIPSSkJetZJFyw2OisgxOf1hyrgcnHc4ETvsCijhGljvWi/CWTovLJG7Y5M6ZJKfoBOBkNya25aYUt1cBQFMg/QGoPGfVxAbcBSfEYkHmADj+2ZzgIYVb8Czj+exCB3zni5ONnu8XxErhanZNZK/9eqNVSjbOceIUUclaEnaaQkXPGM8pCQ4DRkPz2TtWeAtmvzyF49SgdIH/BZxGJQjYvd8+DVbC2Ni7zEaFcU3BMUMhGdoxMeCqjElTAETHyap79uWR4j5jJegx4ODkI6KBgWaZHLIhcHsbl93v2+fnfI0R+MPIFjiV48hdI+DSDmFAUJHBZMJ/Eap9MluXykUWE6NNAcdqHImAk/78cWYPUhpjuxjL62ANga3SFWIXy4CHwGkE1pISBlgscqj4b7MLgOM+aI2BvypSLBSkQkjfJHVcZljg1NjhF9/e8cKaF+j3N/30bmmjzzKNAVcbAlBo7OtEwmwKOIgBKEUKsDuS4QwbHvjT2ACYKrGF2PHShQ5wJn5tD02Z7MZPoObGDzaKaOnCwp/+KMv1ADggS3je7qnZ1s2osA+AOy4qfaza5aeCAgU0lxSF0qsY8In0KvgK4HalcrMOgKucEjWmdLRYaLs1BXquWCg7DhwGY607LITe4Hf8l1nsfNyEjoOwiStRwrrAGMcl2dbm+6fNxDN0XB2KooE93zRoYoMiUHjk+/MkcOXFwDUZxWAERUar7hRsjAjV/8AvqSDiHxaEd2stRoDLyLI0OSOoUkmA584BTg9cOPMDkihmWR44FamrfBvgjDCkNRfzw9DWRRGKBnkZk5VvA1wCKSJbvKA6Ie0G6gbdUR2N3AbK+cL1fubJV4OborOyCefHgeN/J6qbaD3UggNysy+nApcd8CYJf37AEvt64KQGLqmeTBbPNu3x1j0NRUw3BAZybkaCQ0xWZvy7AFff82zn+EWojo6rmheqhzdhMUEl6JkpQafMpKGRip6iGgMOpi5kaXPjIG404u976doOcHVS23ZvFKt3QZSy5wC6olJcBtzySHy58LUzMuJiV8nO1ORTsLB6I+AOzeEQnGB52ZWBO9AV2e+ck0dJWCGfM8atRc3SZyll6bM/om9ijeo4iK67Mwvgy1Q8G9Cry3EdYZXLsGaMSrwi+bjzgQNXN420ZTcc6S6/iHkLOSkBmOMzeyvgOk9ecnPYz/txPS2+wxR5cGAHr7RhfJmmGynDs7kgHvqaaBQ4iFlSdbupQqz58LaUELj10rWb9FW6JI054LSOHLMivA/nAVcGiaDOQUq7oxtX0GjiHttIXCXxNYBKDAuJQ+DEKcDR/SxhkxQvx0MmCH9nIlmV7XxJZlCvsbNpxCDVILquwDRweLjWqIJeuUMUONGNjIswgiy11XTgQ+BMsdAlwMWaLa2nunNwnXpOa5gstdVnCphy+xbARQ/m+hBUPyTJIFcp6QqDqQYYPK9iafQR4GqsuHLHCVjkcrTxo8RBpgZrPiv+XYGDB6SrtmjL+Z26jWa5cl+oK9plH90rgFMqSMP5i2YiE4FLF2whsho9kS3gvHEeE/fjHKeBoRi26PvtE8CJwTl0GdbxfnfgKgyo2whxFs124fErZUuExab/obfjOAtczrLYLFoxxW+EqSb9sB5tCriqZtL6IQpjlicAJ0Lg8JolLSfv+B8HHGSlTEUr3lgy1vsu0CDF9wBO+AoGpQ2gmA2GF9SEt2uEyUmbDoJYWcPO4zhTZEhVINogPZwKHBUV4sz33Rjt9wbuCcv/LXCLERUH8tRDM6j7eBPgAkMqZ4cm7rgEQdEBcEa97ZJIaOeYqNRPgxT1sAZ7Ajhrl2x6PsR3Bi4zJ4QoTznq8GmjW3YI27w1cEGhF5Qyjy6LL3NpziJHCo7Kcjd+CdsUcJzPW9/fMIv/OiYhSGLKzUs/R9NxwM8BrkCzWY1fq4LAQcmMskcGtXI4jPZHpymksbxGRaW4FDjpLnRa8onqhAP6vMKcxurBJvYLxg9j1x4+e/NqCFxFJhrJ2/7JpNdSjd0XCuQo9E471FGOc+t7OovjpsxmAq6w1YVwtVO2He1vGZym6NeBn8dx49M65aLRSq8/WxfD+0rNRaPjR+eew+nXkaKHMgxD/P00d0BPeZNkPHLFZu9q3/bEy8Wr6G20nWbkASukOSyjv7QTe32VBFfjFgXrX6sZdJxPcEzdwkD74b2+7euCrsltjt3tm0Hw+SXdFBIL/KD6WbYmEjReuceCq33bSHVFVWXBbIpBgns/aDhjutk3Ip1RTc7n33Sbz9n8jIux2Tf2bbzNXTmf7pvhAPMjHc6xP+g2cvrDdcymu4GhzHKCxr65jV+dchc9XabNlut1/jVfrM2YRy7T9ndgjxHxP+ZwQ/m32PLGr9Iem/IP++8OnN+22yuur2+27F8x4/Ep/z8C7vxWwz8Ysa3r/4tz+zdwP2j7J/t3fwthodUOAAAAAElFTkSuQmCC" alt="Playbond"></div>
+
+    <nav aria-label="Navigation principale" style="display:flex;flex-direction:column;gap:3px">
+      <button class="nav-item" data-nav="library"><svg width="19" height="19"><use href="#i-lib"/></svg>Ma bibliothèque<span class="spacer"></span><span class="badge-count">128</span></button>
+      <button class="nav-item" data-nav="feed"><svg width="19" height="19"><use href="#i-feed"/></svg>Feed social<span class="spacer"></span><span class="badge-count" style="color:var(--accent)">12</span></button>
+      <button class="nav-item" data-nav="discover"><svg width="19" height="19"><use href="#i-discover"/></svg>Découverte</button>
+      <button class="nav-item" data-nav="stats"><svg width="19" height="19"><use href="#i-stats"/></svg>Statistiques<span class="spacer"></span><span class="badge-premium"><svg width="9" height="9"><use href="#i-star"/></svg>Premium</span></button>
+    </nav>
+
+    <div class="nav-label">Mes listes</div>
+    <nav aria-label="Listes personnalisées" id="lists-nav" style="display:flex;flex-direction:column;gap:3px"></nav>
+    <button class="nav-item" id="btn-new-list" style="color:var(--faint)"><svg width="16" height="16" style="margin:0 2px"><use href="#i-plus"/></svg>Nouvelle liste</button>
+
+    <button class="me" id="btn-me" aria-haspopup="menu">
+      <div class="avatar my-avatar" style="background:var(--grad-brand)">AN</div>
+      <div class="me-info">
+        <div class="me-name">Antoine</div>
+        <div class="me-tag">PLAN GRATUIT · NIV. 42</div>
+      </div>
+      <svg width="15" height="15" style="transform:rotate(-90deg)"><use href="#i-chev"/></svg>
+    </button>
+  </aside>
+
+  <!-- ====================== COLONNE CENTRALE ====================== -->
+  <div class="main">
+
+    <header class="header">
+      <div class="m-logo" data-nav="library" role="button" style="cursor:pointer"><img src="data:image/png;base64,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" alt="Playbond"></div>
+      <label class="search">
+        <svg width="16" height="16"><use href="#i-search"/></svg>
+        <input id="search-input" type="search" placeholder="Rechercher un jeu, un ami…" aria-label="Recherche rapide">
+      </label>
+      <button class="icon-btn btn-sync" id="btn-sync"><svg width="17" height="17"><use href="#i-sync"/></svg><span>Synchroniser</span></button>
+      <button class="icon-btn" id="btn-add" aria-label="Ajouter un jeu manuellement"><svg width="17" height="17"><use href="#i-plus"/></svg></button>
+      <button class="icon-btn" id="btn-bell" aria-label="Notifications"><svg width="18" height="18"><use href="#i-bell"/></svg><span class="dot" id="bell-dot"></span></button>
+    </header>
+
+    <!-- ---- VUE : Bibliothèque ---- -->
+    <section class="lib-page" id="view-library">
+      <div class="page-head">
+        <div class="eyebrow">Bonsoir, Antoine</div>
+        <h1 class="page-title">Ma bibliothèque</h1>
+        <p class="page-sub" id="lib-sub">128 jeux · 7 amis en ligne</p>
+      </div>
+      <div id="onboarding"></div>
+      <div id="challenges"></div>
+      <div class="filters" role="tablist" aria-label="Filtrer par plateforme">
+        <button class="chip is-active" data-filter="all">Tous</button>
+        <button class="chip" data-filter="pc"><svg width="14" height="14"><use href="#i-pc"/></svg>PC</button>
+        <button class="chip" data-filter="ps"><svg width="14" height="14"><use href="#i-ps"/></svg>PlayStation</button>
+        <button class="chip" data-filter="xbox"><svg width="14" height="14"><use href="#i-xbox"/></svg>Xbox</button>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div class="missing-cta">Un jeu manquant ? <button class="link-line" id="missing-sync">Relancer une synchro</button><span class="sep">·</span><button class="link-line" id="missing-add">L'ajouter manuellement</button></div>
+    </section>
+
+    <!-- ---- VUE : Feed social ---- -->
+    <section class="feed-page" id="view-feed" hidden>
+      <div class="page-head" style="padding-top:2px">
+        <div class="eyebrow">Communauté</div>
+        <h1 class="page-title">Feed social</h1>
+      </div>
+      <div class="tabs" role="tablist">
+        <button class="tab is-active" data-tab="foryou">Pour vous <svg width="12" height="12" style="display:inline;vertical-align:-1px;color:var(--accent)"><use href="#i-spark"/></svg></button>
+        <button class="tab" data-tab="friends">Abonnements</button>
+      </div>
+      <div class="composer">
+        <div class="avatar my-avatar" style="background:var(--grad-brand)">AN</div>
+        <div class="composer-body">
+          <textarea id="composer-input" rows="2" placeholder="Un avis sur un jeu ? Une découverte ? Partagez-le…"></textarea>
+          <div class="composer-bar">
+            <button class="composer-tool"><svg width="15" height="15"><use href="#i-lib"/></svg>Jeu</button>
+            <button class="composer-tool"><svg width="15" height="15"><use href="#i-star"/></svg>Note</button>
+            <button class="composer-tool"><svg width="15" height="15"><use href="#i-image"/></svg>Capture</button>
+            <button class="btn-primary" id="btn-publish" disabled>Publier</button>
+          </div>
+        </div>
+      </div>
+      <div id="feed-foryou"></div>
+      <div id="feed-friends" hidden></div>
+    </section>
+
+        <!-- ---- VUE : Découverte ---- -->
+    <section class="disc-page" id="view-discover" hidden>
+      <div class="page-head" style="padding-top:8px">
+        <div class="eyebrow">Recommandations</div>
+        <h1 class="page-title">Découverte</h1>
+        <p class="page-sub">Sélection basée sur votre bibliothèque, vos notes et l'activité de vos amis — incluse dans Premium.</p>
+      </div>
+      <div class="locked-zone">
+        <div class="locked-blur" id="disc-blur" aria-hidden="true">
+          <div class="filters" role="tablist" aria-label="Filtrer les recommandations">
+            <button class="chip is-active" data-dfilter="all">Tout</button>
+            <button class="chip" data-dfilter="friends">Joués par vos amis</button>
+            <button class="chip" data-dfilter="similar">Similaires à vos jeux</button>
+            <button class="chip" data-dfilter="trend">Tendances</button>
+          </div>
+          <div class="grid" id="disc-grid"></div>
+        </div>
+        <div class="lock-overlay" id="disc-lock">
+          <div class="lock-card">
+            <div class="lock-ic"><svg width="22" height="22"><use href="#i-lock"/></svg></div>
+            <h3>Découverte prédictive</h3>
+            <p>Les recommandations personnalisées, basées sur les goûts croisés de vos amis et des joueurs comme vous, font partie de Playbond Premium.</p>
+            <button class="btn-premium" data-nav="premium"><svg width="15" height="15"><use href="#i-star"/></svg>Découvrir Premium — 2,50 €/mois</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- VUE : Fiche jeu (rendue en JS) ---- -->
+    <section class="game-page" id="view-game" hidden></section>
+
+    <!-- ---- VUE : Statistiques (paywall Premium) ---- -->
+    <section class="stats-page" id="view-stats" hidden>
+      <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+      <div class="page-head" style="padding-top:0">
+        <div class="eyebrow">Premium</div>
+        <h1 class="page-title">Statistiques avancées</h1>
+        <p class="page-sub">Votre temps de jeu global et vos graphiques détaillés, toutes plateformes confondues.</p>
+      </div>
+      <div id="stats-body"></div>
+    </section>
+
+    <!-- ---- VUE : Abonnement & facturation ---- -->
+    <section class="billing-page" id="view-billing" hidden>
+      <button class="back-btn" data-nav="library"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+      <div class="page-head" style="padding-top:0">
+        <div class="eyebrow">Compte</div>
+        <h1 class="page-title">Abonnement &amp; facturation</h1>
+      </div>
+
+      <div class="panel"><h3>Mon abonnement</h3><div id="billing-plan"></div></div>
+
+      <div class="panel"><h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-card"/></svg>Moyen de paiement</h3><div id="billing-pay"></div></div>
+
+      <div class="panel"><h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-doc"/></svg>Historique des factures</h3><div id="billing-invoices"></div></div>
+      </div>
+    </section>
+
+
+    <!-- ---- VUE : Liste personnalisée (rendue en JS) ---- -->
+    <section class="disc-page" id="view-list" hidden></section>
+
+    <!-- ---- VUE : Profil joueur (rendu en JS) ---- -->
+    <section class="profile-page" id="view-profile" hidden></section>
+
+    <!-- ---- VUE : Premium (offre + souscription) ---- -->
+    <section class="stats-page" id="view-premium" hidden>
+      <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+      <div class="page-head" style="padding-top:0">
+        <div class="eyebrow">Abonnement</div>
+        <h1 class="page-title">Playbond Premium</h1>
+        <p class="page-sub">Toute la puissance de Playbond : multi-plateforme, statistiques, personnalisation et algorithme prédictif.</p>
+      </div>
+
+      <div id="premium-active" hidden></div>
+
+      <div id="premium-offer">
+        <div class="compare">
+          <div class="compare-col">
+            <h4>Gratuit</h4>
+            <div class="c-price">0 € — POUR TOUJOURS</div>
+            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Importation limitée</b><span>1 plateforme synchronisée (Steam, PlayStation ou Xbox).</span></div></div>
+            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Profil public et critiques de base</b><span>Partagez vos avis et votre bibliothèque avec la communauté.</span></div></div>
+            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Fil d'actualité standard</b><span>Suivez l'activité de vos amis en temps réel.</span></div></div>
+            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Recommandations générales</b><span>Des suggestions basées sur les tendances de la communauté.</span></div></div>
+          </div>
+          <div class="compare-col is-premium">
+            <h4><svg width="15" height="15" style="color:var(--accent)"><use href="#i-star"/></svg>Premium</h4>
+            <div class="c-price">2,50 € / MOIS — OU 25 € / AN</div>
+            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Importation illimitée</b><span>Multi-plateforme : Steam, PlayStation et Xbox réunis dans une seule bibliothèque.</span></div></div>
+            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Statistiques avancées</b><span>Temps de jeu global, graphiques de progression et comparaisons.</span></div></div>
+            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Personnalisation poussée du profil</b><span>Bannières exclusives et badges visibles par la communauté.</span></div></div>
+            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Algorithme prédictif</b><span>Recommandations basées sur les goûts croisés de vos amis et des joueurs comme vous.</span></div></div>
+          </div>
+        </div>
+
+        <div class="plans">
+          <div class="plan">
+            <div class="p-name">Gratuit</div>
+            <div class="p-price">0 €</div>
+            <div class="p-desc">1 plateforme, profil public, critiques de base, fil standard et recommandations générales.</div>
+            <div class="p-cta" style="color:var(--faint);cursor:default">Votre plan actuel</div>
+          </div>
+          <div class="plan is-featured">
+            <div class="p-flag">POPULAIRE</div>
+            <div class="p-name">Premium mensuel</div>
+            <div class="p-price">2,50 € <small>/ mois</small></div>
+            <div class="p-desc">Toutes les fonctionnalités Premium, sans engagement. Annulable à tout moment.</div>
+            <button class="p-cta" data-subscribe="monthly">S'abonner</button>
+          </div>
+          <div class="plan">
+            <div class="p-name">Premium annuel</div>
+            <div class="p-price">25 € <small>/ an</small></div>
+            <div class="p-desc">Soit ≈ 2,08 € par mois — deux mois offerts par rapport au mensuel.</div>
+            <button class="p-cta" data-subscribe="annual">Choisir l'annuel</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- VUE : Personnalisation du profil (rendue en JS) ---- -->
+    <section class="settings-page" id="view-customize" hidden></section>
+
+    <!-- ---- VUE : Publication + commentaires (rendue en JS) ---- -->
+    <section class="feed-page" id="view-post" hidden style="max-width:660px"></section>
+
+    <!-- ---- VUE : Comparaison de stats (rendue en JS) ---- -->
+    <section class="settings-page" id="view-compare" hidden></section>
+
+    <!-- ---- VUE : Abonnés / abonnements (rendue en JS) ---- -->
+    <section class="settings-page" id="view-follows" hidden></section>
+
+    <!-- ---- VUE : Réglages du compte ---- -->
+    <section class="settings-page" id="view-settings" hidden>
+      <button class="back-btn" data-nav="library"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+      <div class="page-head" style="padding-top:0">
+        <div class="eyebrow">Compte</div>
+        <h1 class="page-title">Réglages du compte</h1>
+      </div>
+
+      <div class="panel">
+        <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-user"/></svg>Profil</h3>
+        <div class="f-label">Photo de profil</div>
+        <div class="row-line" style="border:none;padding:4px 0 10px">
+          <div class="avatar my-avatar" style="background:var(--grad-brand)">AN</div>
+          <div class="grow s">JPG ou PNG — affichée partout sur Playbond.</div>
+          <label class="btn-ghost" style="cursor:pointer">Changer la photo<input type="file" id="avatar-file" accept="image/*" hidden></label>
+        </div>
+        <div class="f-label">Pseudo</div>
+        <input type="text" id="set-pseudo" value="Antoine" maxlength="24">
+        <div class="f-label">Adresse e-mail</div>
+        <input type="email" id="set-email" value="antoine@mail.com">
+        <div class="modal-foot" style="margin-top:14px"><button class="btn-primary" id="btn-save-profile">Enregistrer</button></div>
+      </div>
+
+      <div class="panel">
+        <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-sync"/></svg>Plateformes connectées</h3><div id="platform-rows"></div>
+      </div>
+
+      <div class="panel">
+        <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-bell"/></svg>Notifications</h3>
+        <div class="row-line"><div class="grow"><div>Activité de mes amis</div><div class="s">Fins de jeux, critiques, trophées de vos amis.</div></div><label class="switch"><input type="checkbox" checked><i></i></label></div>
+        <div class="row-line"><div class="grow"><div>Réactions à mes publications</div><div class="s">Likes et commentaires sur vos avis.</div></div><label class="switch"><input type="checkbox" checked><i></i></label></div>
+        <div class="row-line"><div class="grow"><div>Récap hebdomadaire par e-mail</div><div class="s">Vos stats de la semaine, chaque dimanche.</div></div><label class="switch"><input type="checkbox"><i></i></label></div>
+      </div>
+
+      <div class="panel">
+        <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-lock"/></svg>Confidentialité</h3>
+        <div class="row-line"><div class="grow"><div>Profil public</div><div class="s">Votre bibliothèque et vos avis sont visibles par tous.</div></div><label class="switch"><input type="checkbox" checked><i></i></label></div>
+        <div class="row-line"><div class="grow"><div>Apparaître dans les recommandations</div><div class="s">Vos goûts alimentent l'algorithme des goûts croisés.</div></div><label class="switch"><input type="checkbox" checked><i></i></label></div>
+      </div>
+
+      <div class="panel">
+        <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-doc"/></svg>À propos</h3>
+        <div class="row-line"><div class="grow"><span class="link-line" data-nav="legal">Mentions légales, CGU &amp; confidentialité</span></div></div>
+        <div class="row-line"><div class="grow"><div class="s">Playbond — prototype v4 · Pour supprimer votre compte : support@playbond.app</div></div></div>
+      </div>
+    </section>
+
+    <!-- ---- VUE : Mentions légales ---- -->
+    <section class="legal-page" id="view-legal" hidden>
+      <button class="back-btn" data-nav="settings"><svg width="16" height="16"><use href="#i-back"/></svg>Retour aux réglages</button>
+      <div class="page-head" style="padding-top:0">
+        <div class="eyebrow">Légal</div>
+        <h1 class="page-title">Mentions légales</h1>
+        <p class="page-sub">Dernière mise à jour : juin 2026 · Textes provisoires du prototype.</p>
+      </div>
+      <div class="panel">
+        <h2>Éditeur</h2>
+        <p>Playbond SAS (en cours de constitution) — Paris, France. Directeur de la publication : l'équipe fondatrice de Playbond. Contact : hello@playbond.app.</p>
+        <h2>Hébergement</h2>
+        <p>L'application et ses données sont hébergées au sein de l'Union européenne par un prestataire certifié ISO 27001. Les coordonnées complètes de l'hébergeur figureront ici lors du lancement public.</p>
+        <h2>Conditions générales d'utilisation</h2>
+        <p>Playbond fournit un service de centralisation de bibliothèques de jeux et de réseau social entre joueurs. L'utilisation du service implique l'acceptation des présentes conditions. Les contenus publiés (avis, critiques, listes) restent la propriété de leurs auteurs, qui concèdent à Playbond une licence d'affichage au sein du service. Tout contenu haineux, illégal ou portant atteinte aux droits de tiers pourra être retiré et le compte associé suspendu.</p>
+        <h2>Abonnement Premium</h2>
+        <p>L'offre Premium est proposée à 2,50 € par mois ou 25 € par an. L'abonnement est sans engagement et résiliable à tout moment depuis la page Abonnement &amp; facturation ; la résiliation prend effet à la fin de la période en cours. Conformément au droit de la consommation, l'utilisateur dispose d'un droit de rétractation de 14 jours.</p>
+        <h2>Données personnelles (RGPD)</h2>
+        <p>Les données collectées (identifiants de plateformes, historique de jeu, interactions sociales) sont utilisées exclusivement pour fournir le service et, avec votre consentement, alimenter les recommandations. Vous disposez d'un droit d'accès, de rectification, de portabilité et d'effacement, exerçable à l'adresse privacy@playbond.app. Aucune donnée n'est vendue à des tiers.</p>
+        <h2>Cookies</h2>
+        <p>Playbond n'utilise que des cookies strictement nécessaires au fonctionnement du service (session, préférences d'affichage). Aucun cookie publicitaire n'est déposé.</p>
+      </div>
+    </section>
+
+  </div>
+
+</div>
+
+<!-- ====================== DRAWER NOTIFICATIONS (droite) ====================== -->
+<div class="ndrawer-veil" id="ndrawer-veil"></div>
+<aside class="ndrawer" id="ndrawer" role="dialog" aria-label="Notifications et activité">
+  <div class="ndrawer-head">
+    <h2>Notifications</h2>
+    <button class="icon-btn" id="ndrawer-close" aria-label="Fermer" style="width:34px;height:34px"><svg width="15" height="15" style="transform:rotate(180deg)"><use href="#i-arrow"/></svg></button>
+  </div>
+  <div class="tabs">
+    <button class="tab is-active" data-ntab="notifs">Notifications</button>
+    <button class="tab" data-ntab="activity">Activité des amis</button>
+  </div>
+  <div class="ndrawer-body">
+    <div id="ndrawer-notifs" style="display:flex;flex-direction:column;gap:11px"></div>
+    <div id="ndrawer-activity" style="display:none;flex-direction:column;gap:11px"></div>
+  </div>
+</aside>
+
+<!-- ====================== MODAL : Nouvelle liste ====================== -->
+<div class="modal" id="modal-list" role="dialog" aria-label="Créer ou renommer une liste">
+  <h3 id="list-modal-title">Nouvelle liste</h3>
+  <div class="f-label">Nom de la liste</div>
+  <input type="text" id="list-name" placeholder="Ex. Pépites indé, À faire en 2026…" maxlength="30">
+  <div class="f-label">Visibilité</div>
+  <div class="row-line" style="border:none;padding:2px 0 4px"><div class="grow"><div style="font-size:13.5px">Liste publique</div><div class="s">Visible et suivable par toute la communauté.</div></div><label class="switch"><input type="checkbox" id="list-public"><i></i></label></div>
+  <div class="f-label">Couleur</div>
+  <div class="color-row" id="list-colors">
+    <button class="color-dot is-active" data-c="#29A9CF" style="background:#29A9CF"></button>
+    <button class="color-dot" data-c="#FFC56D" style="background:#FFC56D"></button>
+    <button class="color-dot" data-c="#4FE0A3" style="background:#4FE0A3"></button>
+    <button class="color-dot" data-c="#FF6CA8" style="background:#FF6CA8"></button>
+    <button class="color-dot" data-c="#B96CFF" style="background:#B96CFF"></button>
+  </div>
+  <div class="modal-foot">
+    <button class="btn-ghost" id="list-cancel">Annuler</button>
+    <button class="btn-primary" id="list-confirm" disabled>Enregistrer</button>
+  </div>
+</div>
+
+<!-- ====================== MODAL : Ajouter des jeux à une liste ====================== -->
+<div class="modal" id="modal-pick" role="dialog" aria-label="Ajouter des jeux à la liste">
+  <h3 id="pick-title">Ajouter des jeux</h3>
+  <div class="f-label">Rechercher</div>
+  <input type="text" id="pick-search" placeholder="Filtrer le catalogue…">
+  <div class="pick-list" id="pick-list"></div>
+  <div class="modal-foot"><button class="btn-primary" id="pick-done">Terminé</button></div>
+</div>
+
+<!-- ====================== MENU PROFIL ====================== -->
+<div class="menu-veil" id="menu-veil"></div>
+<div class="profile-menu" id="profile-menu" role="menu" aria-label="Menu du compte">
+  <div class="pm-head">
+    <div class="avatar my-avatar" style="background:var(--grad-brand)">AN</div>
+    <div class="me-info">
+      <div class="me-name">Antoine</div>
+      <div class="me-tag">antoine@mail.com</div>
+    </div>
+  </div>
+  <button class="pm-item" data-action="profile"><svg width="17" height="17"><use href="#i-user"/></svg>Voir mon profil</button>
+  <button class="pm-item" data-action="customize"><svg width="17" height="17"><use href="#i-spark"/></svg>Personnaliser le profil<span class="badge-premium" id="pm-customize-badge"><svg width="9" height="9"><use href="#i-star"/></svg>Premium</span></button>
+  <button class="pm-item" data-action="billing"><svg width="17" height="17"><use href="#i-card"/></svg>Abonnement &amp; facturation<span class="badge-premium"><svg width="9" height="9"><use href="#i-star"/></svg>Gratuit</span></button>
+  <button class="pm-item" data-action="settings"><svg width="17" height="17"><use href="#i-gear"/></svg>Réglages du compte</button>
+  <div class="pm-sep"></div>
+  <button class="pm-item danger" data-action="logout"><svg width="17" height="17"><use href="#i-out"/></svg>Se déconnecter</button>
+</div>
+
+<!-- ====================== BOTTOM NAV (mobile) ====================== -->
+<nav class="bottom-nav" aria-label="Navigation mobile">
+  <button class="bnav-item" data-nav="library"><svg width="21" height="21"><use href="#i-lib"/></svg>Bibliothèque</button>
+  <button class="bnav-item" data-nav="feed"><svg width="21" height="21"><use href="#i-feed"/></svg>Feed</button>
+  <button class="bnav-item" data-nav="discover"><svg width="21" height="21"><use href="#i-discover"/></svg>Découverte</button>
+  <button class="bnav-item" data-nav="stats"><svg width="21" height="21"><use href="#i-stats"/></svg>Stats</button>
+  <button class="bnav-item" id="btn-me-mobile"><span class="bnav-avatar my-avatar" style="background:var(--grad-brand)">AN</span>Profil</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<!-- ====================== MODAL : Ajouter un jeu ====================== -->
+<div class="modal-veil" id="modal-veil"></div>
+<div class="modal" id="modal-add" role="dialog" aria-label="Ajouter un jeu manuellement">
+  <h3>Ajouter un jeu</h3>
+  <div class="f-label">Titre du jeu</div>
+  <input type="text" id="add-title" placeholder="Commencez à taper… ex. Outer Wilds" maxlength="60" autocomplete="off">
+  <div class="pick-list" id="add-suggest" style="max-height:26vh"></div>
+  <div class="f-label">Plateforme</div>
+  <div class="chip-row" id="add-platform">
+    <button class="chip is-active" data-p="pc"><svg width="14" height="14"><use href="#i-pc"/></svg>PC</button>
+    <button class="chip" data-p="ps"><svg width="14" height="14"><use href="#i-ps"/></svg>PlayStation</button>
+    <button class="chip" data-p="xbox"><svg width="14" height="14"><use href="#i-xbox"/></svg>Xbox</button>
+  </div>
+  <div class="f-label">Statut</div>
+  <div class="chip-row" id="add-status">
+    <button class="chip is-active" data-s="backlog">Backlog</button>
+    <button class="chip" data-s="playing">En cours</button>
+    <button class="chip" data-s="done">Terminé</button>
+  </div>
+  <div class="modal-foot">
+    <button class="btn-ghost" id="add-cancel">Annuler</button>
+    <button class="btn-primary" id="add-confirm" disabled>Ajouter à ma bibliothèque</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   PLAYBOND v4 — données
+   ============================================================ */
+const CATALOG = [
+  { id:"elden",   owned:true, title:"Elden Ring",          platform:"ps",   hue:200, status:"playing", genre:"Action-RPG",   year:2022, hours:84, ach:"42 / 68",
+    community:4.8, votes:"31 240", friends:["Léa","Thomas","Mehdi","Nina"], myRating:0,
+    desc:"L'Entre-terre vous attend. Un monde ouvert signé FromSoftware et George R. R. Martin, où chaque colline cache un donjon, chaque donjon cache un boss, et chaque boss cache une leçon d'humilité. Explorez librement, mourez souvent, recommencez toujours.",
+    social:{type:"friends", names:["Léa","Thomas"], extra:2} },
+  { id:"hades2",  owned:true, title:"Hades II",            platform:"pc",   hue:355, status:"playing", genre:"Rogue-lite",   year:2024, hours:62, ach:"28 / 40",
+    community:4.7, votes:"18 904", friends:["Sarah"], myRating:5,
+    desc:"Incarnez Mélinoé, princesse des Enfers et sorcière de l'ombre, dans une croisade contre Chronos, le Titan du Temps. Supergiant reprend la formule du premier opus et l'enrichit : nouvelles armes, incantations, et toujours cette écriture qui rend chaque mort narrative.",
+    social:{type:"stars", rating:5, label:"Votre note"} },
+  { id:"bg3",     owned:true, title:"Baldur's Gate 3",     platform:"pc",   hue:265, status:"done",    genre:"RPG",          year:2023, hours:121, ach:"39 / 54",
+    community:4.9, votes:"45 112", friends:["Sarah","Léa","Thomas","Nina"], myRating:0,
+    desc:"Un parasite mental, un groupe de compagnons inoubliables et une liberté de choix vertigineuse. Le RPG de Larian transforme chaque partie en histoire unique — y compris celle où vous rechargez une sauvegarde pour sauver un PNJ croisé il y a quatre minutes.",
+    social:{type:"friends", names:["Sarah"], extra:3} },
+  { id:"gow",     owned:true, title:"God of War Ragnarök", platform:"ps",   hue:215, status:"done",    genre:"Action-aventure", year:2022, hours:43, ach:"31 / 36",
+    community:4.8, votes:"27 833", friends:["Mehdi"], myRating:4,
+    desc:"Kratos et Atreus affrontent la fin des mondes nordiques. Une suite spectaculaire qui équilibre combats viscéraux et moments d'intimité père-fils, portée par l'une des meilleures écritures du jeu AAA.",
+    social:{type:"stars", rating:4, label:"Votre note"} },
+  { id:"starfield",owned:true,title:"Starfield",           platform:"xbox", hue:35,  status:"backlog", genre:"RPG spatial",  year:2023, hours:0, ach:"0 / 50",
+    community:3.9, votes:"22 407", friends:["Mehdi"], myRating:0,
+    desc:"Mille planètes, une question : par où commencer ? L'épopée spatiale de Bethesda vous laisse construire vaisseaux et avant-postes dans un univers à explorer à votre rythme — idéalement avant la sortie du prochain Elder Scrolls.",
+    social:{type:"friends", names:["Mehdi"], extra:0} },
+  { id:"hollow",  owned:true, title:"Hollow Knight",       platform:"pc",   hue:150, status:"backlog", genre:"Metroidvania", year:2017, hours:3, ach:"4 / 63",
+    community:4.8, votes:"38 551", friends:["Léa","Nina","Sarah"], myRating:0,
+    desc:"Sous la bourgade de Dirtmouth s'étend Hallownest, royaume déchu d'insectes et de secrets. Un metroidvania dessiné à la main, exigeant et mélancolique, devenu un classique instantané. Votre backlog vous le rappellera.",
+    social:{type:"friends", names:["Léa","Nina"], extra:1} },
+  { id:"forza",   owned:true, title:"Forza Horizon 5",     platform:"xbox", hue:95,  status:"playing", genre:"Course",       year:2021, hours:37, ach:"22 / 88",
+    community:4.5, votes:"19 660", friends:["Thomas"], myRating:0,
+    desc:"Le Mexique en monde ouvert, des centaines de voitures et un festival permanent. Arcade quand vous voulez, simulation quand vous l'exigez : la course la plus accueillante du marché.",
+    social:{type:"stars", rating:4, label:"Note des amis"} },
+  { id:"ghost",   owned:true, title:"Ghost of Tsushima",   platform:"ps",   hue:18,  status:"done",    genre:"Action-aventure", year:2020, hours:58, ach:"52 / 52",
+    community:4.7, votes:"25 119", friends:["Thomas","Mehdi","Léa"], myRating:5,
+    desc:"Jin Sakai, samouraï devenu fantôme, défend Tsushima contre l'invasion mongole. Sublime de bout en bout — suivez le vent, il connaît le chemin. Platine décroché, le vent vous manque déjà.",
+    social:{type:"friends", names:["Thomas"], extra:2} },
+  { id:"cp2077",  owned:true, title:"Cyberpunk 2077",      platform:"pc",   hue:185, status:"playing", genre:"Action-RPG",   year:2020, hours:29, ach:"18 / 57",
+    community:4.4, votes:"30 002", friends:["Nina","Sarah"], myRating:0,
+    desc:"Night City, ses néons, ses corpos et ses choix qui collent à la peau. Ressuscité par ses mises à jour et l'extension Phantom Liberty, le RPG de CD Projekt est aujourd'hui celui qu'il aurait toujours dû être.",
+    social:{type:"stars", rating:5, label:"Note des amis"} },
+
+  { id:"deadcells", owned:false, title:"Dead Cells",   platform:"pc",   hue:130, genre:"Rogue-lite",    year:2018, community:4.6, votes:"21 480",
+    match:92, dtag:"similar", reason:"Parce que vous jouez à Hades II", friends:["Sarah"],
+    desc:"Un rogue-lite nerveux où mourir 400 fois est un choix de game design, pas un échec personnel. Exploration, builds improbables et combat au cordeau : la boucle parfaite entre deux runs d'Hades." },
+  { id:"balatro",  owned:false, title:"Balatro",       platform:"pc",   hue:260, genre:"Deckbuilder",   year:2024, community:4.8, votes:"16 332",
+    match:95, dtag:"trend", reason:"Tendance chez vos amis cette semaine", friends:["Sarah","Nina","Thomas"],
+    desc:"Du poker, des jokers, et la disparition inexpliquée de toutes vos soirées. Le deckbuilder phénomène qui transforme « juste une partie » en « il est 3 h du matin ». Vos amis sont déjà tombés dedans." },
+  { id:"liesofp",  owned:false, title:"Lies of P",     platform:"xbox", hue:210, genre:"Souls-like",    year:2023, community:4.4, votes:"12 057",
+    match:88, dtag:"similar", reason:"Similaire à Elden Ring, votre jeu le plus joué", friends:[],
+    desc:"Pinocchio avec une épée géante, dans un Krat ravagé par des pantins déments. Sérieusement l'un des meilleurs souls-like hors FromSoftware — la phrase la plus étrange de cette fiche, et pourtant vraie." },
+  { id:"silksong", owned:false, title:"Hollow Knight: Silksong", platform:"pc", hue:160, genre:"Metroidvania", year:2025, community:4.9, votes:"9 871",
+    match:90, dtag:"friends", reason:"Dans le backlog de 3 de vos amis", friends:["Léa","Nina","Sarah"],
+    desc:"Il existe vraiment. Hornet bondit, plane et coud ses ennemis dans Pharloom, royaume hanté de soie et de chants. La suite la plus attendue de la décennie tient ses promesses — fin d'une légende urbaine." },
+  { id:"witcher3", owned:false, title:"The Witcher 3", platform:"pc",   hue:30,  genre:"RPG",           year:2015, community:4.9, votes:"52 940",
+    match:93, dtag:"similar", reason:"Vous aimez les mondes ouverts narratifs", friends:["Thomas","Mehdi"],
+    desc:"Geralt de Riv traque sa fille adoptive à travers un continent en guerre. Des quêtes secondaires meilleures que la plupart des jeux entiers, et Gwent, une drogue parfaitement légale. Relancer « pour une quête ou deux » est un piège connu." },
+  { id:"sekiro",   owned:false, title:"Sekiro",        platform:"ps",   hue:5,   genre:"Action",        year:2019, community:4.7, votes:"24 615",
+    match:85, dtag:"similar", reason:"Parce que vous avez fini Ghost of Tsushima", friends:["Thomas"],
+    desc:"Un shinobi, un katana, et le verbe « parer » élevé au rang d'art martial. Le plus exigeant des FromSoftware, et peut-être le plus gratifiant une fois le déclic trouvé. Hésitation = défaite." },
+  { id:"stardew",  owned:false, title:"Stardew Valley",platform:"pc",   hue:115, genre:"Simulation",    year:2016, community:4.8, votes:"41 203",
+    match:80, dtag:"trend", reason:"Pour souffler entre deux boss", friends:["Nina"],
+    desc:"Héritez d'une ferme, plantez des navets, épousez quelqu'un, sauvez le centre communautaire. L'antidote parfait à votre bibliothèque de jeux punitifs — la sérénité a rarement été aussi addictive." },
+  { id:"returnal", owned:false, title:"Returnal",      platform:"ps",   hue:285, genre:"Rogue-lite",    year:2021, community:4.5, votes:"11 928",
+    match:87, dtag:"friends", reason:"Joué par Mehdi et Léa", friends:["Mehdi","Léa"],
+    desc:"Selene s'écrase sur Atropos. Encore. Et encore. Un rogue-lite de science-fiction hypnotique où chaque cycle révèle un fragment d'une histoire qui vous hante autant qu'elle la hante." },
+];
+const byId = id => CATALOG.find(g => g.id === id);
+
+const ME = "Antoine";
+const USERS = {
+  "Antoine"        :{ init:"AN", handle:"@antoine",   g:"var(--grad-brand)", level:42, since:"mars 2026", followers:31, following:5,
+                   bio:"Centralise 128 jeux, en finit 4 par an. Le backlog est un mode de vie." },
+  "Thomas"      :{ init:"TH", handle:"@thomas_lvl99", g:"linear-gradient(135deg,#FF7A59,#C0392B)", level:67, since:"janv. 2026", followers:204, following:88,
+                   bio:"Souls-like only. 165 h sur Elden Ring et fier de chaque mort." },
+  "Sarah"       :{ init:"SA", handle:"@sarahplays",   g:"linear-gradient(135deg,#4FE0A3,#1F8F6B)", level:51, since:"févr. 2026", followers:156, following:120,
+                   bio:"Rogue-lite, deckbuilders et backlogs assumés. Une run de plus, promis." },
+  "Léa"         :{ init:"LÉ", handle:"@lea_ng",       g:"linear-gradient(135deg,#29A9CF,#006181)", level:58, since:"janv. 2026", followers:312, following:97,
+                   bio:"Critique tout ce qui dépasse 80 h. RPG narratifs, mon royaume pour un bon PNJ." },
+  "Mehdi"       :{ init:"ME", handle:"@mehdi_platine",g:"linear-gradient(135deg,#FFC56D,#C77B22)", level:73, since:"déc. 2025", followers:421, following:64,
+                   bio:"23 platines et ça continue. Le 100 % n'est pas une option, c'est un devoir." },
+  "Nina"        :{ init:"NI", handle:"@nina_corpo",   g:"linear-gradient(135deg,#5EB9FF,#2A5BC0)", level:39, since:"avr. 2026", followers:89, following:143,
+                   bio:"Toujours 4 ans en retard sur les sorties, jamais en retard sur les avis." },
+  "MarioDellor" :{ init:"MD", handle:"@mariodellor",  g:"linear-gradient(135deg,#B96CFF,#6C2ABF)", level:81, since:"nov. 2025", followers:1840, following:212,
+                   bio:"Je meurs dans des rogue-lite pour que vous n'ayez pas à le faire. Avis garantis sans spoiler." },
+  "PixelMarie"  :{ init:"PM", handle:"@pixelmarie",   g:"linear-gradient(135deg,#FF6CA8,#B0246B)", level:64, since:"oct. 2025", followers:2305, following:180,
+                   bio:"Pixel art, deckbuilders et nuits blanches involontaires." },
+  "SoulsVet"    :{ init:"SV", handle:"@souls_veteran",g:"linear-gradient(135deg,#9AA7B8,#4A5568)", level:90, since:"sept. 2025", followers:3120, following:45,
+                   bio:"Git gud, mais avec bienveillance. Vétéran de tous les FromSoftware." },
+};
+
+let LISTS = [
+  { id:"backlog", name:"Backlog",    color:"#FFC56D", smart:"backlog" },
+  { id:"done",    name:"Jeux finis", color:"#29A9CF", smart:"done" },
+  { id:"coop",    name:"Coop locale",color:"#4FE0A3", ids:["forza","bg3"] },
+];
+
+const REVIEWS = {
+  elden:    [ {who:"Thomas", rating:5, when:"il y a 12 min", ts:100, likes:24, text:"165 heures. La Lande Maudite m'a brisé, puis reconstruit. Je ne sais pas qui je suis sans ce jeu maintenant."},
+              {who:"SoulsVet", rating:5, when:"il y a 3 j", ts:60, likes:87, text:"Le monde ouvert qui a redéfini le genre. Chaque catacombe oubliée vaut le détour — et la mort qui va avec."},
+              {who:"Nina", rating:3, when:"il y a 1 sem", ts:40, likes:12, text:"Magnifique mais impitoyable. J'aurais aimé une boussole morale… et une boussole tout court."} ],
+  hades2:   [ {who:"Sarah", rating:5, when:"il y a 41 min", ts:99, likes:11, text:"Le premier m'a volé 80 h de ma vie, donc évidemment je signe pour la suite."},
+              {who:"PixelMarie", rating:4, when:"il y a 1 sem", ts:42, likes:64, text:"Mélinoé est une protagoniste fantastique et la lune est ma nouvelle meilleure amie. Encore une run et j'arrête. Promis."} ],
+  bg3:      [ {who:"Léa", rating:5, when:"il y a 2 h", ts:95, likes:38, text:"120 heures et pas une de trop. Le seul jeu où j'ai rechargé une sauvegarde pour sauver un PNJ que je connaissais depuis 4 minutes."},
+              {who:"MarioDellor", rating:5, when:"il y a 4 j", ts:55, likes:121, text:"J'ai lancé les dés. Échec critique. J'ai adoré chaque seconde des conséquences."},
+              {who:"Thomas", rating:4, when:"il y a 2 sem", ts:30, likes:19, text:"Brillant, même si mon groupe a explosé au camp pour une histoire de fromage volé. 10/10 pour le réalisme social."} ],
+  ghost:    [ {who:"Mehdi", rating:5, when:"il y a 5 h", ts:90, likes:29, text:"Platine n°23. Le vent me manque déjà."},
+              {who:"Thomas", rating:4, when:"il y a 2 sem", ts:28, likes:33, text:"Les duels au sabre sous les feuilles d'érable : le jeu le plus photogénique de la PS4, facile."} ],
+  balatro:  [ {who:"PixelMarie", rating:5, when:"il y a 6 h", ts:88, likes:317, text:"Je voulais juste « tester 10 minutes ». Il est 3 h du matin. Envoyez de l'aide. Et des jokers holographiques."},
+              {who:"Nina", rating:5, when:"il y a 2 j", ts:70, likes:96, text:"Le seul jeu de cartes qui m'a fait crier de joie pour une quinte flush. Mon historique Steam est compromis."} ],
+  deadcells:[ {who:"MarioDellor", rating:4, when:"il y a 3 h", ts:92, likes:142, text:"Le seul jeu où mourir 400 fois est un choix de game design et pas un échec personnel. Mon thérapeute n'est pas d'accord."},
+              {who:"Sarah", rating:5, when:"il y a 1 sem", ts:45, likes:51, text:"Le feeling de combat parfait. On y revient comme on revient à un bon café."} ],
+  liesofp:  [ {who:"SoulsVet", rating:4, when:"il y a 9 h", ts:85, likes:96, text:"Pinocchio avec une épée géante, et c'est sérieusement l'un des meilleurs souls-like hors FromSoftware."} ],
+  silksong: [ {who:"Nina", rating:5, when:"il y a 12 h", ts:83, likes:208, text:"Il existe vraiment. Je l'ai installé. Je l'ai vu de mes yeux. Fin d'une légende urbaine."} ],
+  witcher3: [ {who:"Thomas", rating:5, when:"il y a 1 j", ts:78, likes:184, text:"Relancé « pour une quête ou deux ». J'ai re-perdu 60 h et je ne regrette rien. Gwent est une drogue légale."} ],
+};
+const GENERIC_REVIEWS = [
+  {who:"MarioDellor", rating:4, when:"il y a 2 j", ts:65, likes:34, text:"Exactement ce que la fiche promettait, et un peu plus. Mon backlog ne me remercie pas."},
+  {who:"PixelMarie",  rating:4, when:"il y a 5 j", ts:50, likes:21, text:"Lancé un soir « pour voir ». La suite de l'histoire est prévisible et je l'assume entièrement."},
+];
+function getReviews(id){
+  if(!REVIEWS[id]) REVIEWS[id] = GENERIC_REVIEWS.map(r => ({...r}));
+  return REVIEWS[id];
+}
+
+const NOTIFS = [
+  { who:"Thomas", unread:true,  text:`<b>Thomas</b> a aimé votre critique de <span class="hl">Ghost of Tsushima</span>`, time:"il y a 8 min" },
+  { who:"Léa",    unread:true,  text:`<b>Léa</b> a commenté votre avis sur <span class="hl">Hades II</span> : « Totalement d'accord pour la lune »`, time:"il y a 26 min" },
+  { who:"Sarah",  unread:true,  text:`<b>Sarah</b> a commencé à vous suivre`, time:"il y a 1 h" },
+  { who:"Mehdi",  unread:false, text:`<b>Mehdi</b> a ajouté votre liste <span class="hl">Coop locale</span> à ses favoris`, time:"hier · 22:10" },
+  { who:"Nina",   unread:false, text:`<b>Nina</b> vous a mentionné dans un commentaire sur <span class="hl">Cyberpunk 2077</span>`, time:"hier · 18:44" },
+];
+
+const FRIEND_POSTS = [
+  { who:"Thomas", when:"12 min", rating:5, gameId:"elden",
+    action:{kind:"done", label:"A TERMINÉ"}, gsub:"PlayStation · 165 h",
+    text:`165 heures. La Lande Maudite m'a brisé, puis reconstruit. Je ne sais pas qui je suis sans ce jeu maintenant.`,
+    likes:24, comments:7, reposts:3 },
+  { who:"Sarah", when:"41 min", gameId:"hades2",
+    action:{kind:"backlog", label:"AJOUTÉ AU BACKLOG"}, gsub:"PC · Accès anticipé",
+    text:`Le premier m'a volé 80 h de ma vie, donc évidemment je signe pour la suite. Rendez-vous dans 6 mois quand je l'aurai enfin lancé 😅`,
+    likes:11, comments:4, reposts:1 },
+  { who:"Léa", when:"2 h", rating:5, gameId:"bg3",
+    action:{kind:"done", label:"CRITIQUE PUBLIÉE"}, gsub:"PC · 120 h",
+    text:`120 heures et pas une de trop. Le seul jeu où j'ai rechargé une sauvegarde pour sauver un PNJ que je connaissais depuis 4 minutes.`,
+    likes:38, comments:12, reposts:9 },
+  { who:"Mehdi", when:"5 h", gameId:"ghost",
+    action:{kind:"done", label:"TROPHÉE PLATINE"}, gsub:"PlayStation · 100 %",
+    text:`Platine n°23. Le vent me manque déjà.`,
+    likes:29, comments:5, reposts:2 },
+  { who:"Nina", when:"hier", gameId:"cp2077",
+    action:{kind:"playing", label:"A COMMENCÉ"}, gsub:"PC",
+    text:`Quatre ans après tout le monde, je débarque enfin à Night City. Ne me spoilez RIEN.`,
+    likes:9, comments:6, reposts:0 },
+];
+const RECO_POSTS = [
+  { who:"MarioDellor", when:"3 h", rating:4, reco:"Parce que vous jouez à Hades II", gameId:"deadcells", gsub:"PC · Rogue-lite",
+    text:`Le seul jeu où mourir 400 fois est un choix de game design et pas un échec personnel. Mon thérapeute n'est pas d'accord.`,
+    likes:142, comments:31, reposts:18 },
+  { who:"PixelMarie", when:"6 h", rating:5, reco:"Tendance chez vos amis cette semaine", gameId:"balatro", gsub:"PC · Deckbuilder",
+    text:`Je voulais juste « tester 10 minutes ». Il est 3 h du matin. Envoyez de l'aide. Et des jokers holographiques.`,
+    likes:317, comments:54, reposts:42 },
+  { who:"SoulsVet", when:"9 h", rating:4, reco:"Similaire à Elden Ring, votre jeu le plus joué", gameId:"liesofp", gsub:"Xbox · Souls-like",
+    text:`Pinocchio avec une épée géante, et c'est sérieusement l'un des meilleurs souls-like hors FromSoftware. La phrase la plus étrange que j'écrirai cette année.`,
+    likes:96, comments:22, reposts:11 },
+  { who:"Nina", when:"12 h", reco:"Dans le backlog de 3 de vos amis", gameId:"silksong", gsub:"PC · Metroidvania",
+    action:{kind:"backlog", label:"AJOUTÉ AU BACKLOG"},
+    text:`Il existe vraiment. Je l'ai installé. Je l'ai vu de mes yeux. Fin d'une légende urbaine.`,
+    likes:208, comments:67, reposts:35 },
+  { who:"Thomas", when:"1 j", rating:5, reco:"Vous aimez les mondes ouverts narratifs", gameId:"witcher3", gsub:"PC · RPG",
+    text:`Relancé « pour une quête ou deux ». J'ai re-perdu 60 h et je ne regrette rien. Gwent est une drogue légale.`,
+    likes:184, comments:28, reposts:21 },
+];
+const MINI_EVENTS = [
+  { who:"Thomas", text:`<b>Thomas</b> a terminé <span class="hl">Elden Ring</span> et a noté ${stars(5)}`, time:"il y a 12 min", likes:24, c:7 },
+  { who:"Sarah",  text:`<b>Sarah</b> vient d'ajouter <span class="hl">Hades II</span> à son backlog`, time:"il y a 41 min", likes:11, c:4 },
+  { who:"Léa",    text:`<b>Léa</b> a publié une critique de <span class="hl">Baldur's Gate 3</span>`, time:"il y a 2 h", likes:38, c:12 },
+  { who:"Mehdi",  text:`<b>Mehdi</b> a décroché le platine sur <span class="hl">Ghost of Tsushima</span>`, time:"il y a 5 h", likes:29, c:5 },
+];
+const ACTIVITY_FULL = MINI_EVENTS.concat([
+  { who:"Nina",   text:`<b>Nina</b> a commencé <span class="hl">Cyberpunk 2077</span> sur PC`, time:"hier · 21:34", likes:9, c:6 },
+  { who:"Thomas", text:`<b>Thomas</b> suit désormais votre liste <span class="hl">Coop locale</span>`, time:"hier · 18:02", likes:2, c:0 },
+]);
+
+const PLATFORM_ICON = { pc:"#i-pc", ps:"#i-ps", xbox:"#i-xbox" };
+const PLATFORM_NAME = { pc:"PC", ps:"PlayStation", xbox:"Xbox" };
+const STATUS_LABEL  = { playing:"EN COURS", done:"TERMINÉ", backlog:"BACKLOG" };
+
+/* Graphes d'abonnements (prototype) */
+const FOLLOWS = {
+  "Antoine"        :{ followers:["Thomas","Sarah","Léa","Mehdi","Nina"], following:["Thomas","Sarah","Léa","Mehdi","Nina"] },
+  "Thomas"      :{ followers:["Antoine","Mehdi","SoulsVet","Léa"],        following:["Antoine","SoulsVet","Mehdi"] },
+  "Sarah"       :{ followers:["Antoine","Nina","PixelMarie"],             following:["Antoine","PixelMarie","Nina","Léa"] },
+  "Léa"         :{ followers:["Antoine","Thomas","Sarah","Nina"],         following:["Antoine","MarioDellor"] },
+  "Mehdi"       :{ followers:["Antoine","Thomas"],                        following:["Antoine","Thomas","SoulsVet"] },
+  "Nina"        :{ followers:["Antoine","Sarah"],                         following:["Antoine","Sarah","Léa","PixelMarie"] },
+  "MarioDellor" :{ followers:["Léa","PixelMarie","SoulsVet"],          following:["PixelMarie"] },
+  "PixelMarie"  :{ followers:["Sarah","Nina","MarioDellor"],           following:["MarioDellor","SoulsVet"] },
+  "SoulsVet"    :{ followers:["Thomas","Mehdi","PixelMarie"],          following:["Thomas"] },
+};
+/* ============================================================
+   V7 — état global, abonnement, personnalisation
+   ============================================================ */
+const STATE = {
+  premium:false, plan:null,                       // "monthly" | "annual"
+  platforms:{ pc:true, ps:false, xbox:false },    // gratuit : 1 seule plateforme
+  onboardingDone:false,
+};
+USERS[ME].photo  = null;   // dataURL après upload
+USERS[ME].banner = null;   // dataURL après upload (Premium)
+USERS[ME].badges = [];     // ids de BADGE_DEFS (Premium)
+/* compteurs pour la comparaison de stats */
+Object.assign(USERS["Antoine"], { plat:3 });
+Object.assign(USERS["Thomas"],  { plat:9 });
+Object.assign(USERS["Sarah"],   { plat:5 });
+Object.assign(USERS["Léa"],     { plat:7 });
+Object.assign(USERS["Mehdi"],   { plat:23 });
+Object.assign(USERS["Nina"],    { plat:2 });
+Object.assign(USERS["MarioDellor"], { plat:14 });
+Object.assign(USERS["PixelMarie"],  { plat:11 });
+Object.assign(USERS["SoulsVet"],    { plat:19 });
+
+const BADGE_DEFS = [
+  { id:"platine",  icon:"🏆", name:"Premier platine" },
+  { id:"cent",     icon:"💯", name:"100 jeux" },
+  { id:"critique", icon:"✍️", name:"Critique populaire" },
+  { id:"early",    icon:"🚀", name:"Early adopter" },
+  { id:"marathon", icon:"⏱️", name:"Marathonien" },
+  { id:"social",   icon:"🦋", name:"Papillon social" },
+];
+
+/* Listes : visibilité publique */
+LISTS.forEach(l => l.pub = false);
+
+/* Listes publiques de la communauté */
+const COMMUNITY_LISTS = [
+  { id:"cl1", name:"Les meilleurs metroidvania",     by:"Léa",      color:"#29A9CF", ids:["hollow","silksong","deadcells"],          followers:128 },
+  { id:"cl2", name:"Souls-like pour bien souffrir",  by:"SoulsVet", color:"#9AA7B8", ids:["elden","liesofp","sekiro"],               followers:342 },
+  { id:"cl3", name:"Cosy entre deux boss",           by:"Nina",     color:"#4FE0A3", ids:["stardew","balatro"],                      followers:96 },
+  { id:"cl4", name:"Mondes ouverts qui valent 100 h",by:"Thomas",   color:"#FF7A59", ids:["witcher3","elden","cp2077","ghost"],      followers:215 },
+];
+const followedCLists = {};
+const clById = id => COMMUNITY_LISTS.find(c => c.id === id);
+
+/* Identifiants + commentaires des publications */
+FRIEND_POSTS.forEach((p,i) => p.pid = "f"+i);
+RECO_POSTS.forEach((p,i)   => p.pid = "r"+i);
+const COMMENTS = {
+  f0: [ { who:"Léa",      when:"il y a 8 min",  text:"La Lande Maudite nous a tous eus. Bienvenue au club des reconstruits." },
+        { who:"SoulsVet", when:"il y a 5 min",  text:"165 h c'est un échauffement. On en reparle au NG+7." } ],
+  f2: [ { who:"Sarah",    when:"il y a 1 h",    text:"Le PNJ de 4 minutes, je sais EXACTEMENT duquel tu parles 😭" },
+        { who:"Thomas",   when:"il y a 40 min", text:"Critique validée. Acte 3 meilleur dénouement du genre." } ],
+  f3: [ { who:"Antoine",  when:"il y a 2 h",    text:"GG pour le platine ! Le mien m'a pris 58 h, le vent me manque aussi." } ],
+  r0: [ { who:"PixelMarie", when:"il y a 2 h",  text:"Le thérapeute a tort. 400 morts = 400 leçons." } ],
+  r1: [ { who:"Nina",     when:"il y a 4 h",    text:"Même histoire. Jokers holographiques envoyés, tiens bon." },
+        { who:"Mehdi",    when:"il y a 3 h",    text:"On dit tous « 10 minutes ». Personne ne ressort en 10 minutes." } ],
+  r3: [ { who:"Léa",      when:"il y a 10 h",   text:"J'y croirai quand je l'aurai fini. Donc jamais, vu mon backlog." } ],
+};
+const getComments = pid => (COMMENTS[pid] ||= []);
+
+/* Journal de jeu (entrées par défaut générées si absentes) */
+const JOURNAL = {
+  elden:  [ { c:"#4FE0A3", t:"Session de 2 h 10 — Donjon de la Lande", when:"hier · 22:40" },
+            { c:"#29A9CF", t:"Boss vaincu : Margit le Déchu (enfin)",   when:"il y a 4 j" },
+            { c:"#FFC56D", t:"Commencé",                                 when:"12 mars 2026" } ],
+  ghost:  [ { c:"#29A9CF", t:"Terminé — 100 % · platine décroché",       when:"2 juin 2026" },
+            { c:"#FFC56D", t:"Commencé",                                 when:"3 mai 2026" } ],
+  hades2: [ { c:"#4FE0A3", t:"Run n°61 — défaite face à Chronos",        when:"ce matin · 00:45" },
+            { c:"#FFC56D", t:"Commencé",                                 when:"28 avril 2026" } ],
+};
+
+/* Suggestions pour l'ajout manuel (catalogue connu de Playbond) */
+const EXTRA_GAMES = [
+  { title:"Outer Wilds",            platform:"pc",   genre:"Exploration",  hue:42 },
+  { title:"It Takes Two",           platform:"ps",   genre:"Coop",         hue:12 },
+  { title:"Celeste",                platform:"pc",   genre:"Plateforme",   hue:320 },
+  { title:"Disco Elysium",          platform:"pc",   genre:"RPG",          hue:28 },
+  { title:"Doom Eternal",           platform:"xbox", genre:"FPS",          hue:0 },
+  { title:"Red Dead Redemption 2",  platform:"ps",   genre:"Monde ouvert", hue:20 },
+  { title:"Rocket League",          platform:"pc",   genre:"Sport",        hue:205 },
+  { title:"Slay the Spire",         platform:"pc",   genre:"Deckbuilder",  hue:268 },
+  { title:"Terraria",               platform:"pc",   genre:"Sandbox",      hue:110 },
+  { title:"Persona 5 Royal",        platform:"ps",   genre:"JRPG",         hue:350 },
+  { title:"Resident Evil 4",        platform:"ps",   genre:"Horreur",      hue:38 },
+  { title:"Marvel's Spider-Man 2",  platform:"ps",   genre:"Action",       hue:355 },
+  { title:"Halo Infinite",          platform:"xbox", genre:"FPS",          hue:160 },
+  { title:"Horizon Forbidden West", platform:"ps",   genre:"Action-RPG",   hue:188 },
+  { title:"Bloodborne",             platform:"ps",   genre:"Souls-like",   hue:230 },
+  { title:"Factorio",               platform:"pc",   genre:"Gestion",      hue:32 },
+  { title:"Vampire Survivors",      platform:"pc",   genre:"Rogue-lite",   hue:280 },
+  { title:"Minecraft",              platform:"pc",   genre:"Sandbox",      hue:100 },
+];
+
+/* Défis entre amis */
+const CHALLENGES = [];
+
+
+/* ============================================================
+   Helpers de rendu
+   ------------------------------------------------------------
+   IMAGES : chaque visuel de jeu tente de charger
+   images/games/{id}.jpg  (dossier à côté de ce fichier HTML).
+   Déposez vos jaquettes sous ce nom (ex. images/games/elden.jpg)
+   et elles remplaceront automatiquement le dégradé génératif —
+   quelle que soit la version du prototype.
+   ============================================================ */
+const GAME_IMG = id => `images/games/${id}.jpg`;
+const coverImg = id => `<img class="cover-img" loading="lazy" src="${GAME_IMG(id)}" alt="" onerror="this.remove()">`;
+
+function stars(n, size=10){
+  let s = `<span class="mini-stars">`;
+  for(let i=0;i<5;i++) s += `<svg width="${size}" height="${size}" style="${i<n?'':'opacity:.22'}"><use href="#i-star"/></svg>`;
+  return s + `</span>`;
+}
+function avatar(name, cls="avatar"){
+  const u = USERS[name];
+  const bg = u.photo ? `url(${u.photo}) center/cover` : u.g;
+  return `<div class="${cls}" data-user="${name}" style="background:${bg}" title="Voir le profil de ${name}">${u.photo ? "" : u.init}</div>`;
+}
+function refreshMyAvatars(){
+  const u = USERS[ME];
+  document.querySelectorAll(".my-avatar").forEach(el => {
+    el.style.background = u.photo ? `url(${u.photo}) center/cover` : "var(--grad-brand)";
+    el.textContent = u.photo ? "" : u.init;
+  });
+}
+function coverStyle(hue){
+  return `background:radial-gradient(140% 90% at 75% 105%, hsl(${hue} 70% 30% / .9), transparent 60%),linear-gradient(165deg, hsl(${hue} 50% 22%), hsl(${(hue+45)%360} 55% 9%))`;
+}
+function cardHTML(g, i){
+  let social = "";
+  if(g.social?.type === "friends"){
+    const stack = g.social.names.map(n => avatar(n,"avatar sm")).join("");
+    const extra = g.social.extra > 0 ? ` et ${g.social.extra} ami${g.social.extra>1?"s":""}` : "";
+    social = `<div class="stack">${stack}</div><span class="who">Joué par ${g.social.names.join(", ")}${extra}</span>`;
+  } else if(g.social?.type === "stars"){
+    social = `<span class="stars">${stars(g.social.rating, 11)}</span><span class="who">${g.social.label}</span>`;
+  } else {
+    social = `<span class="who">${g.genre} · ${PLATFORM_NAME[g.platform]}</span>`;
+  }
+  return `
+  <article class="card" data-open="${g.id}" style="animation:cardIn .4s ${i*0.04}s backwards">
+    <div class="cover" style="${coverStyle(g.hue)}">
+      ${coverImg(g.id)}
+      <span class="cover-letter">${g.title[0]}</span>
+      ${g.status ? `<span class="tag" data-status="${g.status}">${STATUS_LABEL[g.status]}</span>` : ""}
+      <span class="platform-ic"><svg width="15" height="15"><use href="${PLATFORM_ICON[g.platform]}"/></svg></span>
+    </div>
+    <div class="card-info">
+      <h3 class="card-title">${g.title}</h3>
+      <div class="card-social">${social}</div>
+    </div>
+  </article>`;
+}
+function discCardHTML(g, i){
+  const stack = g.friends.slice(0,3).map(n => avatar(n,"avatar sm")).join("");
+  const who = g.friends.length
+    ? `<div class="stack">${stack}</div><span class="who">Joué par ${g.friends.slice(0,2).join(", ")}${g.friends.length>2?` et ${g.friends.length-2} ami${g.friends.length>3?"s":""}`:""}</span>`
+    : `<span class="stars">${stars(Math.round(g.community), 11)}</span><span class="who">${g.community.toFixed(1)} · communauté</span>`;
+  return `
+  <article class="card" data-open="${g.id}" style="animation:cardIn .4s ${i*0.04}s backwards">
+    <div class="cover" style="${coverStyle(g.hue)}">
+      ${coverImg(g.id)}
+      <span class="cover-letter">${g.title[0]}</span>
+      <span class="match-badge">${g.match} %</span>
+      <span class="platform-ic"><svg width="15" height="15"><use href="${PLATFORM_ICON[g.platform]}"/></svg></span>
+    </div>
+    <div class="card-info">
+      <div class="reason-line"><svg width="10" height="10"><use href="#i-spark"/></svg>${g.reason}</div>
+      <h3 class="card-title">${g.title}</h3>
+      <div class="card-social">${who}</div>
+    </div>
+  </article>`;
+}
+function postHTML(p, i=0, inThread=false){
+  const u = USERS[p.who];
+  const game = p.gameId ? byId(p.gameId) : null;
+  return `
+  <article class="post" ${inThread ? "" : `data-post="${p.pid}"`} style="animation-delay:${i*0.05}s;${inThread?"":"cursor:pointer"}">
+    ${avatar(p.who)}
+    <div class="post-body">
+      ${p.reco ? `<div class="post-reco"><svg width="11" height="11"><use href="#i-spark"/></svg>${p.reco}</div>` : ""}
+      <div class="post-meta">
+        <span data-user="${p.who}"><span class="name">${p.who === ME ? "Vous" : p.who}</span> <span class="handle">${u.handle}</span></span>
+        <span class="when">· ${p.when}</span>
+        ${p.rating ? stars(p.rating, 11) : ""}
+      </div>
+      ${p.action ? `<span class="post-action-label" data-kind="${p.action.kind}">${p.action.label}</span>` : ""}
+      <p class="post-text">${p.text}</p>
+      ${game ? `
+      <div class="post-game" data-open="${game.id}" role="button" tabindex="0">
+        <div class="mini-cover" style="${coverStyle(game.hue)};position:relative;overflow:hidden">${coverImg(game.id)}${game.title[0]}</div>
+        <div class="post-game-info">
+          <div class="g-title">${game.title}</div>
+          <div class="g-sub">${p.gsub || game.genre}</div>
+        </div>
+        <svg class="chev" width="15" height="15"><use href="#i-chev"/></svg>
+      </div>` : ""}
+      <div class="post-actions">
+        <button class="react like" data-likes="${p.likes}" aria-label="J'aime"><svg width="15" height="15"><use href="#i-heart"/></svg><span>${p.likes}</span></button>
+        <button class="react js-open-comments" data-post="${p.pid}" aria-label="Commentaires"><svg width="15" height="15"><use href="#i-chat"/></svg><span>${getComments(p.pid).length || p.comments}</span></button>
+        <span class="react"><svg width="15" height="15"><use href="#i-repost"/></svg><span>${p.reposts}</span></span>
+      </div>
+    </div>
+  </article>`;
+}
+function eventHTML(e){
+  return `
+  <article class="event">
+    ${avatar(e.who)}
+    <div class="event-body">
+      <p class="event-text">${e.text}</p>
+      <div class="event-time">${e.time}</div>
+      <div class="event-actions">
+        <button class="react like" data-likes="${e.likes}" aria-label="J'aime"><svg width="14" height="14"><use href="#i-heart"/></svg><span>${e.likes}</span></button>
+        <span class="react"><svg width="14" height="14"><use href="#i-chat"/></svg><span>${e.c}</span></span>
+      </div>
+    </div>
+  </article>`;
+}
+function notifHTML(n){
+  return `
+  <article class="notif ${n.unread ? "unread" : ""}">
+    ${avatar(n.who)}
+    <div class="event-body">
+      <p class="event-text">${n.text}</p>
+      <div class="event-time">${n.time}</div>
+    </div>
+  </article>`;
+}
+function reviewHTML(r){
+  const mine = r.who === ME;
+  return `
+  <div class="review ${mine ? "is-mine" : ""}">
+    <div class="review-head">
+      ${avatar(r.who,"avatar sm")}<span class="name" data-user="${r.who}">${mine ? "Vous" : r.who}</span>${stars(r.rating,10)}<span class="when">· ${r.when}</span>
+      ${mine ? `
+      <div class="review-mine-tools">
+        <button class="react" data-edit-review="${r.ts}" title="Modifier"><svg width="13" height="13"><use href="#i-gear"/></svg><span>Modifier</span></button>
+        <button class="react del" data-del-review="${r.ts}" title="Supprimer"><svg width="13" height="13" style="transform:rotate(45deg)"><use href="#i-plus"/></svg><span>Supprimer</span></button>
+      </div>` : ""}
+    </div>
+    <p>${r.text}</p>
+    <div class="event-actions">
+      <button class="react like" data-likes="${r.likes}" aria-label="J'aime"><svg width="13" height="13"><use href="#i-heart"/></svg><span>${r.likes}</span></button>
+    </div>
+  </div>`;
+}
+function commentHTML(c){
+  return `
+  <div class="comment">
+    ${avatar(c.who,"avatar sm")}
+    <div class="event-body">
+      <div class="post-meta"><span data-user="${c.who}"><span class="name" style="font-size:13px">${c.who === ME ? "Vous" : c.who}</span></span><span class="when">· ${c.when}</span></div>
+      <p class="event-text" style="color:var(--text);font-size:13.5px">${c.text}</p>
+    </div>
+  </div>`;
+}
+function userRowHTML(name){
+  const u = USERS[name];
+  const self = name === ME;
+  return `
+  <div class="user-row">
+    ${avatar(name)}
+    <div class="u-info" data-user="${name}">
+      <div class="u-name">${self ? "Vous" : name} <span class="u-sub">${u.handle}</span></div>
+      <div class="u-bio">${u.bio}</div>
+    </div>
+    ${self ? "" : `<button class="btn-follow ${followState[name]?"is-on":""}" data-followtoggle="${name}">${followState[name]?"Suivi ✓":"Suivre"}</button>`}
+  </div>`;
+}
+
+
+/* ============================================================
+   Fiche jeu : avis, statuts, playlists, journal, listes publiques
+   ============================================================ */
+let reviewSort = "recent";
+const SORTS = {
+  recent:  { label:"Récents",          fn:(a,b) => b.ts - a.ts },
+  popular: { label:"Populaires",       fn:(a,b) => b.likes - a.likes },
+  top:     { label:"Meilleures notes", fn:(a,b) => b.rating - a.rating || b.likes - a.likes },
+  low:     { label:"Notes basses",     fn:(a,b) => a.rating - b.rating || b.likes - a.likes },
+};
+function renderReviews(id){
+  const list = [...getReviews(id)].sort(SORTS[reviewSort].fn);
+  document.getElementById("reviews-list").innerHTML = list.map(reviewHTML).join("");
+  document.getElementById("reviews-count").textContent = list.length;
+  document.querySelectorAll(".review-tools .chip").forEach(c =>
+    c.classList.toggle("is-active", c.dataset.sort === reviewSort));
+}
+function listPopHTML(id){
+  const customLists = LISTS.filter(l => l.ids);
+  return `
+  <div class="list-pop-wrap">
+    <button class="chip" id="btn-list-pop"><svg width="13" height="13"><use href="#i-plus"/></svg>Liste${(n => n ? ` (${n})` : "")(customLists.filter(l => l.ids.includes(id)).length)}</button>
+    <div class="list-pop" id="list-pop">
+      ${customLists.map(l => `
+        <button class="pm-item ${l.ids.includes(id)?"in-list":""}" data-togglelist="${l.id}">
+          <span class="list-dot" style="background:${l.color}"></span>${l.name}
+          <svg class="lcheck" width="14" height="14"><use href="#i-check"/></svg>
+        </button>`).join("")}
+      <div class="pm-sep"></div>
+      <button class="pm-item" id="pop-new-list"><svg width="14" height="14"><use href="#i-plus"/></svg>Nouvelle liste</button>
+    </div>
+  </div>`;
+}
+function journalEntries(g){
+  if(JOURNAL[g.id]) return JOURNAL[g.id];
+  const rows = [];
+  if(g.status === "done") rows.push({ c:"#29A9CF", t:"Terminé", when:"mai 2026" });
+  if(g.hours > 0) rows.push({ c:"#4FE0A3", t:`Dernière session — ${Math.max(1,Math.round(g.hours/8))} h ${(g.hours*7)%60} min`, when:"il y a 3 j" });
+  rows.push({ c:"#FFC56D", t:"Ajouté à la bibliothèque", when:"2026" });
+  return rows;
+}
+function renderGame(id){
+  const g = byId(id);
+  reviewSort = "recent";
+  const clists = COMMUNITY_LISTS.filter(c => c.ids.includes(id));
+
+  const ownedBlock = g.owned ? `
+    <div class="status-row">
+      ${["playing","done","backlog"].map(s =>
+        `<button class="chip status-chip ${g.status===s?"is-active":""}" data-status="${s}">${STATUS_LABEL[s]}</button>`).join("")}
+      ${listPopHTML(id)}
+    </div>` : `
+    <div class="status-row">
+      <button class="btn-add-lib" id="btn-add-lib" style="margin-top:0"><svg width="15" height="15"><use href="#i-plus"/></svg>Ajouter à ma bibliothèque</button>
+      ${listPopHTML(id)}
+    </div>
+    ${g.reason ? `<div class="reason-line" style="margin-top:4px"><svg width="10" height="10"><use href="#i-spark"/></svg>${g.reason} · compatibilité ${g.match} %</div>` : ""}`;
+
+  gameView.innerHTML = `
+    <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+    <div class="game-hero">
+      <div class="g-cover" style="${coverStyle(g.hue)};overflow:hidden">
+        ${coverImg(g.id)}
+        <span class="cover-letter">${g.title[0]}</span>
+        ${g.owned ? `<span class="tag" data-status="${g.status}" id="hero-tag">${STATUS_LABEL[g.status]}</span>` : `<span class="match-badge">${g.match ?? "—"} %</span>`}
+      </div>
+      <div class="g-info">
+        <div class="eyebrow">${g.genre} · ${g.year}</div>
+        <h1 class="page-title" style="font-size:clamp(22px,4vw,30px)">${g.title}</h1>
+        <div class="g-meta">
+          <svg width="15" height="15"><use href="${PLATFORM_ICON[g.platform]}"/></svg>${PLATFORM_NAME[g.platform]}
+          <span class="sep">·</span>
+          <span class="g-rating"><span class="n">${g.community ? g.community.toFixed(1) : "—"}</span>${stars(Math.round(g.community||0),11)}<span>${g.votes ?? "0"} avis</span></span>
+        </div>
+        ${ownedBlock}
+      </div>
+    </div>
+    ${g.owned ? `
+    <div class="g-stats">
+      <div class="g-stat"><div class="k">${g.hours} h</div><div class="l">Temps de jeu</div></div>
+      <div class="g-stat"><div class="k">${g.ach}</div><div class="l">Succès</div></div>
+      <div class="g-stat"><div class="k">${g.friends.length}</div><div class="l">Amis joueurs</div></div>
+    </div>` : ""}
+    <p class="g-desc">${g.desc}</p>
+    ${g.owned ? `
+    <h2 class="g-section-title">Journal de jeu</h2>
+    <div class="journal">
+      ${journalEntries(g).map(j => `<div class="j-row"><span class="j-dot" style="background:${j.c}"></span>${j.t}<span class="j-when">${j.when}</span></div>`).join("")}
+    </div>` : ""}
+    ${g.friends.length ? `
+    <h2 class="g-section-title">Vos amis y jouent</h2>
+    <div class="friends-row">
+      ${g.friends.map(n => `<span class="friend-chip" data-user="${n}">${avatar(n,"avatar sm")}${n}</span>`).join("")}
+    </div>` : ""}
+    ${clists.length ? `
+    <h2 class="g-section-title">Dans les listes de la communauté</h2>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      ${clists.map(c => `
+      <div class="clist-chip" data-openclist="${c.id}">
+        <span class="list-dot" style="background:${c.color};width:10px;height:10px"></span>
+        <div class="cl-info">
+          <div class="cl-name">${c.name}</div>
+          <div class="cl-sub">par ${c.by} · ${c.ids.length} jeux · ${c.followers + (followedCLists[c.id]?1:0)} abonnés</div>
+        </div>
+        <svg width="15" height="15" style="color:var(--faint)"><use href="#i-chev"/></svg>
+      </div>`).join("")}
+    </div>` : ""}
+    <h2 class="g-section-title">Avis de la communauté <span class="badge-count" style="font-size:12px">(<span id="reviews-count"></span>)</span></h2>
+    <div class="review-composer">
+      ${avatar(ME)}
+      <div class="rc-body">
+        <textarea id="rc-text" rows="2" placeholder="Partagez votre avis sur ${g.title}…"></textarea>
+        <div class="rc-bar">
+          <div class="rate-stars" id="rc-stars">
+            ${[1,2,3,4,5].map(n => `<button data-rate="${n}" class="${(g.myRating||0)>=n?"on":""}" aria-label="${n} étoiles"><svg width="19" height="19"><use href="#i-star"/></svg></button>`).join("")}
+          </div>
+          <button class="btn-primary" id="rc-publish" disabled>Publier mon avis</button>
+        </div>
+      </div>
+    </div>
+    <div class="review-tools">
+      ${Object.entries(SORTS).map(([k,s]) => `<button class="chip ${k===reviewSort?"is-active":""}" data-sort="${k}">${s.label}</button>`).join("")}
+    </div>
+    <div id="reviews-list" style="display:flex;flex-direction:column;gap:11px"></div>
+  `;
+  renderReviews(id);
+
+  if(g.owned){
+    gameView.querySelectorAll(".status-chip").forEach(chip => chip.addEventListener("click", () => {
+      g.status = chip.dataset.status;
+      gameView.querySelectorAll(".status-chip").forEach(c => c.classList.toggle("is-active", c === chip));
+      const tag = document.getElementById("hero-tag");
+      tag.dataset.status = g.status; tag.textContent = STATUS_LABEL[g.status];
+      renderGrid(); renderLists();
+    }));
+  } else {
+    document.getElementById("btn-add-lib").addEventListener("click", function(){
+      if(g.owned) return;
+      g.owned = true; g.status = "backlog"; g.hours = 0; g.ach = "—";
+      this.classList.add("is-added");
+      this.innerHTML = `<svg width="15" height="15"><use href="#i-check"/></svg>Dans votre backlog`;
+      renderGrid(); renderDiscover(currentDFilter); renderLists();
+    });
+  }
+  const pop = document.getElementById("list-pop");
+  document.getElementById("btn-list-pop").addEventListener("click", e => { e.stopPropagation(); pop.classList.toggle("open"); });
+  pop.addEventListener("click", e => {
+    e.stopPropagation();
+    const t = e.target.closest("[data-togglelist]");
+    if(t){
+      const l = LISTS.find(x => x.id === t.dataset.togglelist);
+      const idx = l.ids.indexOf(id);
+      idx >= 0 ? l.ids.splice(idx,1) : l.ids.push(id);
+      t.classList.toggle("in-list");
+      renderLists();
+    }
+    if(e.target.closest("#pop-new-list")){ pop.classList.remove("open"); openListModal(); }
+  });
+
+  const rcText = document.getElementById("rc-text");
+  const rcPublish = document.getElementById("rc-publish");
+  let editingTs = null;
+  const rcState = () => rcPublish.disabled = !(rcText.value.trim() && (g.myRating||0) > 0);
+  rcText.addEventListener("input", rcState);
+  gameView.querySelectorAll("#rc-stars [data-rate]").forEach(btn => btn.addEventListener("click", () => {
+    g.myRating = +btn.dataset.rate;
+    gameView.querySelectorAll("#rc-stars [data-rate]").forEach(b => b.classList.toggle("on", +b.dataset.rate <= g.myRating));
+    if(g.social?.type === "stars" && g.social.label === "Votre note"){ g.social.rating = g.myRating; renderGrid(); }
+    rcState();
+  }));
+  rcPublish.addEventListener("click", () => {
+    const reviews = getReviews(id);
+    if(editingTs !== null){
+      const r = reviews.find(x => x.ts === editingTs);
+      if(r){ r.text = rcText.value.trim(); r.rating = g.myRating; r.when = "modifié à l'instant"; }
+      editingTs = null;
+      rcPublish.textContent = "Publier mon avis";
+    } else {
+      reviews.unshift({ who:ME, rating:g.myRating, when:"à l'instant", ts:Date.now(), likes:0, text:rcText.value.trim() });
+    }
+    rcText.value = ""; rcState();
+    reviewSort = "recent";
+    renderReviews(id);
+  });
+  gameView.querySelectorAll(".review-tools .chip").forEach(c => c.addEventListener("click", () => {
+    reviewSort = c.dataset.sort;
+    renderReviews(id);
+  }));
+  document.getElementById("reviews-list").addEventListener("click", e => {
+    const edit = e.target.closest("[data-edit-review]");
+    if(edit){
+      const r = getReviews(id).find(x => x.ts === +edit.dataset.editReview);
+      if(!r) return;
+      editingTs = r.ts;
+      rcText.value = r.text;
+      g.myRating = r.rating;
+      gameView.querySelectorAll("#rc-stars [data-rate]").forEach(b => b.classList.toggle("on", +b.dataset.rate <= g.myRating));
+      rcPublish.textContent = "Mettre à jour mon avis";
+      rcState();
+      gameView.querySelector(".review-composer").scrollIntoView({behavior:"smooth", block:"center"});
+      rcText.focus();
+      return;
+    }
+    const del = e.target.closest("[data-del-review]");
+    if(del){
+      const reviews = getReviews(id);
+      const idx = reviews.findIndex(x => x.ts === +del.dataset.delReview);
+      if(idx >= 0) reviews.splice(idx,1);
+      if(editingTs === +del.dataset.delReview){ editingTs = null; rcText.value = ""; rcPublish.textContent = "Publier mon avis"; rcState(); }
+      renderReviews(id);
+    }
+  });
+}
+
+/* ============================================================
+   Publication + commentaires
+   ============================================================ */
+const userPosts = [];
+function findPost(pid){
+  return FRIEND_POSTS.concat(RECO_POSTS, userPosts).find(p => p.pid === pid);
+}
+function renderPost(pid){
+  const p = findPost(pid);
+  const comments = getComments(pid);
+  postView.innerHTML = `
+    <button class="back-btn js-back" style="margin-bottom:8px"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+    ${postHTML(p, 0, true)}
+    <h2 class="g-section-title" style="margin-top:14px">Commentaires <span class="badge-count" style="font-size:12px">(${comments.length})</span></h2>
+    <div class="review-composer" style="margin:4px 0 6px">
+      ${avatar(ME)}
+      <div class="rc-body">
+        <textarea id="cm-text" rows="2" placeholder="Répondre à ${p.who === ME ? "votre publication" : p.who}…"></textarea>
+        <div class="rc-bar"><button class="btn-primary" id="cm-publish" disabled>Commenter</button></div>
+      </div>
+    </div>
+    <div id="comments-list">${comments.map(commentHTML).join("") || `<div class="grid-empty" style="margin-top:8px"><strong>Aucun commentaire</strong>Soyez la première personne à réagir.</div>`}</div>
+  `;
+  const cmText = document.getElementById("cm-text");
+  const cmPub = document.getElementById("cm-publish");
+  cmText.addEventListener("input", () => cmPub.disabled = !cmText.value.trim());
+  cmPub.addEventListener("click", () => {
+    comments.push({ who:ME, when:"à l'instant", text:cmText.value.trim() });
+    p.comments = comments.length;
+    renderPost(pid);
+    renderFeeds();
+    window.scrollTo({top:document.body.scrollHeight, behavior:"smooth"});
+  });
+}
+
+/* ============================================================
+   Profil, badges, défis, comparaison
+   ============================================================ */
+const followState = {};
+function myStats(){
+  const owned = CATALOG.filter(g => g.owned);
+  return {
+    games: owned.length,
+    done: owned.filter(g => g.status === "done").length,
+    hours: owned.reduce((s,g) => s + (g.hours||0), 0),
+    plat: USERS[ME].plat,
+  };
+}
+function friendStats(name){
+  const u = USERS[name];
+  const games = CATALOG.filter(g => g.friends?.includes(name)).length + 4;
+  return { games, done: Math.round(games*.6), hours: u.level*16, plat: u.plat };
+}
+function renderProfile(name){
+  const u = USERS[name];
+  const self = name === ME;
+  const games = self ? CATALOG.filter(g => g.owned) : CATALOG.filter(g => g.friends?.includes(name));
+  const posts = FRIEND_POSTS.concat(RECO_POSTS).filter(p => p.who === name);
+  const finished = self ? CATALOG.filter(g => g.owned && g.status === "done").length : Math.max(1, Math.round(games.length * .6));
+  const nFollowers = FOLLOWS[name].followers.length + (followState[name] ? 1 : 0);
+  const challenge = CHALLENGES.find(c => c.with === name);
+  const bannerBg = (self && u.banner) ? "" : `background:${u.g}`;
+
+  profileView.innerHTML = `
+    <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+    <div class="banner" style="${bannerBg}">
+      ${self && u.banner ? `<img class="banner-img" src="${u.banner}" alt="">` : ""}
+      ${self ? (STATE.premium
+          ? `<button class="banner-edit" data-action="customize"><svg width="11" height="11"><use href="#i-spark"/></svg>Modifier la bannière</button>`
+          : `<button class="banner-hint" data-nav="premium"><svg width="10" height="10"><use href="#i-lock"/></svg>Bannières personnalisées avec Premium</button>`) : ""}
+    </div>
+    <div class="profile-head">
+      <div class="avatar xl ${self?"my-avatar":""}" style="background:${self && u.photo ? `url(${u.photo}) center/cover` : u.g}">${self && u.photo ? "" : u.init}</div>
+      <div class="profile-id">
+        <div class="p-name">${self ? document.querySelector(".me-name").textContent : name} ${self && STATE.premium ? `<span class="tag-premium-on"><svg width="9" height="9"><use href="#i-star"/></svg>PREMIUM</span>` : ""}</div>
+        <div class="p-handle">${u.handle} · NIV. ${u.level} · membre depuis ${u.since}</div>
+      </div>
+      ${self
+        ? `<button class="btn-ghost" data-action="customize"><svg width="13" height="13" style="display:inline;vertical-align:-2px"><use href="#i-spark"/></svg> Personnaliser</button>`
+        : `<button class="btn-follow ${followState[name]?"is-on":""}" id="btn-follow">${followState[name]?"Suivi ✓":"Suivre"}</button>`}
+    </div>
+    ${self && u.badges.length ? `<div class="badge-row">${u.badges.map(b => { const d = BADGE_DEFS.find(x=>x.id===b); return `<span class="badge-chip">${d.icon} ${d.name}</span>`; }).join("")}</div>` : ""}
+    <p class="profile-bio">${u.bio}</p>
+    ${self ? "" : `
+    <div class="list-actions" style="padding:0 2px">
+      <button class="chip" id="btn-challenge">${challenge ? "⚔️ Défi en cours" : "⚔️ Défier " + name}</button>
+      <button class="chip" id="btn-compare">${STATE.premium ? "📊 Comparer nos stats" : `<svg width="11" height="11" style="display:inline;vertical-align:-1px"><use href="#i-lock"/></svg> Comparer nos stats`}</button>
+    </div>`}
+    <div class="profile-stats">
+      <div class="g-stat"><div class="k">${games.length}</div><div class="l">Jeux</div></div>
+      <div class="g-stat"><div class="k">${finished}</div><div class="l">Terminés</div></div>
+      <div class="g-stat click" data-follows="${name}" data-ftab="followers"><div class="k">${nFollowers}</div><div class="l">Abonnés</div></div>
+      <div class="g-stat click" data-follows="${name}" data-ftab="following"><div class="k">${FOLLOWS[name].following.length}</div><div class="l">Abonnements</div></div>
+    </div>
+    <h2 class="g-section-title">${self ? "Ma bibliothèque" : `Bibliothèque de ${name}`}</h2>
+    <div class="grid">${games.map((g,i) => cardHTML({...g, social:null}, i)).join("")}</div>
+    ${posts.length ? `<h2 class="g-section-title">Publications récentes</h2><div>${posts.map(postHTML).join("")}</div>` : ""}
+  `;
+  if(!self){
+    document.getElementById("btn-follow").addEventListener("click", function(){
+      followState[name] = !followState[name];
+      renderProfile(name);
+    });
+    document.getElementById("btn-challenge").addEventListener("click", () => {
+      if(CHALLENGES.find(c => c.with === name)) return;
+      const target = CATALOG.find(g => g.owned && g.status === "backlog") || CATALOG.find(g => g.owned);
+      CHALLENGES.push({ with:name, gameId:target.id });
+      NOTIFS.unshift({ who:name, unread:true, text:`Défi lancé : qui finira <span class="hl">${target.title}</span> en premier, vous ou <b>${name}</b> ?`, time:"à l'instant" });
+      document.getElementById("ndrawer-notifs").innerHTML = NOTIFS.map(notifHTML).join("");
+      renderChallenges();
+      renderProfile(name);
+      showToast(`Défi lancé à ${name} sur ${target.title} ⚔️`);
+    });
+    document.getElementById("btn-compare").addEventListener("click", () => {
+      STATE.premium ? visit({ v:"compare", id:name }) : goTo("premium");
+    });
+  }
+}
+function renderCompare(name){
+  const a = myStats(), b = friendStats(name);
+  const u = USERS[name];
+  const row = (label, va, vb, unit="") => `
+    <div class="ct-row"><span class="l">${label}</span>
+      <span class="v ${va>=vb?"win":""}">${va}${unit}</span>
+      <span class="v ${vb>=va?"win":""}">${vb}${unit}</span>
+    </div>`;
+  compareView.innerHTML = `
+    <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+    <div class="page-head" style="padding-top:0">
+      <div class="eyebrow">Premium · Comparaison</div>
+      <h1 class="page-title">Vous vs ${name}</h1>
+    </div>
+    <div class="compare-table">
+      <div class="ct-head">
+        <span style="font-size:12px;color:var(--faint)">Statistique</span>
+        <span class="ct-who">${avatar(ME,"avatar sm")}Vous</span>
+        <span class="ct-who">${avatar(name,"avatar sm")}${name}</span>
+      </div>
+      ${row("Jeux dans la bibliothèque", a.games, b.games)}
+      ${row("Jeux terminés", a.done, b.done)}
+      ${row("Heures de jeu totales", a.hours, b.hours, " h")}
+      ${row("Trophées platine", a.plat, b.plat)}
+      ${row("Niveau Playbond", USERS[ME].level, u.level)}
+    </div>
+    <p class="page-sub" style="padding:0 2px">Les valeurs gagnantes sont en bleu. Comparaison alimentée par vos bibliothèques synchronisées.</p>
+  `;
+}
+function renderFollows(name, tab="followers"){
+  const f = FOLLOWS[name];
+  const self = name === ME;
+  followsView.innerHTML = `
+    <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+    <div class="page-head" style="padding-top:0">
+      <div class="eyebrow">Communauté</div>
+      <h1 class="page-title">${self ? "Vos relations" : `Relations de ${name}`}</h1>
+    </div>
+    <div class="tabs" style="position:static;background:none">
+      <button class="tab ${tab==="followers"?"is-active":""}" data-ftabswitch="followers">Abonnés (${f.followers.length})</button>
+      <button class="tab ${tab==="following"?"is-active":""}" data-ftabswitch="following">Abonnements (${f.following.length})</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${f[tab].map(userRowHTML).join("") || `<div class="grid-empty"><strong>Personne ici pour l'instant</strong></div>`}
+    </div>
+  `;
+  followsView.querySelectorAll("[data-ftabswitch]").forEach(t =>
+    t.addEventListener("click", () => { curState.tab = t.dataset.ftabswitch; renderFollows(name, curState.tab); }));
+  followsView.querySelectorAll("[data-followtoggle]").forEach(b => b.addEventListener("click", e => {
+    e.stopPropagation();
+    const n = b.dataset.followtoggle;
+    followState[n] = !followState[n];
+    b.classList.toggle("is-on", followState[n]);
+    b.textContent = followState[n] ? "Suivi ✓" : "Suivre";
+  }));
+}
+/* — personnalisation (Premium) — */
+function renderCustomize(){
+  const u = USERS[ME];
+  customizeView.innerHTML = `
+    <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+    <div class="page-head" style="padding-top:0">
+      <div class="eyebrow">Premium · Personnalisation</div>
+      <h1 class="page-title">Personnaliser le profil</h1>
+    </div>
+    <div class="panel">
+      <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-image"/></svg>Bannière du profil</h3>
+      <div class="banner" style="${u.banner ? "" : `background:${u.g}`};height:96px">${u.banner ? `<img class="banner-img" src="${u.banner}" alt="">` : ""}</div>
+      <div class="modal-foot" style="margin-top:12px;justify-content:flex-start">
+        <label class="btn-primary" style="cursor:pointer">Importer une bannière<input type="file" id="banner-file" accept="image/*" hidden></label>
+        ${u.banner ? `<button class="btn-ghost" id="banner-reset">Réinitialiser</button>` : ""}
+      </div>
+    </div>
+    <div class="panel">
+      <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-star"/></svg>Badges affichés <span class="badge-count" style="font-size:11px">(${u.badges.length}/3)</span></h3>
+      <p class="page-sub" style="margin-bottom:12px">Choisissez jusqu'à 3 badges visibles par la communauté sur votre profil.</p>
+      <div class="badge-row" style="padding:0">
+        ${BADGE_DEFS.map(b => `<button class="badge-chip pick ${u.badges.includes(b.id)?"sel":""}" data-badge="${b.id}">${b.icon} ${b.name}</button>`).join("")}
+      </div>
+    </div>
+    <div class="panel">
+      <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-user"/></svg>Photo de profil</h3>
+      <div class="row-line" style="border:none">
+        <div class="avatar my-avatar" style="background:${u.photo ? `url(${u.photo}) center/cover` : "var(--grad-brand)"}">${u.photo ? "" : u.init}</div>
+        <div class="grow s">Visible partout : feed, avis, notifications.</div>
+        <label class="btn-ghost" style="cursor:pointer">Changer la photo<input type="file" class="avatar-file-input" accept="image/*" hidden></label>
+      </div>
+    </div>
+  `;
+  document.getElementById("banner-file").addEventListener("change", e => readImage(e, url => { u.banner = url; renderCustomize(); }));
+  document.getElementById("banner-reset")?.addEventListener("click", () => { u.banner = null; renderCustomize(); });
+  customizeView.querySelectorAll("[data-badge]").forEach(b => b.addEventListener("click", () => {
+    const id = b.dataset.badge;
+    const i = u.badges.indexOf(id);
+    if(i >= 0) u.badges.splice(i,1);
+    else if(u.badges.length < 3) u.badges.push(id);
+    renderCustomize();
+  }));
+  customizeView.querySelector(".avatar-file-input").addEventListener("change", e =>
+    readImage(e, url => { u.photo = url; refreshMyAvatars(); renderCustomize(); }));
+}
+function readImage(e, cb){
+  const f = e.target.files?.[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = () => cb(r.result);
+  r.readAsDataURL(f);
+}
+
+
+/* ============================================================
+   Listes (perso + communauté), stats, premium, facturation,
+   plateformes, onboarding, défis
+   ============================================================ */
+function listGames(l){
+  return l.smart ? CATALOG.filter(g => g.owned && g.status === l.smart)
+                 : l.ids.map(byId).filter(Boolean);
+}
+function renderLists(){
+  document.getElementById("lists-nav").innerHTML = LISTS.map(l => `
+    <button class="nav-item" data-openlist="${l.id}">
+      <span class="list-dot" style="background:${l.color}"></span>${l.name}
+      ${l.pub ? `<svg class="pub-ic" width="11" height="11" title="Liste publique"><use href="#i-discover"/></svg>` : ""}
+      <span class="spacer"></span><span class="badge-count">${listGames(l).length}</span>
+    </button>`).join("");
+}
+function renderList(id){
+  const cl = clById(id);
+  if(cl){ // liste publique de la communauté
+    const games = cl.ids.map(byId).filter(Boolean);
+    const followed = !!followedCLists[id];
+    listView.innerHTML = `
+      <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+      <div class="page-head" style="padding-top:0">
+        <div class="eyebrow" style="color:${cl.color}">Liste publique de la communauté</div>
+        <h1 class="page-title">${cl.name}</h1>
+        <p class="page-sub">par <span class="link-line" data-user="${cl.by}">${cl.by}</span> · ${games.length} jeux · ${cl.followers + (followed?1:0)} abonnés</p>
+      </div>
+      <div class="list-actions">
+        <button class="btn-follow ${followed?"is-on":""}" id="btn-follow-clist">${followed?"Liste suivie ✓":"Suivre cette liste"}</button>
+      </div>
+      <div class="grid">${games.map((g,i) => g.owned ? cardHTML(g,i) : discCardHTML(g,i)).join("")}</div>
+    `;
+    document.getElementById("btn-follow-clist").addEventListener("click", () => {
+      followedCLists[id] = !followedCLists[id];
+      renderList(id);
+    });
+    return;
+  }
+  const l = LISTS.find(x => x.id === id);
+  const games = listGames(l);
+  listView.innerHTML = `
+    <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+    <div class="page-head" style="padding-top:0">
+      <div class="eyebrow" style="color:${l.color}">${l.smart ? "Liste automatique" : l.pub ? "Liste personnalisée · publique" : "Liste personnalisée · privée"}</div>
+      <h1 class="page-title">${l.name}</h1>
+      <p class="page-sub">${games.length} jeu${games.length>1?"x":""}${l.smart ? " · mise à jour selon les statuts de votre bibliothèque" : ""}</p>
+    </div>
+    ${l.smart ? "" : `
+    <div class="list-actions">
+      <button class="chip" data-picklist="${l.id}"><svg width="13" height="13"><use href="#i-plus"/></svg>Ajouter des jeux</button>
+      <button class="chip" data-renamelist="${l.id}"><svg width="13" height="13"><use href="#i-gear"/></svg>Modifier</button>
+      <button class="chip" data-deletelist="${l.id}" style="color:var(--danger);border-color:rgba(255,93,108,.3)">Supprimer</button>
+    </div>`}
+    <div class="grid">${games.length
+      ? games.map((g,i) => g.owned ? cardHTML(g,i) : discCardHTML(g,i)).join("")
+      : `<div class="grid-empty"><strong>Liste vide</strong>Utilisez « Ajouter des jeux » ci-dessus, ou le bouton « Liste » sur la fiche d'un jeu.</div>`}</div>
+  `;
+}
+
+/* — statistiques : paywall ou tableau de bord premium — */
+function renderStats(){
+  const body = document.getElementById("stats-body");
+  if(!STATE.premium){
+    body.innerHTML = `
+      <div class="locked-zone" style="margin-top:8px">
+        <div class="fake-stats" aria-hidden="true">
+          <div class="fake-kpi"><div class="k">1 248 h</div><div class="l">Temps de jeu global</div></div>
+          <div class="fake-kpi"><div class="k">61 %</div><div class="l">Taux de complétion</div></div>
+          <div class="fake-kpi"><div class="k">RPG</div><div class="l">Genre dominant</div></div>
+          <div class="fake-bars"><i style="height:40%"></i><i style="height:65%"></i><i style="height:50%"></i><i style="height:90%"></i><i style="height:72%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:35%"></i></div>
+        </div>
+        <div class="lock-overlay">
+          <div class="lock-card">
+            <div class="lock-ic"><svg width="22" height="22"><use href="#i-lock"/></svg></div>
+            <h3>Débloquez vos statistiques</h3>
+            <p>Temps de jeu global, graphiques de progression et comparaisons avec vos amis font partie de Playbond Premium.</p>
+            <button class="btn-premium" data-nav="premium"><svg width="15" height="15"><use href="#i-star"/></svg>Passer à Premium — 2,50 €/mois</button>
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+  const s = myStats();
+  const months = ["Jan","Fév","Mar","Avr","Mai","Juin"];
+  const heights = [38, 52, 70, 64, 88, 57];
+  body.innerHTML = `
+    <div class="g-stats" style="grid-template-columns:repeat(2,1fr)">
+      <div class="g-stat"><div class="k">${s.hours} h</div><div class="l">Temps de jeu global</div></div>
+      <div class="g-stat"><div class="k">${Math.round(s.done/s.games*100)} %</div><div class="l">Taux de complétion</div></div>
+      <div class="g-stat"><div class="k">RPG</div><div class="l">Genre dominant</div></div>
+      <div class="g-stat"><div class="k">${s.plat}</div><div class="l">Trophées platine</div></div>
+    </div>
+    <div class="panel" style="margin-top:14px">
+      <h3>Heures jouées — 6 derniers mois</h3>
+      <div class="fake-bars" style="border:none;padding:6px 0 0;background:none">
+        ${heights.map((h,i) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><i style="width:100%;height:${h}%;border-radius:6px 6px 2px 2px;background:var(--grad-brand)"></i><span style="font-family:var(--font-mono);font-size:9.5px;color:var(--faint)">${months[i]}</span></div>`).join("")}
+      </div>
+    </div>
+    <div class="panel" style="margin-top:14px">
+      <h3>Comparer avec un ami</h3>
+      <div class="badge-row" style="padding:0">
+        ${["Thomas","Sarah","Léa","Mehdi","Nina"].map(n => `<button class="friend-chip" data-compare="${n}">${avatar(n,"avatar sm")}${n}</button>`).join("")}
+      </div>
+    </div>`;
+}
+
+/* — page premium / souscription — */
+function renderPremiumPage(){
+  const offer = document.getElementById("premium-offer");
+  const active = document.getElementById("premium-active");
+  offer.hidden = STATE.premium;
+  active.hidden = !STATE.premium;
+  if(STATE.premium){
+    active.innerHTML = `
+      <div class="premium-banner">
+        <div class="pb-ic"><svg width="20" height="20"><use href="#i-star"/></svg></div>
+        <div style="flex:1">
+          <h4>Premium actif — plan ${STATE.plan === "annual" ? "annuel (25 €/an)" : "mensuel (2,50 €/mois)"}</h4>
+          <div class="s">Importation multi-plateforme, statistiques avancées, personnalisation et algorithme prédictif sont débloqués.</div>
+        </div>
+        <button class="btn-ghost" data-nav="billing">Gérer</button>
+      </div>
+      <div class="perks" style="margin-top:14px">
+        <div class="perk"><svg width="16" height="16" style="color:var(--accent)"><use href="#i-check"/></svg><div><b>Importation illimitée</b><span>Connectez PlayStation et Xbox dans Réglages → Plateformes.</span></div></div>
+        <div class="perk"><svg width="16" height="16" style="color:var(--accent)"><use href="#i-check"/></svg><div><b>Statistiques avancées</b><span>Votre tableau de bord est ouvert dans l'onglet Statistiques.</span></div></div>
+        <div class="perk"><svg width="16" height="16" style="color:var(--accent)"><use href="#i-check"/></svg><div><b>Personnalisation du profil</b><span>Bannière et badges via « Personnaliser le profil ».</span></div></div>
+        <div class="perk"><svg width="16" height="16" style="color:var(--accent)"><use href="#i-check"/></svg><div><b>Algorithme prédictif</b><span>La Découverte affiche vos recommandations personnalisées.</span></div></div>
+      </div>`;
+  }
+}
+function subscribe(plan){
+  STATE.premium = true;
+  STATE.plan = plan;
+  applyPremiumUI();
+  showToast(`Bienvenue dans Playbond Premium 🎉 Plan ${plan === "annual" ? "annuel" : "mensuel"} activé`);
+}
+function cancelPremium(){
+  STATE.premium = false;
+  STATE.plan = null;
+  STATE.platforms = { pc:true, ps:false, xbox:false };
+  applyPremiumUI();
+}
+function applyPremiumUI(){
+  /* sidebar + menu */
+  document.querySelector(".me-tag").textContent = STATE.premium ? "PLAN PREMIUM · NIV. 42" : "PLAN GRATUIT · NIV. 42";
+  const pmBadge = document.querySelector('.pm-item[data-action="billing"] .badge-premium');
+  if(pmBadge) pmBadge.innerHTML = `<svg width="9" height="9"><use href="#i-star"/></svg>${STATE.premium ? "Premium" : "Gratuit"}`;
+  const cuBadge = document.getElementById("pm-customize-badge");
+  if(cuBadge) cuBadge.style.display = STATE.premium ? "none" : "";
+  /* découverte */
+  document.getElementById("disc-blur").classList.toggle("locked-blur", !STATE.premium);
+  document.getElementById("disc-lock").style.display = STATE.premium ? "none" : "";
+  /* pages dynamiques */
+  renderStats(); renderPremiumPage(); renderBilling(); renderPlatforms(); renderOnboarding();
+  updateLibSub();
+}
+function renderBilling(){
+  const planEl = document.getElementById("billing-plan");
+  const payEl = document.getElementById("billing-pay");
+  const invEl = document.getElementById("billing-invoices");
+  if(STATE.premium){
+    const price = STATE.plan === "annual" ? "25,00 €" : "2,50 €";
+    planEl.innerHTML = `
+      <div class="plan-row">
+        <span class="plan-pill" style="color:var(--accent);border-color:var(--accent-line)">PREMIUM</span>
+        <div class="grow">
+          <div class="t">Premium ${STATE.plan === "annual" ? "annuel" : "mensuel"}</div>
+          <div class="s">Actif depuis le 12 juin 2026 · prochain renouvellement le ${STATE.plan === "annual" ? "12 juin 2027" : "12 juillet 2026"}</div>
+        </div>
+        <button class="btn-ghost" id="btn-cancel-premium" style="color:var(--danger);border-color:rgba(255,93,108,.3)">Résilier</button>
+      </div>`;
+    payEl.innerHTML = `
+      <div class="row-line">
+        <span class="ic"><svg width="17" height="17"><use href="#i-card"/></svg></span>
+        <div class="grow"><div>Visa •••• 4242</div><div class="s">Expire 09/29 · carte par défaut</div></div>
+        <span class="plan-pill" style="color:var(--ok);border-color:rgba(79,224,163,.3)">ACTIVE</span>
+      </div>`;
+    invEl.innerHTML = `
+      <div class="row-line">
+        <span class="ic"><svg width="17" height="17"><use href="#i-doc"/></svg></span>
+        <div class="grow"><div>Facture #2026-001 — Premium ${STATE.plan === "annual" ? "annuel" : "mensuel"}</div><div class="s">12 juin 2026 · ${price}</div></div>
+        <span class="plan-pill" style="color:var(--ok);border-color:rgba(79,224,163,.3)">PAYÉE</span>
+      </div>`;
+    document.getElementById("btn-cancel-premium").addEventListener("click", function(){
+      if(this.dataset.armed){ cancelPremium(); showToast("Abonnement résilié — retour au plan gratuit"); }
+      else { this.dataset.armed = "1"; this.textContent = "Confirmer la résiliation ?"; }
+    });
+  } else {
+    planEl.innerHTML = `
+      <div class="plan-row">
+        <span class="plan-pill">GRATUIT</span>
+        <div class="grow">
+          <div class="t">Plan Gratuit</div>
+          <div class="s">Membre depuis mars 2026 · 1 plateforme synchronisée sur 1 incluse</div>
+        </div>
+        <button class="btn-premium" data-nav="premium" style="margin-top:0;padding:9px 18px;font-size:13px"><svg width="13" height="13"><use href="#i-star"/></svg>Passer à Premium — 2,50 €/mois</button>
+      </div>`;
+    payEl.innerHTML = `
+      <div class="row-line">
+        <span class="ic"><svg width="17" height="17"><use href="#i-card"/></svg></span>
+        <div class="grow"><div>Aucun moyen de paiement</div><div class="s">Une carte sera requise au moment de l'activation de Premium.</div></div>
+      </div>`;
+    invEl.innerHTML = `<div class="empty-line">Aucune facture pour le moment — votre plan actuel est gratuit.</div>`;
+  }
+}
+/* — plateformes connectées (réglages) — */
+const PLATFORM_META = { pc:{name:"Steam", n:128}, ps:{name:"PlayStation Network", n:46}, xbox:{name:"Xbox Live", n:31} };
+function renderPlatforms(){
+  document.getElementById("platform-rows").innerHTML = ["pc","ps","xbox"].map(p => {
+    const meta = PLATFORM_META[p];
+    const on = STATE.platforms[p];
+    let right;
+    if(on) right = `<span class="plan-pill" style="color:var(--ok);border-color:rgba(79,224,163,.3)">ACTIF</span>`;
+    else if(STATE.premium) right = `<button class="btn-ghost" data-connect="${p}">Connecter</button>`;
+    else right = `<button class="btn-ghost" data-nav="premium" style="color:var(--accent);border-color:var(--accent-line)"><svg width="11" height="11" style="display:inline;vertical-align:-1px"><use href="#i-lock"/></svg> Premium</button>`;
+    return `
+    <div class="row-line">
+      <span class="ic"><svg width="17" height="17"><use href="${PLATFORM_ICON[p]}"/></svg></span>
+      <div class="grow"><div>${meta.name}</div><div class="s">${on ? `Connecté · ${meta.n} jeux importés` : STATE.premium ? "Prêt à connecter — import illimité inclus dans Premium." : "L'import multi-plateforme est réservé à Premium."}</div></div>
+      ${right}
+    </div>`;
+  }).join("");
+  document.querySelectorAll("[data-connect]").forEach(b => b.addEventListener("click", () => {
+    const p = b.dataset.connect;
+    STATE.platforms[p] = true;
+    renderPlatforms(); updateLibSub();
+    showToast(`${PLATFORM_META[p].name} connecté · import de ${PLATFORM_META[p].n} jeux lancé`);
+  }));
+}
+function updateLibSub(){
+  const n = Object.values(STATE.platforms).filter(Boolean).length;
+  document.getElementById("lib-sub").textContent =
+    `${CATALOG.filter(g=>g.owned).length + (STATE.platforms.ps?40:0) + (STATE.platforms.xbox?25:0)} jeux · ${n} plateforme${n>1?"s":""} synchronisée${n>1?"s":""} · 7 amis en ligne`;
+}
+/* — onboarding (compte gratuit uniquement) — */
+function renderOnboarding(){
+  const el = document.getElementById("onboarding");
+  if(STATE.premium || STATE.onboardingDone){ el.innerHTML = ""; return; }
+  const current = Object.keys(STATE.platforms).find(p => STATE.platforms[p]);
+  el.innerHTML = `
+  <div class="onboard">
+    <div class="ob-ic"><svg width="18" height="18"><use href="#i-sync"/></svg></div>
+    <div style="flex:1;min-width:0">
+      <h4>Bienvenue sur Playbond 👋</h4>
+      <p>Votre plan gratuit inclut la synchronisation d'<b>une seule plateforme</b>. Choisissez la vôtre — ou <span class="link-line" data-nav="premium">passez à Premium</span> pour toutes les réunir.</p>
+      <div class="chip-row">
+        ${["pc","ps","xbox"].map(p => `<button class="chip ${current===p?"is-active":""}" data-obp="${p}"><svg width="14" height="14"><use href="${PLATFORM_ICON[p]}"/></svg>${PLATFORM_META[p].name.split(" ")[0]}</button>`).join("")}
+      </div>
+    </div>
+    <button class="ob-close" id="ob-close" aria-label="Fermer"><svg width="14" height="14" style="transform:rotate(45deg)"><use href="#i-plus"/></svg></button>
+  </div>`;
+  el.querySelectorAll("[data-obp]").forEach(b => b.addEventListener("click", () => {
+    STATE.platforms = { pc:false, ps:false, xbox:false };
+    STATE.platforms[b.dataset.obp] = true;
+    renderOnboarding(); renderPlatforms(); updateLibSub(); renderGrid();
+    showToast(`${PLATFORM_META[b.dataset.obp].name.split(" ")[0]} définie comme plateforme synchronisée`);
+  }));
+  document.getElementById("ob-close").addEventListener("click", () => { STATE.onboardingDone = true; renderOnboarding(); });
+}
+/* — défis — */
+function renderChallenges(){
+  const el = document.getElementById("challenges");
+  el.innerHTML = CHALLENGES.map((c,i) => {
+    const g = byId(c.gameId);
+    return `
+    <div class="challenge">
+      <div class="stack">${avatar(ME,"avatar sm")}${avatar(c.with,"avatar sm")}</div>
+      <div class="c-txt"><b>Défi en cours</b> — qui finira <span class="hl" data-open="${g.id}" style="cursor:pointer">${g.title}</span> en premier, vous ou <span data-user="${c.with}" class="link-line">${c.with}</span> ?<div class="s">Lancé à l'instant · le premier statut « Terminé » l'emporte</div></div>
+      <button class="btn-ghost" data-dropchallenge="${i}">Abandonner</button>
+    </div>`;
+  }).join("");
+  el.querySelectorAll("[data-dropchallenge]").forEach(b => b.addEventListener("click", () => {
+    CHALLENGES.splice(+b.dataset.dropchallenge, 1);
+    renderChallenges();
+  }));
+}
+
+
+/* ============================================================
+   État, rendu initial, router, délégation
+   ============================================================ */
+const grid = document.getElementById("grid");
+const discGrid = document.getElementById("disc-grid");
+const gameView = document.getElementById("view-game");
+const profileView = document.getElementById("view-profile");
+const listView = document.getElementById("view-list");
+const followsView = document.getElementById("view-follows");
+const customizeView = document.getElementById("view-customize");
+const postView = document.getElementById("view-post");
+const compareView = document.getElementById("view-compare");
+const searchInput = document.getElementById("search-input");
+let currentFilter = "all";
+let currentDFilter = "all";
+
+function renderGrid(filter = currentFilter, query = (searchInput.value||"").trim().toLowerCase()){
+  const items = CATALOG.filter(g => g.owned)
+    .filter(g => filter==="all" || g.platform===filter)
+    .filter(g => g.title.toLowerCase().includes(query));
+  grid.innerHTML = items.length
+    ? items.map(cardHTML).join("")
+    : `<div class="grid-empty"><strong>Aucun jeu trouvé</strong>Essayez un autre filtre ou une autre recherche.</div>`;
+}
+function renderDiscover(filter = "all"){
+  const items = CATALOG.filter(g => !g.owned).filter(g => filter==="all" || g.dtag===filter)
+                       .sort((a,b) => b.match - a.match);
+  discGrid.innerHTML = items.length
+    ? items.map(discCardHTML).join("")
+    : `<div class="grid-empty"><strong>Tout est dans votre bibliothèque</strong>Revenez bientôt pour de nouvelles recommandations.</div>`;
+}
+function renderFeeds(){
+  document.getElementById("feed-foryou").innerHTML  = RECO_POSTS.map(postHTML).join("");
+  document.getElementById("feed-friends").innerHTML = userPosts.map(postHTML).join("") + FRIEND_POSTS.map(postHTML).join("");
+}
+renderGrid(); renderDiscover(); renderLists(); renderFeeds(); renderChallenges();
+document.getElementById("ndrawer-notifs").innerHTML = NOTIFS.map(notifHTML).join("");
+document.getElementById("ndrawer-activity").innerHTML = ACTIVITY_FULL.map(eventHTML).join("");
+
+const VIEWS = {
+  library:  document.getElementById("view-library"),
+  feed:     document.getElementById("view-feed"),
+  discover: document.getElementById("view-discover"),
+  game:     gameView,
+  profile:  profileView,
+  list:     listView,
+  follows:  followsView,
+  post:     postView,
+  compare:  compareView,
+  customize:customizeView,
+  premium:  document.getElementById("view-premium"),
+  stats:    document.getElementById("view-stats"),
+  billing:  document.getElementById("view-billing"),
+  settings: document.getElementById("view-settings"),
+  legal:    document.getElementById("view-legal"),
+};
+let navStack = [];
+let curState = { v:"library" };
+
+function setNav(view){
+  document.querySelectorAll("[data-nav]").forEach(b => b.classList.toggle("is-active", b.dataset.nav === view));
+}
+function showView(state){
+  if(state.v === "game") renderGame(state.id);
+  if(state.v === "profile") renderProfile(state.id);
+  if(state.v === "list") renderList(state.id);
+  if(state.v === "follows") renderFollows(state.id, state.tab || "followers");
+  if(state.v === "post") renderPost(state.id);
+  if(state.v === "compare") renderCompare(state.id);
+  if(state.v === "customize") renderCustomize();
+  Object.entries(VIEWS).forEach(([k, el]) => el.hidden = (k !== state.v));
+  document.body.dataset.view = state.v;
+  setNav(["library","feed","discover","stats"].includes(state.v) ? state.v : "");
+  closeNdrawer(); closeMenu(); closeModals();
+  window.scrollTo({top:0});
+}
+function visit(state){ navStack.push(curState); curState = state; showView(state); }
+function goTo(view){ navStack = []; curState = { v:view }; showView(curState); }
+function goBack(){ curState = navStack.pop() || { v:"library" }; showView(curState); }
+const openGame    = id   => visit({ v:"game", id });
+const openProfile = name => visit({ v:"profile", id:name });
+const openList    = id   => visit({ v:"list", id });
+const openPost    = pid  => visit({ v:"post", id:pid });
+setNav("library");
+
+document.addEventListener("click", e => {
+  if(e.target.closest(".js-back")){ goBack(); return; }
+  const cm = e.target.closest(".js-open-comments");
+  if(cm){ openPost(cm.dataset.post); return; }
+  const fl = e.target.closest("[data-follows]");
+  if(fl){ visit({ v:"follows", id:fl.dataset.follows, tab:fl.dataset.ftab }); return; }
+  const cmp = e.target.closest("[data-compare]");
+  if(cmp){ visit({ v:"compare", id:cmp.dataset.compare }); return; }
+  const user = e.target.closest("[data-user]");
+  if(user){
+    e.stopPropagation();
+    if(!(curState.v === "profile" && curState.id === user.dataset.user)) openProfile(user.dataset.user);
+    return;
+  }
+  const act = e.target.closest("[data-action]");
+  if(act && !act.classList.contains("pm-item")){
+    if(act.dataset.action === "customize"){ STATE.premium ? visit({v:"customize"}) : goTo("premium"); return; }
+  }
+  const nav = e.target.closest("[data-nav]");
+  if(nav){ goTo(nav.dataset.nav); return; }
+  const sub = e.target.closest("[data-subscribe]");
+  if(sub){ subscribe(sub.dataset.subscribe); return; }
+  const clist = e.target.closest("[data-openclist]");
+  if(clist){ openList(clist.dataset.openclist); return; }
+  const list = e.target.closest("[data-openlist]");
+  if(list){ openList(list.dataset.openlist); return; }
+  const pick = e.target.closest("[data-picklist]");
+  if(pick){ openPickModal(pick.dataset.picklist); return; }
+  const ren = e.target.closest("[data-renamelist]");
+  if(ren){ openListModal(ren.dataset.renamelist); return; }
+  const del = e.target.closest("[data-deletelist]");
+  if(del){
+    if(del.dataset.armed){
+      const i = LISTS.findIndex(x => x.id === del.dataset.deletelist);
+      const name = LISTS[i].name;
+      LISTS.splice(i,1);
+      renderLists(); goTo("library");
+      showToast(`Liste « ${name} » supprimée`);
+    } else { del.dataset.armed = "1"; del.textContent = "Confirmer la suppression ?"; }
+    return;
+  }
+  const opener = e.target.closest("[data-open]");
+  if(opener && !e.target.closest(".react")){
+    if(!(curState.v === "game" && curState.id === opener.dataset.open)) openGame(opener.dataset.open);
+    return;
+  }
+  const postEl = e.target.closest("[data-post]");
+  if(postEl && !e.target.closest(".react,[data-open],[data-user]")) openPost(postEl.dataset.post);
+});
+
+/* ============================================================
+   Filtres, recherche, onglets, composer du feed
+   ============================================================ */
+document.querySelectorAll(".chip[data-filter]").forEach(chip => chip.addEventListener("click", () => {
+  document.querySelector(".chip[data-filter].is-active")?.classList.remove("is-active");
+  chip.classList.add("is-active");
+  currentFilter = chip.dataset.filter;
+  renderGrid();
+}));
+document.querySelectorAll(".chip[data-dfilter]").forEach(chip => chip.addEventListener("click", () => {
+  document.querySelector(".chip[data-dfilter].is-active")?.classList.remove("is-active");
+  chip.classList.add("is-active");
+  currentDFilter = chip.dataset.dfilter;
+  renderDiscover(currentDFilter);
+}));
+searchInput.addEventListener("input", () => {
+  if(document.body.dataset.view !== "library") goTo("library");
+  renderGrid();
+});
+const tabPanes = { foryou: document.getElementById("feed-foryou"), friends: document.getElementById("feed-friends") };
+document.querySelectorAll(".tab[data-tab]").forEach(tab => tab.addEventListener("click", () => {
+  document.querySelector(".tab[data-tab].is-active")?.classList.remove("is-active");
+  tab.classList.add("is-active");
+  Object.entries(tabPanes).forEach(([k, el]) => el.hidden = (k !== tab.dataset.tab));
+}));
+const composerInput = document.getElementById("composer-input");
+const publishBtn = document.getElementById("btn-publish");
+composerInput.addEventListener("input", () => publishBtn.disabled = composerInput.value.trim().length === 0);
+publishBtn.addEventListener("click", () => {
+  const text = composerInput.value.trim();
+  if(!text) return;
+  userPosts.unshift({ pid:"u"+Date.now(), who:ME, when:"à l'instant", text, likes:0, comments:0, reposts:0 });
+  composerInput.value = ""; publishBtn.disabled = true;
+  renderFeeds();
+  document.querySelector('.tab[data-tab="friends"]').click();
+});
+
+/* ============================================================
+   Drawer de notifications
+   ============================================================ */
+function closeNdrawer(){ document.body.classList.remove("ndrawer-open"); }
+document.getElementById("btn-bell").addEventListener("click", () => {
+  document.body.classList.toggle("ndrawer-open");
+  document.getElementById("bell-dot").style.display = "none";
+});
+document.getElementById("ndrawer-veil").addEventListener("click", closeNdrawer);
+document.getElementById("ndrawer-close").addEventListener("click", closeNdrawer);
+const nPanes = { notifs: document.getElementById("ndrawer-notifs"), activity: document.getElementById("ndrawer-activity") };
+document.querySelectorAll(".tab[data-ntab]").forEach(tab => tab.addEventListener("click", () => {
+  document.querySelector(".tab[data-ntab].is-active")?.classList.remove("is-active");
+  tab.classList.add("is-active");
+  Object.entries(nPanes).forEach(([k, el]) => el.style.display = (k === tab.dataset.ntab ? "flex" : "none"));
+}));
+
+/* ============================================================
+   Modals : ajout (avec autocomplétion), liste, sélection
+   ============================================================ */
+const modalAdd  = document.getElementById("modal-add");
+const modalList = document.getElementById("modal-list");
+const modalPick = document.getElementById("modal-pick");
+const ALL_MODALS = [modalAdd, modalList, modalPick];
+function closeModals(){
+  document.body.classList.remove("modal-open");
+  ALL_MODALS.forEach(m => m.style.display = "");
+}
+function showOnly(modal, focusEl){
+  ALL_MODALS.forEach(m => m.style.display = (m === modal ? "" : "none"));
+  document.body.classList.add("modal-open");
+  if(focusEl) setTimeout(() => focusEl.focus(), 220);
+}
+document.getElementById("modal-veil").addEventListener("click", closeModals);
+
+/* — ajout manuel avec suggestions du catalogue — */
+const addTitle = document.getElementById("add-title");
+const addConfirm = document.getElementById("add-confirm");
+const addSuggest = document.getElementById("add-suggest");
+let pickedSuggestion = null;   // {catalogId} | {extra}
+function suggestionPool(){
+  return CATALOG.filter(g => !g.owned).map(g => ({ catalogId:g.id, title:g.title, platform:g.platform, genre:g.genre, hue:g.hue }))
+    .concat(EXTRA_GAMES.map(g => ({ extra:g, title:g.title, platform:g.platform, genre:g.genre, hue:g.hue })));
+}
+function renderSuggestions(){
+  const q = addTitle.value.trim().toLowerCase();
+  pickedSuggestion = null;
+  if(q.length < 2){ addSuggest.innerHTML = q.length ? "" : `<div class="empty-line" style="padding:2px 2px 0">Tapez au moins 2 lettres pour chercher dans le catalogue Playbond.</div>`; return; }
+  const hits = suggestionPool().filter(s => s.title.toLowerCase().includes(q)).slice(0,6);
+  addSuggest.innerHTML = hits.map((s,i) => `
+    <div class="pick-row" data-suggest="${i}">
+      <div class="mini-cover" style="${coverStyle(s.hue)}">${s.title[0]}</div>
+      <div class="p-info"><div class="p-t">${s.title}</div><div class="p-s">${PLATFORM_NAME[s.platform]} · ${s.genre} · catalogue Playbond</div></div>
+      <svg class="lcheck" width="15" height="15" style="opacity:.4;color:var(--faint)"><use href="#i-chev"/></svg>
+    </div>`).join("") || `<div class="empty-line" style="padding:2px 2px 0">Aucun jeu connu — il sera créé en fiche manuelle.</div>`;
+  addSuggest.querySelectorAll("[data-suggest]").forEach(row => row.addEventListener("click", () => {
+    const s = hits[+row.dataset.suggest];
+    pickedSuggestion = s;
+    addTitle.value = s.title;
+    document.querySelectorAll("#add-platform .chip").forEach(c => c.classList.toggle("is-active", c.dataset.p === s.platform));
+    addSuggest.innerHTML = `
+      <div class="pick-row in-list">
+        <div class="mini-cover" style="${coverStyle(s.hue)}">${s.title[0]}</div>
+        <div class="p-info"><div class="p-t">${s.title}</div><div class="p-s">Sélectionné depuis le catalogue — métadonnées importées</div></div>
+        <svg class="lcheck" width="15" height="15"><use href="#i-check"/></svg>
+      </div>`;
+    addConfirm.disabled = false;
+  }));
+}
+document.getElementById("btn-add").addEventListener("click", () => { renderSuggestions(); showOnly(modalAdd, addTitle); });
+document.getElementById("add-cancel").addEventListener("click", closeModals);
+addTitle.addEventListener("input", () => { addConfirm.disabled = addTitle.value.trim().length === 0; renderSuggestions(); });
+["add-platform","add-status"].forEach(id => {
+  document.getElementById(id).addEventListener("click", e => {
+    const chip = e.target.closest(".chip");
+    if(!chip) return;
+    chip.parentElement.querySelector(".is-active")?.classList.remove("is-active");
+    chip.classList.add("is-active");
+  });
+});
+addConfirm.addEventListener("click", () => {
+  const title = addTitle.value.trim();
+  if(!title) return;
+  const status = document.querySelector("#add-status .is-active").dataset.s;
+  if(pickedSuggestion?.catalogId){
+    const g = byId(pickedSuggestion.catalogId);
+    g.owned = true; g.status = status; g.hours = 0; g.ach = "—";
+    renderDiscover(currentDFilter);
+  } else {
+    const meta = pickedSuggestion?.extra;
+    CATALOG.unshift({
+      id:"manual-" + Date.now(), owned:true, title,
+      platform: document.querySelector("#add-platform .is-active").dataset.p,
+      status,
+      hue: meta ? meta.hue : Math.floor(Math.random()*360),
+      genre: meta ? meta.genre : "Ajout manuel", year:new Date().getFullYear(),
+      hours:0, ach:"—", community:null, votes:null, friends:[], myRating:0,
+      desc:`${title} a été ajouté ${meta ? "depuis le catalogue Playbond" : "manuellement"} à votre bibliothèque. Les métadonnées complémentaires seront récupérées lors de la prochaine synchronisation.`,
+    });
+  }
+  addTitle.value = ""; addConfirm.disabled = true; pickedSuggestion = null;
+  closeModals(); goTo("library"); renderGrid(); renderLists(); updateLibSub();
+  showToast(`« ${title} » ajouté à votre bibliothèque`);
+});
+/* CTA « jeu manquant ? » */
+document.getElementById("missing-add").addEventListener("click", () => { renderSuggestions(); showOnly(modalAdd, addTitle); });
+document.getElementById("missing-sync").addEventListener("click", () => document.getElementById("btn-sync").click());
+
+/* — création / modification de liste (avec visibilité publique) — */
+const listName = document.getElementById("list-name");
+const listConfirm = document.getElementById("list-confirm");
+const listPublic = document.getElementById("list-public");
+let editingListId = null;
+function openListModal(renameId = null){
+  editingListId = renameId;
+  const l = renameId ? LISTS.find(x => x.id === renameId) : null;
+  document.getElementById("list-modal-title").textContent = l ? "Modifier la liste" : "Nouvelle liste";
+  listName.value = l ? l.name : "";
+  listPublic.checked = l ? l.pub : false;
+  listConfirm.disabled = !listName.value.trim();
+  document.querySelectorAll(".color-dot").forEach(d =>
+    d.classList.toggle("is-active", l ? d.dataset.c.toLowerCase() === l.color.toLowerCase() : d.dataset.c === "#29A9CF"));
+  showOnly(modalList, listName);
+}
+document.getElementById("btn-new-list").addEventListener("click", () => openListModal());
+document.getElementById("list-cancel").addEventListener("click", closeModals);
+listName.addEventListener("input", () => listConfirm.disabled = listName.value.trim().length === 0);
+document.getElementById("list-colors").addEventListener("click", e => {
+  const dot = e.target.closest(".color-dot");
+  if(!dot) return;
+  document.querySelector(".color-dot.is-active")?.classList.remove("is-active");
+  dot.classList.add("is-active");
+});
+listConfirm.addEventListener("click", () => {
+  const name = listName.value.trim();
+  if(!name) return;
+  const color = document.querySelector(".color-dot.is-active").dataset.c;
+  if(editingListId){
+    const l = LISTS.find(x => x.id === editingListId);
+    l.name = name; l.color = color; l.pub = listPublic.checked;
+    closeModals(); renderLists();
+    if(curState.v === "list" && curState.id === l.id) renderList(l.id);
+  } else {
+    const l = { id:"l" + Date.now(), name, color, ids:[], pub:listPublic.checked };
+    LISTS.push(l);
+    closeModals(); renderLists(); openList(l.id);
+  }
+  listName.value = ""; listConfirm.disabled = true;
+  editingListId = null;
+});
+
+/* — picker de jeux pour une liste — */
+const pickSearch = document.getElementById("pick-search");
+let pickingListId = null;
+function renderPickList(){
+  const l = LISTS.find(x => x.id === pickingListId);
+  const q = pickSearch.value.trim().toLowerCase();
+  document.getElementById("pick-list").innerHTML = CATALOG
+    .filter(g => g.title.toLowerCase().includes(q))
+    .map(g => `
+    <div class="pick-row ${l.ids.includes(g.id)?"in-list":""}" data-pick="${g.id}">
+      <div class="mini-cover" style="${coverStyle(g.hue)}">${g.title[0]}</div>
+      <div class="p-info"><div class="p-t">${g.title}</div><div class="p-s">${PLATFORM_NAME[g.platform]} · ${g.owned ? "Dans votre bibliothèque" : "Pas encore possédé"}</div></div>
+      <svg class="lcheck" width="15" height="15"><use href="#i-check"/></svg>
+    </div>`).join("");
+}
+function openPickModal(listId){
+  pickingListId = listId;
+  pickSearch.value = "";
+  document.getElementById("pick-title").textContent = `Ajouter à « ${LISTS.find(x => x.id === listId).name} »`;
+  renderPickList();
+  showOnly(modalPick, pickSearch);
+}
+pickSearch.addEventListener("input", renderPickList);
+document.getElementById("pick-list").addEventListener("click", e => {
+  const row = e.target.closest("[data-pick]");
+  if(!row) return;
+  const l = LISTS.find(x => x.id === pickingListId);
+  const id = row.dataset.pick;
+  const idx = l.ids.indexOf(id);
+  idx >= 0 ? l.ids.splice(idx,1) : l.ids.push(id);
+  row.classList.toggle("in-list");
+  renderLists();
+});
+document.getElementById("pick-done").addEventListener("click", () => {
+  closeModals();
+  if(curState.v === "list" && curState.id === pickingListId) renderList(pickingListId);
+});
+
+/* ============================================================
+   Menu profil + réglages
+   ============================================================ */
+function openMenu(){ document.body.classList.add("menu-open"); }
+function closeMenu(){ document.body.classList.remove("menu-open"); }
+document.getElementById("btn-me").addEventListener("click", openMenu);
+document.getElementById("btn-me-mobile").addEventListener("click", openMenu);
+document.getElementById("menu-veil").addEventListener("click", closeMenu);
+document.querySelectorAll(".pm-item[data-action]").forEach(item => item.addEventListener("click", () => {
+  closeMenu();
+  const a = item.dataset.action;
+  if(a === "billing") goTo("billing");
+  else if(a === "settings") goTo("settings");
+  else if(a === "profile") openProfile(ME);
+  else if(a === "customize"){ STATE.premium ? visit({v:"customize"}) : goTo("premium"); }
+}));
+document.getElementById("btn-save-profile").addEventListener("click", () => {
+  const pseudo = document.getElementById("set-pseudo").value.trim() || "Antoine";
+  document.querySelectorAll(".me-name").forEach(el => el.textContent = pseudo);
+  showToast("Profil mis à jour");
+});
+document.getElementById("avatar-file").addEventListener("change", e =>
+  readImage(e, url => { USERS[ME].photo = url; refreshMyAvatars(); showToast("Photo de profil mise à jour"); }));
+
+/* ============================================================
+   Likes + popover + sync + toast + clavier
+   ============================================================ */
+document.addEventListener("click", e => {
+  const like = e.target.closest("button.react.like");
+  if(!like) return;
+  e.stopPropagation();
+  const liked = like.classList.toggle("is-liked");
+  like.querySelector("span").textContent = +like.dataset.likes + (liked ? 1 : 0);
+});
+document.addEventListener("click", e => {
+  if(!e.target.closest(".list-pop-wrap")) document.getElementById("list-pop")?.classList.remove("open");
+});
+const toast = document.getElementById("toast");
+let toastTimer;
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+}
+const syncBtn = document.getElementById("btn-sync");
+syncBtn.addEventListener("click", () => {
+  if(syncBtn.classList.contains("is-syncing")) return;
+  syncBtn.classList.add("is-syncing");
+  setTimeout(() => {
+    syncBtn.classList.remove("is-syncing");
+    showToast("Bibliothèque synchronisée · tout est à jour");
+  }, 1800);
+});
+document.addEventListener("keydown", e => {
+  if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k"){ e.preventDefault(); searchInput.focus(); }
+  if(e.key === "Escape"){ closeMenu(); closeNdrawer(); closeModals(); }
+});
+
+/* ============================================================
+   Initialisation premium / plateformes / onboarding
+   ============================================================ */
+applyPremiumUI();
+</script>
+</body>
+</html>
