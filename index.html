@@ -480,7 +480,7 @@ img{display:block}
 }
 .reason-line{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.03em;color:var(--accent);min-height:14px}
 .btn-add-lib{
-  display:inline-flex;align-items:center;gap:8px;align-self:flex-start;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
   padding:10px 19px;border-radius:99px;background:var(--grad-brand);color:#fff;font-weight:700;font-size:13.5px;
   box-shadow:0 6px 18px rgba(41,169,207,.28);transition:transform .15s,box-shadow .15s;margin-top:4px;
 }
@@ -716,59 +716,6 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
 .friend-chip:hover{border-color:var(--accent-line)}
 .friend-chip .avatar.sm::after{display:none}
 </style>
-<style>
-/* ============================================================
-   V7 — premium actif, onboarding, défis, commentaires, images
-   ============================================================ */
-.cover-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
-.cover .tag,.cover .platform-ic,.cover .match-badge,.g-cover .tag,.g-cover .match-badge{z-index:2}
-.missing-cta{display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap;color:var(--faint);font-size:12.5px;padding:18px 0 4px}
-.missing-cta .sep{color:var(--faint)}
-.onboard{display:flex;gap:14px;align-items:flex-start;margin:14px 0 2px;padding:16px;border:1px solid var(--accent-line);border-radius:var(--r-l);background:linear-gradient(120deg,var(--accent-soft),var(--bg-1) 65%);position:relative}
-.onboard .ob-ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--grad-brand);color:#fff;flex:none}
-.onboard h4{font-family:var(--font-display);font-weight:700;font-size:15px}
-.onboard p{font-size:12.5px;color:var(--muted);margin:3px 0 10px}
-.onboard .chip-row{display:flex;gap:8px;flex-wrap:wrap}
-.onboard .ob-close{position:absolute;top:10px;right:10px;color:var(--faint);padding:4px;border-radius:6px}
-.onboard .ob-close:hover{color:var(--text)}
-.challenge{display:flex;gap:13px;align-items:center;margin:12px 0 2px;padding:13px 15px;border:1px solid rgba(79,224,163,.3);border-radius:var(--r-l);background:linear-gradient(120deg,rgba(79,224,163,.08),var(--bg-1) 60%)}
-.challenge .stack .avatar.sm{border-color:var(--bg-1)}
-.challenge .c-txt{flex:1;min-width:0;font-size:13px}
-.challenge .c-txt b{font-family:var(--font-display)}
-.challenge .c-txt .s{font-size:11px;color:var(--muted)}
-.badge-chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:99px;background:var(--bg-1);border:1px solid var(--line);font-size:12px;font-weight:600}
-.badge-chip.sel{border-color:var(--accent-line);background:var(--accent-soft)}
-.badge-chip.pick{cursor:pointer;transition:border-color .12s}
-.badge-row{display:flex;gap:7px;flex-wrap:wrap;padding:2px 18px}
-.banner-edit{position:absolute;left:10px;bottom:10px;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#fff;background:rgba(7,12,16,.62);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);padding:6px 12px;border-radius:99px;cursor:pointer;z-index:2}
-.banner img.banner-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.comment{display:flex;gap:11px;padding:14px 4px;border-bottom:1px solid var(--line)}
-.comment .event-body{flex:1;min-width:0}
-.compare-table{border:1px solid var(--line);border-radius:var(--r-l);background:var(--bg-1);overflow:hidden}
-.compare-table .ct-head{display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);align-items:center}
-.compare-table .ct-row{display:grid;grid-template-columns:1fr 86px 86px;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;align-items:center}
-.compare-table .ct-row:last-child{border-bottom:none}
-.compare-table .ct-row .l{color:var(--muted)}
-.compare-table .v{font-family:var(--font-display);font-weight:800;text-align:center;font-size:15px}
-.compare-table .v.win{color:var(--accent)}
-.ct-who{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;justify-content:center;width:86px}
-.premium-banner{display:flex;gap:14px;align-items:center;padding:16px;border:1px solid var(--accent-line);border-radius:var(--r-l);background:linear-gradient(120deg,var(--accent-soft),var(--bg-1) 60%)}
-.premium-banner .pb-ic{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--grad-brand);color:#fff;flex:none}
-.premium-banner h4{font-family:var(--font-display);font-weight:800;font-size:16px}
-.premium-banner .s{font-size:12.5px;color:var(--muted)}
-.tag-premium-on{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:2px 8px;border-radius:99px}
-.journal{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg-1);overflow:hidden}
-.journal .j-row{display:flex;gap:12px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);font-size:13px}
-.journal .j-row:last-child{border-bottom:none}
-.journal .j-dot{width:8px;height:8px;border-radius:50%;flex:none}
-.journal .j-when{margin-left:auto;font-family:var(--font-mono);font-size:10px;color:var(--faint);white-space:nowrap}
-.clist-chip{display:flex;gap:11px;align-items:center;padding:11px 13px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg-1);cursor:pointer;transition:border-color .15s}
-.clist-chip:hover{border-color:var(--accent-line)}
-.clist-chip .cl-info{flex:1;min-width:0;line-height:1.35}
-.clist-chip .cl-name{font-weight:700;font-size:13.5px}
-.clist-chip .cl-sub{font-size:11px;color:var(--faint)}
-.pub-ic{color:var(--accent);flex:none}
-</style>
 </head>
 <body data-view="library">
 
@@ -821,9 +768,9 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
     <button class="nav-item" id="btn-new-list" style="color:var(--faint)"><svg width="16" height="16" style="margin:0 2px"><use href="#i-plus"/></svg>Nouvelle liste</button>
 
     <button class="me" id="btn-me" aria-haspopup="menu">
-      <div class="avatar my-avatar" style="background:var(--grad-brand)">AN</div>
+      <div class="avatar" style="background:var(--grad-brand)">AX</div>
       <div class="me-info">
-        <div class="me-name">Antoine</div>
+        <div class="me-name">Axel_Prime</div>
         <div class="me-tag">PLAN GRATUIT · NIV. 42</div>
       </div>
       <svg width="15" height="15" style="transform:rotate(-90deg)"><use href="#i-chev"/></svg>
@@ -847,12 +794,10 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
     <!-- ---- VUE : Bibliothèque ---- -->
     <section class="lib-page" id="view-library">
       <div class="page-head">
-        <div class="eyebrow">Bonsoir, Antoine</div>
+        <div class="eyebrow">Bonsoir, Axel</div>
         <h1 class="page-title">Ma bibliothèque</h1>
-        <p class="page-sub" id="lib-sub">128 jeux · 7 amis en ligne</p>
+        <p class="page-sub">128 jeux · 3 plateformes synchronisées · 7 amis en ligne</p>
       </div>
-      <div id="onboarding"></div>
-      <div id="challenges"></div>
       <div class="filters" role="tablist" aria-label="Filtrer par plateforme">
         <button class="chip is-active" data-filter="all">Tous</button>
         <button class="chip" data-filter="pc"><svg width="14" height="14"><use href="#i-pc"/></svg>PC</button>
@@ -860,7 +805,6 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
         <button class="chip" data-filter="xbox"><svg width="14" height="14"><use href="#i-xbox"/></svg>Xbox</button>
       </div>
       <div class="grid" id="grid"></div>
-      <div class="missing-cta">Un jeu manquant ? <button class="link-line" id="missing-sync">Relancer une synchro</button><span class="sep">·</span><button class="link-line" id="missing-add">L'ajouter manuellement</button></div>
     </section>
 
     <!-- ---- VUE : Feed social ---- -->
@@ -874,7 +818,7 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
         <button class="tab" data-tab="friends">Abonnements</button>
       </div>
       <div class="composer">
-        <div class="avatar my-avatar" style="background:var(--grad-brand)">AN</div>
+        <div class="avatar" style="background:var(--grad-brand)">AX</div>
         <div class="composer-body">
           <textarea id="composer-input" rows="2" placeholder="Un avis sur un jeu ? Une découverte ? Partagez-le…"></textarea>
           <div class="composer-bar">
@@ -897,7 +841,7 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
         <p class="page-sub">Sélection basée sur votre bibliothèque, vos notes et l'activité de vos amis — incluse dans Premium.</p>
       </div>
       <div class="locked-zone">
-        <div class="locked-blur" id="disc-blur" aria-hidden="true">
+        <div class="locked-blur" aria-hidden="true">
           <div class="filters" role="tablist" aria-label="Filtrer les recommandations">
             <button class="chip is-active" data-dfilter="all">Tout</button>
             <button class="chip" data-dfilter="friends">Joués par vos amis</button>
@@ -906,12 +850,12 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
           </div>
           <div class="grid" id="disc-grid"></div>
         </div>
-        <div class="lock-overlay" id="disc-lock">
+        <div class="lock-overlay">
           <div class="lock-card">
             <div class="lock-ic"><svg width="22" height="22"><use href="#i-lock"/></svg></div>
             <h3>Découverte prédictive</h3>
             <p>Les recommandations personnalisées, basées sur les goûts croisés de vos amis et des joueurs comme vous, font partie de Playbond Premium.</p>
-            <button class="btn-premium" data-nav="premium"><svg width="15" height="15"><use href="#i-star"/></svg>Découvrir Premium — 2,50 €/mois</button>
+            <button class="btn-premium" data-nav="stats"><svg width="15" height="15"><use href="#i-star"/></svg>Découvrir Premium — 2,50 €/mois</button>
           </div>
         </div>
       </div>
@@ -922,13 +866,70 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
 
     <!-- ---- VUE : Statistiques (paywall Premium) ---- -->
     <section class="stats-page" id="view-stats" hidden>
-      <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
+      <button class="back-btn" data-nav="library"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
       <div class="page-head" style="padding-top:0">
         <div class="eyebrow">Premium</div>
         <h1 class="page-title">Statistiques avancées</h1>
         <p class="page-sub">Votre temps de jeu global et vos graphiques détaillés, toutes plateformes confondues.</p>
       </div>
-      <div id="stats-body"></div>
+
+      <div class="locked-zone">
+        <div class="fake-stats" aria-hidden="true">
+          <div class="fake-kpi"><div class="k">1 248 h</div><div class="l">Temps de jeu global</div></div>
+          <div class="fake-kpi"><div class="k">61 %</div><div class="l">Taux de complétion</div></div>
+          <div class="fake-kpi"><div class="k">RPG</div><div class="l">Genre dominant</div></div>
+          <div class="fake-bars"><i style="height:40%"></i><i style="height:65%"></i><i style="height:50%"></i><i style="height:90%"></i><i style="height:72%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:35%"></i></div>
+        </div>
+        <div class="lock-overlay">
+          <div class="lock-card">
+            <div class="lock-ic"><svg width="22" height="22"><use href="#i-lock"/></svg></div>
+            <h3>Débloquez vos statistiques</h3>
+            <p>Les statistiques avancées font partie de Playbond Premium : temps de jeu global, graphiques et comparaisons détaillées.</p>
+            <button class="btn-premium js-see-plans"><svg width="15" height="15"><use href="#i-star"/></svg>Passer à Premium — 2,50 €/mois</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare" id="plans-anchor">
+        <div class="compare-col">
+          <h4>Gratuit</h4>
+          <div class="c-price">0 € — POUR TOUJOURS</div>
+          <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Importation limitée</b><span>1 plateforme synchronisée (Steam, PlayStation ou Xbox).</span></div></div>
+          <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Profil public et critiques de base</b><span>Partagez vos avis et votre bibliothèque avec la communauté.</span></div></div>
+          <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Fil d'actualité standard</b><span>Suivez l'activité de vos amis en temps réel.</span></div></div>
+          <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Recommandations générales</b><span>Des suggestions basées sur les tendances de la communauté.</span></div></div>
+        </div>
+        <div class="compare-col is-premium">
+          <h4><svg width="15" height="15" style="color:var(--accent)"><use href="#i-star"/></svg>Premium</h4>
+          <div class="c-price">2,50 € / MOIS — OU 25 € / AN</div>
+          <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Importation illimitée</b><span>Multi-plateforme : Steam, PlayStation et Xbox réunis dans une seule bibliothèque.</span></div></div>
+          <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Statistiques avancées</b><span>Temps de jeu global, graphiques de progression et comparaisons.</span></div></div>
+          <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Personnalisation poussée du profil</b><span>Bannières exclusives et badges visibles par la communauté.</span></div></div>
+          <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Algorithme prédictif</b><span>Recommandations basées sur les goûts croisés de vos amis et des joueurs comme vous.</span></div></div>
+        </div>
+      </div>
+
+      <div class="plans">
+        <div class="plan">
+          <div class="p-name">Gratuit</div>
+          <div class="p-price">0 €</div>
+          <div class="p-desc">1 plateforme, profil public, critiques de base, fil standard et recommandations générales.</div>
+          <div class="p-cta" style="color:var(--faint);cursor:default">Votre plan actuel</div>
+        </div>
+        <div class="plan is-featured">
+          <div class="p-flag">POPULAIRE</div>
+          <div class="p-name">Premium mensuel</div>
+          <div class="p-price">2,50 € <small>/ mois</small></div>
+          <div class="p-desc">Toutes les fonctionnalités Premium, sans engagement. Annulable à tout moment.</div>
+          <button class="p-cta" data-nav="billing">Commencer</button>
+        </div>
+        <div class="plan">
+          <div class="p-name">Premium annuel</div>
+          <div class="p-price">25 € <small>/ an</small></div>
+          <div class="p-desc">Soit ≈ 2,08 € par mois — deux mois offerts par rapport au mensuel.</div>
+          <button class="p-cta" data-nav="billing">Choisir l'annuel</button>
+        </div>
+      </div>
     </section>
 
     <!-- ---- VUE : Abonnement & facturation ---- -->
@@ -939,11 +940,32 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
         <h1 class="page-title">Abonnement &amp; facturation</h1>
       </div>
 
-      <div class="panel"><h3>Mon abonnement</h3><div id="billing-plan"></div></div>
+      <div class="panel">
+        <h3>Mon abonnement</h3>
+        <div class="plan-row">
+          <span class="plan-pill">GRATUIT</span>
+          <div class="grow">
+            <div class="t">Plan Gratuit</div>
+            <div class="s">Membre depuis mars 2026 · 1 plateforme synchronisée sur 1 incluse</div>
+          </div>
+          <button class="btn-premium" data-nav="stats" style="margin-top:0;padding:9px 18px;font-size:13px"><svg width="13" height="13"><use href="#i-star"/></svg>Passer à Premium — 2,50 €/mois</button>
+        </div>
+      </div>
 
-      <div class="panel"><h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-card"/></svg>Moyen de paiement</h3><div id="billing-pay"></div></div>
+      <div class="panel">
+        <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-card"/></svg>Moyen de paiement</h3>
+        <div class="row-line">
+          <span class="ic"><svg width="17" height="17"><use href="#i-card"/></svg></span>
+          <div class="grow">
+            <div>Aucun moyen de paiement</div>
+            <div class="s">Une carte sera requise au moment de l'activation de Premium.</div>
+          </div>
+        </div>
+      </div>
 
-      <div class="panel"><h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-doc"/></svg>Historique des factures</h3><div id="billing-invoices"></div></div>
+      <div class="panel">
+        <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-doc"/></svg>Historique des factures</h3>
+        <div class="empty-line">Aucune facture pour le moment — votre plan actuel est gratuit.</div>
       </div>
     </section>
 
@@ -953,70 +975,6 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
 
     <!-- ---- VUE : Profil joueur (rendu en JS) ---- -->
     <section class="profile-page" id="view-profile" hidden></section>
-
-    <!-- ---- VUE : Premium (offre + souscription) ---- -->
-    <section class="stats-page" id="view-premium" hidden>
-      <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
-      <div class="page-head" style="padding-top:0">
-        <div class="eyebrow">Abonnement</div>
-        <h1 class="page-title">Playbond Premium</h1>
-        <p class="page-sub">Toute la puissance de Playbond : multi-plateforme, statistiques, personnalisation et algorithme prédictif.</p>
-      </div>
-
-      <div id="premium-active" hidden></div>
-
-      <div id="premium-offer">
-        <div class="compare">
-          <div class="compare-col">
-            <h4>Gratuit</h4>
-            <div class="c-price">0 € — POUR TOUJOURS</div>
-            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Importation limitée</b><span>1 plateforme synchronisée (Steam, PlayStation ou Xbox).</span></div></div>
-            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Profil public et critiques de base</b><span>Partagez vos avis et votre bibliothèque avec la communauté.</span></div></div>
-            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Fil d'actualité standard</b><span>Suivez l'activité de vos amis en temps réel.</span></div></div>
-            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Recommandations générales</b><span>Des suggestions basées sur les tendances de la communauté.</span></div></div>
-          </div>
-          <div class="compare-col is-premium">
-            <h4><svg width="15" height="15" style="color:var(--accent)"><use href="#i-star"/></svg>Premium</h4>
-            <div class="c-price">2,50 € / MOIS — OU 25 € / AN</div>
-            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Importation illimitée</b><span>Multi-plateforme : Steam, PlayStation et Xbox réunis dans une seule bibliothèque.</span></div></div>
-            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Statistiques avancées</b><span>Temps de jeu global, graphiques de progression et comparaisons.</span></div></div>
-            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Personnalisation poussée du profil</b><span>Bannières exclusives et badges visibles par la communauté.</span></div></div>
-            <div class="c-item"><svg width="14" height="14"><use href="#i-check"/></svg><div><b>Algorithme prédictif</b><span>Recommandations basées sur les goûts croisés de vos amis et des joueurs comme vous.</span></div></div>
-          </div>
-        </div>
-
-        <div class="plans">
-          <div class="plan">
-            <div class="p-name">Gratuit</div>
-            <div class="p-price">0 €</div>
-            <div class="p-desc">1 plateforme, profil public, critiques de base, fil standard et recommandations générales.</div>
-            <div class="p-cta" style="color:var(--faint);cursor:default">Votre plan actuel</div>
-          </div>
-          <div class="plan is-featured">
-            <div class="p-flag">POPULAIRE</div>
-            <div class="p-name">Premium mensuel</div>
-            <div class="p-price">2,50 € <small>/ mois</small></div>
-            <div class="p-desc">Toutes les fonctionnalités Premium, sans engagement. Annulable à tout moment.</div>
-            <button class="p-cta" data-subscribe="monthly">S'abonner</button>
-          </div>
-          <div class="plan">
-            <div class="p-name">Premium annuel</div>
-            <div class="p-price">25 € <small>/ an</small></div>
-            <div class="p-desc">Soit ≈ 2,08 € par mois — deux mois offerts par rapport au mensuel.</div>
-            <button class="p-cta" data-subscribe="annual">Choisir l'annuel</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ---- VUE : Personnalisation du profil (rendue en JS) ---- -->
-    <section class="settings-page" id="view-customize" hidden></section>
-
-    <!-- ---- VUE : Publication + commentaires (rendue en JS) ---- -->
-    <section class="feed-page" id="view-post" hidden style="max-width:660px"></section>
-
-    <!-- ---- VUE : Comparaison de stats (rendue en JS) ---- -->
-    <section class="settings-page" id="view-compare" hidden></section>
 
     <!-- ---- VUE : Abonnés / abonnements (rendue en JS) ---- -->
     <section class="settings-page" id="view-follows" hidden></section>
@@ -1031,21 +989,30 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
 
       <div class="panel">
         <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-user"/></svg>Profil</h3>
-        <div class="f-label">Photo de profil</div>
-        <div class="row-line" style="border:none;padding:4px 0 10px">
-          <div class="avatar my-avatar" style="background:var(--grad-brand)">AN</div>
-          <div class="grow s">JPG ou PNG — affichée partout sur Playbond.</div>
-          <label class="btn-ghost" style="cursor:pointer">Changer la photo<input type="file" id="avatar-file" accept="image/*" hidden></label>
-        </div>
         <div class="f-label">Pseudo</div>
-        <input type="text" id="set-pseudo" value="Antoine" maxlength="24">
+        <input type="text" id="set-pseudo" value="Axel_Prime" maxlength="24">
         <div class="f-label">Adresse e-mail</div>
-        <input type="email" id="set-email" value="antoine@mail.com">
+        <input type="email" id="set-email" value="axel.prime@mail.com">
         <div class="modal-foot" style="margin-top:14px"><button class="btn-primary" id="btn-save-profile">Enregistrer</button></div>
       </div>
 
       <div class="panel">
-        <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-sync"/></svg>Plateformes connectées</h3><div id="platform-rows"></div>
+        <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-sync"/></svg>Plateformes connectées</h3>
+        <div class="row-line">
+          <span class="ic"><svg width="17" height="17"><use href="#i-pc"/></svg></span>
+          <div class="grow"><div>Steam</div><div class="s">Connecté · 128 jeux importés</div></div>
+          <span class="plan-pill" style="color:var(--ok);border-color:rgba(79,224,163,.3)">ACTIF</span>
+        </div>
+        <div class="row-line">
+          <span class="ic"><svg width="17" height="17"><use href="#i-ps"/></svg></span>
+          <div class="grow"><div>PlayStation Network</div><div class="s">L'import multi-plateforme est réservé à Premium.</div></div>
+          <button class="btn-ghost" data-nav="stats" style="color:var(--premium);border-color:rgba(255,197,109,.3)"><svg width="11" height="11" style="display:inline;vertical-align:-1px"><use href="#i-lock"/></svg> Premium</button>
+        </div>
+        <div class="row-line">
+          <span class="ic"><svg width="17" height="17"><use href="#i-xbox"/></svg></span>
+          <div class="grow"><div>Xbox Live</div><div class="s">L'import multi-plateforme est réservé à Premium.</div></div>
+          <button class="btn-ghost" data-nav="stats" style="color:var(--premium);border-color:rgba(255,197,109,.3)"><svg width="11" height="11" style="display:inline;vertical-align:-1px"><use href="#i-lock"/></svg> Premium</button>
+        </div>
       </div>
 
       <div class="panel">
@@ -1118,8 +1085,6 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
   <h3 id="list-modal-title">Nouvelle liste</h3>
   <div class="f-label">Nom de la liste</div>
   <input type="text" id="list-name" placeholder="Ex. Pépites indé, À faire en 2026…" maxlength="30">
-  <div class="f-label">Visibilité</div>
-  <div class="row-line" style="border:none;padding:2px 0 4px"><div class="grow"><div style="font-size:13.5px">Liste publique</div><div class="s">Visible et suivable par toute la communauté.</div></div><label class="switch"><input type="checkbox" id="list-public"><i></i></label></div>
   <div class="f-label">Couleur</div>
   <div class="color-row" id="list-colors">
     <button class="color-dot is-active" data-c="#29A9CF" style="background:#29A9CF"></button>
@@ -1147,14 +1112,13 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
 <div class="menu-veil" id="menu-veil"></div>
 <div class="profile-menu" id="profile-menu" role="menu" aria-label="Menu du compte">
   <div class="pm-head">
-    <div class="avatar my-avatar" style="background:var(--grad-brand)">AN</div>
+    <div class="avatar" style="background:var(--grad-brand)">AX</div>
     <div class="me-info">
-      <div class="me-name">Antoine</div>
-      <div class="me-tag">antoine@mail.com</div>
+      <div class="me-name">Axel_Prime</div>
+      <div class="me-tag">axel.prime@mail.com</div>
     </div>
   </div>
   <button class="pm-item" data-action="profile"><svg width="17" height="17"><use href="#i-user"/></svg>Voir mon profil</button>
-  <button class="pm-item" data-action="customize"><svg width="17" height="17"><use href="#i-spark"/></svg>Personnaliser le profil<span class="badge-premium" id="pm-customize-badge"><svg width="9" height="9"><use href="#i-star"/></svg>Premium</span></button>
   <button class="pm-item" data-action="billing"><svg width="17" height="17"><use href="#i-card"/></svg>Abonnement &amp; facturation<span class="badge-premium"><svg width="9" height="9"><use href="#i-star"/></svg>Gratuit</span></button>
   <button class="pm-item" data-action="settings"><svg width="17" height="17"><use href="#i-gear"/></svg>Réglages du compte</button>
   <div class="pm-sep"></div>
@@ -1167,7 +1131,7 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
   <button class="bnav-item" data-nav="feed"><svg width="21" height="21"><use href="#i-feed"/></svg>Feed</button>
   <button class="bnav-item" data-nav="discover"><svg width="21" height="21"><use href="#i-discover"/></svg>Découverte</button>
   <button class="bnav-item" data-nav="stats"><svg width="21" height="21"><use href="#i-stats"/></svg>Stats</button>
-  <button class="bnav-item" id="btn-me-mobile"><span class="bnav-avatar my-avatar" style="background:var(--grad-brand)">AN</span>Profil</button>
+  <button class="bnav-item" id="btn-me-mobile"><span class="bnav-avatar" style="background:var(--grad-brand)">AX</span>Profil</button>
 </nav>
 
 <div class="toast" id="toast"></div>
@@ -1177,8 +1141,7 @@ body.ndrawer-open .ndrawer-veil{opacity:1;pointer-events:auto}
 <div class="modal" id="modal-add" role="dialog" aria-label="Ajouter un jeu manuellement">
   <h3>Ajouter un jeu</h3>
   <div class="f-label">Titre du jeu</div>
-  <input type="text" id="add-title" placeholder="Commencez à taper… ex. Outer Wilds" maxlength="60" autocomplete="off">
-  <div class="pick-list" id="add-suggest" style="max-height:26vh"></div>
+  <input type="text" id="add-title" placeholder="Ex. Outer Wilds" maxlength="60">
   <div class="f-label">Plateforme</div>
   <div class="chip-row" id="add-platform">
     <button class="chip is-active" data-p="pc"><svg width="14" height="14"><use href="#i-pc"/></svg>PC</button>
@@ -1266,9 +1229,9 @@ const CATALOG = [
 ];
 const byId = id => CATALOG.find(g => g.id === id);
 
-const ME = "Antoine";
+const ME = "Axel";
 const USERS = {
-  "Antoine"        :{ init:"AN", handle:"@antoine",   g:"var(--grad-brand)", level:42, since:"mars 2026", followers:31, following:5,
+  "Axel"        :{ init:"AX", handle:"@axel_prime",   g:"var(--grad-brand)", level:42, since:"mars 2026", followers:31, following:5,
                    bio:"Centralise 128 jeux, en finit 4 par an. Le backlog est un mode de vie." },
   "Thomas"      :{ init:"TH", handle:"@thomas_lvl99", g:"linear-gradient(135deg,#FF7A59,#C0392B)", level:67, since:"janv. 2026", followers:204, following:88,
                    bio:"Souls-like only. 165 h sur Elden Ring et fier de chaque mort." },
@@ -1387,125 +1350,22 @@ const STATUS_LABEL  = { playing:"EN COURS", done:"TERMINÉ", backlog:"BACKLOG" }
 
 /* Graphes d'abonnements (prototype) */
 const FOLLOWS = {
-  "Antoine"        :{ followers:["Thomas","Sarah","Léa","Mehdi","Nina"], following:["Thomas","Sarah","Léa","Mehdi","Nina"] },
-  "Thomas"      :{ followers:["Antoine","Mehdi","SoulsVet","Léa"],        following:["Antoine","SoulsVet","Mehdi"] },
-  "Sarah"       :{ followers:["Antoine","Nina","PixelMarie"],             following:["Antoine","PixelMarie","Nina","Léa"] },
-  "Léa"         :{ followers:["Antoine","Thomas","Sarah","Nina"],         following:["Antoine","MarioDellor"] },
-  "Mehdi"       :{ followers:["Antoine","Thomas"],                        following:["Antoine","Thomas","SoulsVet"] },
-  "Nina"        :{ followers:["Antoine","Sarah"],                         following:["Antoine","Sarah","Léa","PixelMarie"] },
+  "Axel"        :{ followers:["Thomas","Sarah","Léa","Mehdi","Nina"], following:["Thomas","Sarah","Léa","Mehdi","Nina"] },
+  "Thomas"      :{ followers:["Axel","Mehdi","SoulsVet","Léa"],        following:["Axel","SoulsVet","Mehdi"] },
+  "Sarah"       :{ followers:["Axel","Nina","PixelMarie"],             following:["Axel","PixelMarie","Nina","Léa"] },
+  "Léa"         :{ followers:["Axel","Thomas","Sarah","Nina"],         following:["Axel","MarioDellor"] },
+  "Mehdi"       :{ followers:["Axel","Thomas"],                        following:["Axel","Thomas","SoulsVet"] },
+  "Nina"        :{ followers:["Axel","Sarah"],                         following:["Axel","Sarah","Léa","PixelMarie"] },
   "MarioDellor" :{ followers:["Léa","PixelMarie","SoulsVet"],          following:["PixelMarie"] },
   "PixelMarie"  :{ followers:["Sarah","Nina","MarioDellor"],           following:["MarioDellor","SoulsVet"] },
   "SoulsVet"    :{ followers:["Thomas","Mehdi","PixelMarie"],          following:["Thomas"] },
 };
-/* ============================================================
-   V7 — état global, abonnement, personnalisation
-   ============================================================ */
-const STATE = {
-  premium:false, plan:null,                       // "monthly" | "annual"
-  platforms:{ pc:true, ps:false, xbox:false },    // gratuit : 1 seule plateforme
-  onboardingDone:false,
-};
-USERS[ME].photo  = null;   // dataURL après upload
-USERS[ME].banner = null;   // dataURL après upload (Premium)
-USERS[ME].badges = [];     // ids de BADGE_DEFS (Premium)
-/* compteurs pour la comparaison de stats */
-Object.assign(USERS["Antoine"], { plat:3 });
-Object.assign(USERS["Thomas"],  { plat:9 });
-Object.assign(USERS["Sarah"],   { plat:5 });
-Object.assign(USERS["Léa"],     { plat:7 });
-Object.assign(USERS["Mehdi"],   { plat:23 });
-Object.assign(USERS["Nina"],    { plat:2 });
-Object.assign(USERS["MarioDellor"], { plat:14 });
-Object.assign(USERS["PixelMarie"],  { plat:11 });
-Object.assign(USERS["SoulsVet"],    { plat:19 });
 
-const BADGE_DEFS = [
-  { id:"platine",  icon:"🏆", name:"Premier platine" },
-  { id:"cent",     icon:"💯", name:"100 jeux" },
-  { id:"critique", icon:"✍️", name:"Critique populaire" },
-  { id:"early",    icon:"🚀", name:"Early adopter" },
-  { id:"marathon", icon:"⏱️", name:"Marathonien" },
-  { id:"social",   icon:"🦋", name:"Papillon social" },
-];
-
-/* Listes : visibilité publique */
-LISTS.forEach(l => l.pub = false);
-
-/* Listes publiques de la communauté */
-const COMMUNITY_LISTS = [
-  { id:"cl1", name:"Les meilleurs metroidvania",     by:"Léa",      color:"#29A9CF", ids:["hollow","silksong","deadcells"],          followers:128 },
-  { id:"cl2", name:"Souls-like pour bien souffrir",  by:"SoulsVet", color:"#9AA7B8", ids:["elden","liesofp","sekiro"],               followers:342 },
-  { id:"cl3", name:"Cosy entre deux boss",           by:"Nina",     color:"#4FE0A3", ids:["stardew","balatro"],                      followers:96 },
-  { id:"cl4", name:"Mondes ouverts qui valent 100 h",by:"Thomas",   color:"#FF7A59", ids:["witcher3","elden","cp2077","ghost"],      followers:215 },
-];
-const followedCLists = {};
-const clById = id => COMMUNITY_LISTS.find(c => c.id === id);
-
-/* Identifiants + commentaires des publications */
-FRIEND_POSTS.forEach((p,i) => p.pid = "f"+i);
-RECO_POSTS.forEach((p,i)   => p.pid = "r"+i);
-const COMMENTS = {
-  f0: [ { who:"Léa",      when:"il y a 8 min",  text:"La Lande Maudite nous a tous eus. Bienvenue au club des reconstruits." },
-        { who:"SoulsVet", when:"il y a 5 min",  text:"165 h c'est un échauffement. On en reparle au NG+7." } ],
-  f2: [ { who:"Sarah",    when:"il y a 1 h",    text:"Le PNJ de 4 minutes, je sais EXACTEMENT duquel tu parles 😭" },
-        { who:"Thomas",   when:"il y a 40 min", text:"Critique validée. Acte 3 meilleur dénouement du genre." } ],
-  f3: [ { who:"Antoine",  when:"il y a 2 h",    text:"GG pour le platine ! Le mien m'a pris 58 h, le vent me manque aussi." } ],
-  r0: [ { who:"PixelMarie", when:"il y a 2 h",  text:"Le thérapeute a tort. 400 morts = 400 leçons." } ],
-  r1: [ { who:"Nina",     when:"il y a 4 h",    text:"Même histoire. Jokers holographiques envoyés, tiens bon." },
-        { who:"Mehdi",    when:"il y a 3 h",    text:"On dit tous « 10 minutes ». Personne ne ressort en 10 minutes." } ],
-  r3: [ { who:"Léa",      when:"il y a 10 h",   text:"J'y croirai quand je l'aurai fini. Donc jamais, vu mon backlog." } ],
-};
-const getComments = pid => (COMMENTS[pid] ||= []);
-
-/* Journal de jeu (entrées par défaut générées si absentes) */
-const JOURNAL = {
-  elden:  [ { c:"#4FE0A3", t:"Session de 2 h 10 — Donjon de la Lande", when:"hier · 22:40" },
-            { c:"#29A9CF", t:"Boss vaincu : Margit le Déchu (enfin)",   when:"il y a 4 j" },
-            { c:"#FFC56D", t:"Commencé",                                 when:"12 mars 2026" } ],
-  ghost:  [ { c:"#29A9CF", t:"Terminé — 100 % · platine décroché",       when:"2 juin 2026" },
-            { c:"#FFC56D", t:"Commencé",                                 when:"3 mai 2026" } ],
-  hades2: [ { c:"#4FE0A3", t:"Run n°61 — défaite face à Chronos",        when:"ce matin · 00:45" },
-            { c:"#FFC56D", t:"Commencé",                                 when:"28 avril 2026" } ],
-};
-
-/* Suggestions pour l'ajout manuel (catalogue connu de Playbond) */
-const EXTRA_GAMES = [
-  { title:"Outer Wilds",            platform:"pc",   genre:"Exploration",  hue:42 },
-  { title:"It Takes Two",           platform:"ps",   genre:"Coop",         hue:12 },
-  { title:"Celeste",                platform:"pc",   genre:"Plateforme",   hue:320 },
-  { title:"Disco Elysium",          platform:"pc",   genre:"RPG",          hue:28 },
-  { title:"Doom Eternal",           platform:"xbox", genre:"FPS",          hue:0 },
-  { title:"Red Dead Redemption 2",  platform:"ps",   genre:"Monde ouvert", hue:20 },
-  { title:"Rocket League",          platform:"pc",   genre:"Sport",        hue:205 },
-  { title:"Slay the Spire",         platform:"pc",   genre:"Deckbuilder",  hue:268 },
-  { title:"Terraria",               platform:"pc",   genre:"Sandbox",      hue:110 },
-  { title:"Persona 5 Royal",        platform:"ps",   genre:"JRPG",         hue:350 },
-  { title:"Resident Evil 4",        platform:"ps",   genre:"Horreur",      hue:38 },
-  { title:"Marvel's Spider-Man 2",  platform:"ps",   genre:"Action",       hue:355 },
-  { title:"Halo Infinite",          platform:"xbox", genre:"FPS",          hue:160 },
-  { title:"Horizon Forbidden West", platform:"ps",   genre:"Action-RPG",   hue:188 },
-  { title:"Bloodborne",             platform:"ps",   genre:"Souls-like",   hue:230 },
-  { title:"Factorio",               platform:"pc",   genre:"Gestion",      hue:32 },
-  { title:"Vampire Survivors",      platform:"pc",   genre:"Rogue-lite",   hue:280 },
-  { title:"Minecraft",              platform:"pc",   genre:"Sandbox",      hue:100 },
-];
-
-/* Défis entre amis */
-const CHALLENGES = [];
 
 
 /* ============================================================
    Helpers de rendu
-   ------------------------------------------------------------
-   IMAGES : chaque visuel de jeu tente de charger
-   images/games/{id}.jpg  (dossier à côté de ce fichier HTML).
-   Déposez vos jaquettes sous ce nom (ex. images/games/elden.jpg)
-   et elles remplaceront automatiquement le dégradé génératif —
-   quelle que soit la version du prototype.
    ============================================================ */
-const GAME_IMG = id => `images/games/${id}.jpg`;
-const coverImg = id => `<img class="cover-img" loading="lazy" src="${GAME_IMG(id)}" alt="" onerror="this.remove()">`;
-
 function stars(n, size=10){
   let s = `<span class="mini-stars">`;
   for(let i=0;i<5;i++) s += `<svg width="${size}" height="${size}" style="${i<n?'':'opacity:.22'}"><use href="#i-star"/></svg>`;
@@ -1513,15 +1373,7 @@ function stars(n, size=10){
 }
 function avatar(name, cls="avatar"){
   const u = USERS[name];
-  const bg = u.photo ? `url(${u.photo}) center/cover` : u.g;
-  return `<div class="${cls}" data-user="${name}" style="background:${bg}" title="Voir le profil de ${name}">${u.photo ? "" : u.init}</div>`;
-}
-function refreshMyAvatars(){
-  const u = USERS[ME];
-  document.querySelectorAll(".my-avatar").forEach(el => {
-    el.style.background = u.photo ? `url(${u.photo}) center/cover` : "var(--grad-brand)";
-    el.textContent = u.photo ? "" : u.init;
-  });
+  return `<div class="${cls}" data-user="${name}" style="background:${u.g}" title="Voir le profil de ${name}">${u.init}</div>`;
 }
 function coverStyle(hue){
   return `background:radial-gradient(140% 90% at 75% 105%, hsl(${hue} 70% 30% / .9), transparent 60%),linear-gradient(165deg, hsl(${hue} 50% 22%), hsl(${(hue+45)%360} 55% 9%))`;
@@ -1540,7 +1392,6 @@ function cardHTML(g, i){
   return `
   <article class="card" data-open="${g.id}" style="animation:cardIn .4s ${i*0.04}s backwards">
     <div class="cover" style="${coverStyle(g.hue)}">
-      ${coverImg(g.id)}
       <span class="cover-letter">${g.title[0]}</span>
       ${g.status ? `<span class="tag" data-status="${g.status}">${STATUS_LABEL[g.status]}</span>` : ""}
       <span class="platform-ic"><svg width="15" height="15"><use href="${PLATFORM_ICON[g.platform]}"/></svg></span>
@@ -1559,7 +1410,6 @@ function discCardHTML(g, i){
   return `
   <article class="card" data-open="${g.id}" style="animation:cardIn .4s ${i*0.04}s backwards">
     <div class="cover" style="${coverStyle(g.hue)}">
-      ${coverImg(g.id)}
       <span class="cover-letter">${g.title[0]}</span>
       <span class="match-badge">${g.match} %</span>
       <span class="platform-ic"><svg width="15" height="15"><use href="${PLATFORM_ICON[g.platform]}"/></svg></span>
@@ -1571,16 +1421,16 @@ function discCardHTML(g, i){
     </div>
   </article>`;
 }
-function postHTML(p, i=0, inThread=false){
+function postHTML(p, i=0){
   const u = USERS[p.who];
   const game = p.gameId ? byId(p.gameId) : null;
   return `
-  <article class="post" ${inThread ? "" : `data-post="${p.pid}"`} style="animation-delay:${i*0.05}s;${inThread?"":"cursor:pointer"}">
+  <article class="post" style="animation-delay:${i*0.05}s">
     ${avatar(p.who)}
     <div class="post-body">
       ${p.reco ? `<div class="post-reco"><svg width="11" height="11"><use href="#i-spark"/></svg>${p.reco}</div>` : ""}
       <div class="post-meta">
-        <span data-user="${p.who}"><span class="name">${p.who === ME ? "Vous" : p.who}</span> <span class="handle">${u.handle}</span></span>
+        <span data-user="${p.who}"><span class="name">${p.who}</span> <span class="handle">${u.handle}</span></span>
         <span class="when">· ${p.when}</span>
         ${p.rating ? stars(p.rating, 11) : ""}
       </div>
@@ -1588,7 +1438,7 @@ function postHTML(p, i=0, inThread=false){
       <p class="post-text">${p.text}</p>
       ${game ? `
       <div class="post-game" data-open="${game.id}" role="button" tabindex="0">
-        <div class="mini-cover" style="${coverStyle(game.hue)};position:relative;overflow:hidden">${coverImg(game.id)}${game.title[0]}</div>
+        <div class="mini-cover" style="${coverStyle(game.hue)}">${game.title[0]}</div>
         <div class="post-game-info">
           <div class="g-title">${game.title}</div>
           <div class="g-sub">${p.gsub || game.genre}</div>
@@ -1597,7 +1447,7 @@ function postHTML(p, i=0, inThread=false){
       </div>` : ""}
       <div class="post-actions">
         <button class="react like" data-likes="${p.likes}" aria-label="J'aime"><svg width="15" height="15"><use href="#i-heart"/></svg><span>${p.likes}</span></button>
-        <button class="react js-open-comments" data-post="${p.pid}" aria-label="Commentaires"><svg width="15" height="15"><use href="#i-chat"/></svg><span>${getComments(p.pid).length || p.comments}</span></button>
+        <span class="react"><svg width="15" height="15"><use href="#i-chat"/></svg><span>${p.comments}</span></span>
         <span class="react"><svg width="15" height="15"><use href="#i-repost"/></svg><span>${p.reposts}</span></span>
       </div>
     </div>
@@ -1627,7 +1477,7 @@ function notifHTML(n){
     </div>
   </article>`;
 }
-function reviewHTML(r){
+function reviewHTML(r, gameId){
   const mine = r.who === ME;
   return `
   <div class="review ${mine ? "is-mine" : ""}">
@@ -1645,33 +1495,11 @@ function reviewHTML(r){
     </div>
   </div>`;
 }
-function commentHTML(c){
-  return `
-  <div class="comment">
-    ${avatar(c.who,"avatar sm")}
-    <div class="event-body">
-      <div class="post-meta"><span data-user="${c.who}"><span class="name" style="font-size:13px">${c.who === ME ? "Vous" : c.who}</span></span><span class="when">· ${c.when}</span></div>
-      <p class="event-text" style="color:var(--text);font-size:13.5px">${c.text}</p>
-    </div>
-  </div>`;
-}
-function userRowHTML(name){
-  const u = USERS[name];
-  const self = name === ME;
-  return `
-  <div class="user-row">
-    ${avatar(name)}
-    <div class="u-info" data-user="${name}">
-      <div class="u-name">${self ? "Vous" : name} <span class="u-sub">${u.handle}</span></div>
-      <div class="u-bio">${u.bio}</div>
-    </div>
-    ${self ? "" : `<button class="btn-follow ${followState[name]?"is-on":""}" data-followtoggle="${name}">${followState[name]?"Suivi ✓":"Suivre"}</button>`}
-  </div>`;
-}
 
 
 /* ============================================================
-   Fiche jeu : avis, statuts, playlists, journal, listes publiques
+   Fiche jeu : avis (rédiger / modifier / supprimer / trier),
+   statuts, playlists (y compris jeux non possédés)
    ============================================================ */
 let reviewSort = "recent";
 const SORTS = {
@@ -1682,7 +1510,7 @@ const SORTS = {
 };
 function renderReviews(id){
   const list = [...getReviews(id)].sort(SORTS[reviewSort].fn);
-  document.getElementById("reviews-list").innerHTML = list.map(reviewHTML).join("");
+  document.getElementById("reviews-list").innerHTML = list.map(r => reviewHTML(r, id)).join("");
   document.getElementById("reviews-count").textContent = list.length;
   document.querySelectorAll(".review-tools .chip").forEach(c =>
     c.classList.toggle("is-active", c.dataset.sort === reviewSort));
@@ -1703,18 +1531,10 @@ function listPopHTML(id){
     </div>
   </div>`;
 }
-function journalEntries(g){
-  if(JOURNAL[g.id]) return JOURNAL[g.id];
-  const rows = [];
-  if(g.status === "done") rows.push({ c:"#29A9CF", t:"Terminé", when:"mai 2026" });
-  if(g.hours > 0) rows.push({ c:"#4FE0A3", t:`Dernière session — ${Math.max(1,Math.round(g.hours/8))} h ${(g.hours*7)%60} min`, when:"il y a 3 j" });
-  rows.push({ c:"#FFC56D", t:"Ajouté à la bibliothèque", when:"2026" });
-  return rows;
-}
+
 function renderGame(id){
   const g = byId(id);
   reviewSort = "recent";
-  const clists = COMMUNITY_LISTS.filter(c => c.ids.includes(id));
 
   const ownedBlock = g.owned ? `
     <div class="status-row">
@@ -1728,11 +1548,23 @@ function renderGame(id){
     </div>
     ${g.reason ? `<div class="reason-line" style="margin-top:4px"><svg width="10" height="10"><use href="#i-spark"/></svg>${g.reason} · compatibilité ${g.match} %</div>` : ""}`;
 
+  const statsBlock = g.owned ? `
+    <div class="g-stats">
+      <div class="g-stat"><div class="k">${g.hours} h</div><div class="l">Temps de jeu</div></div>
+      <div class="g-stat"><div class="k">${g.ach}</div><div class="l">Succès</div></div>
+      <div class="g-stat"><div class="k">${g.friends.length}</div><div class="l">Amis joueurs</div></div>
+    </div>` : "";
+
+  const friendsRow = g.friends.length ? `
+    <h2 class="g-section-title">Vos amis y jouent</h2>
+    <div class="friends-row">
+      ${g.friends.map(n => `<span class="friend-chip" data-user="${n}">${avatar(n,"avatar sm")}${n}</span>`).join("")}
+    </div>` : "";
+
   gameView.innerHTML = `
     <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
     <div class="game-hero">
-      <div class="g-cover" style="${coverStyle(g.hue)};overflow:hidden">
-        ${coverImg(g.id)}
+      <div class="g-cover" style="${coverStyle(g.hue)}">
         <span class="cover-letter">${g.title[0]}</span>
         ${g.owned ? `<span class="tag" data-status="${g.status}" id="hero-tag">${STATUS_LABEL[g.status]}</span>` : `<span class="match-badge">${g.match ?? "—"} %</span>`}
       </div>
@@ -1747,36 +1579,9 @@ function renderGame(id){
         ${ownedBlock}
       </div>
     </div>
-    ${g.owned ? `
-    <div class="g-stats">
-      <div class="g-stat"><div class="k">${g.hours} h</div><div class="l">Temps de jeu</div></div>
-      <div class="g-stat"><div class="k">${g.ach}</div><div class="l">Succès</div></div>
-      <div class="g-stat"><div class="k">${g.friends.length}</div><div class="l">Amis joueurs</div></div>
-    </div>` : ""}
+    ${statsBlock}
     <p class="g-desc">${g.desc}</p>
-    ${g.owned ? `
-    <h2 class="g-section-title">Journal de jeu</h2>
-    <div class="journal">
-      ${journalEntries(g).map(j => `<div class="j-row"><span class="j-dot" style="background:${j.c}"></span>${j.t}<span class="j-when">${j.when}</span></div>`).join("")}
-    </div>` : ""}
-    ${g.friends.length ? `
-    <h2 class="g-section-title">Vos amis y jouent</h2>
-    <div class="friends-row">
-      ${g.friends.map(n => `<span class="friend-chip" data-user="${n}">${avatar(n,"avatar sm")}${n}</span>`).join("")}
-    </div>` : ""}
-    ${clists.length ? `
-    <h2 class="g-section-title">Dans les listes de la communauté</h2>
-    <div style="display:flex;flex-direction:column;gap:9px">
-      ${clists.map(c => `
-      <div class="clist-chip" data-openclist="${c.id}">
-        <span class="list-dot" style="background:${c.color};width:10px;height:10px"></span>
-        <div class="cl-info">
-          <div class="cl-name">${c.name}</div>
-          <div class="cl-sub">par ${c.by} · ${c.ids.length} jeux · ${c.followers + (followedCLists[c.id]?1:0)} abonnés</div>
-        </div>
-        <svg width="15" height="15" style="color:var(--faint)"><use href="#i-chev"/></svg>
-      </div>`).join("")}
-    </div>` : ""}
+    ${friendsRow}
     <h2 class="g-section-title">Avis de la communauté <span class="badge-count" style="font-size:12px">(<span id="reviews-count"></span>)</span></h2>
     <div class="review-composer">
       ${avatar(ME)}
@@ -1797,6 +1602,7 @@ function renderGame(id){
   `;
   renderReviews(id);
 
+  /* — statuts / bibliothèque — */
   if(g.owned){
     gameView.querySelectorAll(".status-chip").forEach(chip => chip.addEventListener("click", () => {
       g.status = chip.dataset.status;
@@ -1814,6 +1620,8 @@ function renderGame(id){
       renderGrid(); renderDiscover(currentDFilter); renderLists();
     });
   }
+
+  /* — popover de listes (jeux possédés ou non) — */
   const pop = document.getElementById("list-pop");
   document.getElementById("btn-list-pop").addEventListener("click", e => { e.stopPropagation(); pop.classList.toggle("open"); });
   pop.addEventListener("click", e => {
@@ -1829,6 +1637,7 @@ function renderGame(id){
     if(e.target.closest("#pop-new-list")){ pop.classList.remove("open"); openListModal(); }
   });
 
+  /* — avis : rédiger, modifier, supprimer, trier — */
   const rcText = document.getElementById("rc-text");
   const rcPublish = document.getElementById("rc-publish");
   let editingTs = null;
@@ -1858,6 +1667,7 @@ function renderGame(id){
     reviewSort = c.dataset.sort;
     renderReviews(id);
   }));
+  /* modifier / supprimer (délégation sur la liste, re-rendue à chaque tri) */
   document.getElementById("reviews-list").addEventListener("click", e => {
     const edit = e.target.closest("[data-edit-review]");
     if(edit){
@@ -1885,58 +1695,9 @@ function renderGame(id){
 }
 
 /* ============================================================
-   Publication + commentaires
-   ============================================================ */
-const userPosts = [];
-function findPost(pid){
-  return FRIEND_POSTS.concat(RECO_POSTS, userPosts).find(p => p.pid === pid);
-}
-function renderPost(pid){
-  const p = findPost(pid);
-  const comments = getComments(pid);
-  postView.innerHTML = `
-    <button class="back-btn js-back" style="margin-bottom:8px"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
-    ${postHTML(p, 0, true)}
-    <h2 class="g-section-title" style="margin-top:14px">Commentaires <span class="badge-count" style="font-size:12px">(${comments.length})</span></h2>
-    <div class="review-composer" style="margin:4px 0 6px">
-      ${avatar(ME)}
-      <div class="rc-body">
-        <textarea id="cm-text" rows="2" placeholder="Répondre à ${p.who === ME ? "votre publication" : p.who}…"></textarea>
-        <div class="rc-bar"><button class="btn-primary" id="cm-publish" disabled>Commenter</button></div>
-      </div>
-    </div>
-    <div id="comments-list">${comments.map(commentHTML).join("") || `<div class="grid-empty" style="margin-top:8px"><strong>Aucun commentaire</strong>Soyez la première personne à réagir.</div>`}</div>
-  `;
-  const cmText = document.getElementById("cm-text");
-  const cmPub = document.getElementById("cm-publish");
-  cmText.addEventListener("input", () => cmPub.disabled = !cmText.value.trim());
-  cmPub.addEventListener("click", () => {
-    comments.push({ who:ME, when:"à l'instant", text:cmText.value.trim() });
-    p.comments = comments.length;
-    renderPost(pid);
-    renderFeeds();
-    window.scrollTo({top:document.body.scrollHeight, behavior:"smooth"});
-  });
-}
-
-/* ============================================================
-   Profil, badges, défis, comparaison
+   Profil + abonnés / abonnements
    ============================================================ */
 const followState = {};
-function myStats(){
-  const owned = CATALOG.filter(g => g.owned);
-  return {
-    games: owned.length,
-    done: owned.filter(g => g.status === "done").length,
-    hours: owned.reduce((s,g) => s + (g.hours||0), 0),
-    plat: USERS[ME].plat,
-  };
-}
-function friendStats(name){
-  const u = USERS[name];
-  const games = CATALOG.filter(g => g.friends?.includes(name)).length + 4;
-  return { games, done: Math.round(games*.6), hours: u.level*16, plat: u.plat };
-}
 function renderProfile(name){
   const u = USERS[name];
   const self = name === ME;
@@ -1944,34 +1705,23 @@ function renderProfile(name){
   const posts = FRIEND_POSTS.concat(RECO_POSTS).filter(p => p.who === name);
   const finished = self ? CATALOG.filter(g => g.owned && g.status === "done").length : Math.max(1, Math.round(games.length * .6));
   const nFollowers = FOLLOWS[name].followers.length + (followState[name] ? 1 : 0);
-  const challenge = CHALLENGES.find(c => c.with === name);
-  const bannerBg = (self && u.banner) ? "" : `background:${u.g}`;
 
   profileView.innerHTML = `
     <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
-    <div class="banner" style="${bannerBg}">
-      ${self && u.banner ? `<img class="banner-img" src="${u.banner}" alt="">` : ""}
-      ${self ? (STATE.premium
-          ? `<button class="banner-edit" data-action="customize"><svg width="11" height="11"><use href="#i-spark"/></svg>Modifier la bannière</button>`
-          : `<button class="banner-hint" data-nav="premium"><svg width="10" height="10"><use href="#i-lock"/></svg>Bannières personnalisées avec Premium</button>`) : ""}
+    <div class="banner" style="background:${u.g}">
+      ${self ? `<button class="banner-hint" data-nav="stats"><svg width="10" height="10"><use href="#i-lock"/></svg>Bannières personnalisées avec Premium</button>` : ""}
     </div>
     <div class="profile-head">
-      <div class="avatar xl ${self?"my-avatar":""}" style="background:${self && u.photo ? `url(${u.photo}) center/cover` : u.g}">${self && u.photo ? "" : u.init}</div>
+      <div class="avatar xl" style="background:${u.g}">${u.init}</div>
       <div class="profile-id">
-        <div class="p-name">${self ? document.querySelector(".me-name").textContent : name} ${self && STATE.premium ? `<span class="tag-premium-on"><svg width="9" height="9"><use href="#i-star"/></svg>PREMIUM</span>` : ""}</div>
+        <div class="p-name">${self ? document.querySelector(".me-name").textContent : name}</div>
         <div class="p-handle">${u.handle} · NIV. ${u.level} · membre depuis ${u.since}</div>
       </div>
       ${self
-        ? `<button class="btn-ghost" data-action="customize"><svg width="13" height="13" style="display:inline;vertical-align:-2px"><use href="#i-spark"/></svg> Personnaliser</button>`
+        ? `<button class="btn-ghost" data-nav="settings"><svg width="13" height="13" style="display:inline;vertical-align:-2px"><use href="#i-gear"/></svg> Modifier le profil</button>`
         : `<button class="btn-follow ${followState[name]?"is-on":""}" id="btn-follow">${followState[name]?"Suivi ✓":"Suivre"}</button>`}
     </div>
-    ${self && u.badges.length ? `<div class="badge-row">${u.badges.map(b => { const d = BADGE_DEFS.find(x=>x.id===b); return `<span class="badge-chip">${d.icon} ${d.name}</span>`; }).join("")}</div>` : ""}
     <p class="profile-bio">${u.bio}</p>
-    ${self ? "" : `
-    <div class="list-actions" style="padding:0 2px">
-      <button class="chip" id="btn-challenge">${challenge ? "⚔️ Défi en cours" : "⚔️ Défier " + name}</button>
-      <button class="chip" id="btn-compare">${STATE.premium ? "📊 Comparer nos stats" : `<svg width="11" height="11" style="display:inline;vertical-align:-1px"><use href="#i-lock"/></svg> Comparer nos stats`}</button>
-    </div>`}
     <div class="profile-stats">
       <div class="g-stat"><div class="k">${games.length}</div><div class="l">Jeux</div></div>
       <div class="g-stat"><div class="k">${finished}</div><div class="l">Terminés</div></div>
@@ -1987,49 +1737,21 @@ function renderProfile(name){
       followState[name] = !followState[name];
       renderProfile(name);
     });
-    document.getElementById("btn-challenge").addEventListener("click", () => {
-      if(CHALLENGES.find(c => c.with === name)) return;
-      const target = CATALOG.find(g => g.owned && g.status === "backlog") || CATALOG.find(g => g.owned);
-      CHALLENGES.push({ with:name, gameId:target.id });
-      NOTIFS.unshift({ who:name, unread:true, text:`Défi lancé : qui finira <span class="hl">${target.title}</span> en premier, vous ou <b>${name}</b> ?`, time:"à l'instant" });
-      document.getElementById("ndrawer-notifs").innerHTML = NOTIFS.map(notifHTML).join("");
-      renderChallenges();
-      renderProfile(name);
-      showToast(`Défi lancé à ${name} sur ${target.title} ⚔️`);
-    });
-    document.getElementById("btn-compare").addEventListener("click", () => {
-      STATE.premium ? visit({ v:"compare", id:name }) : goTo("premium");
-    });
   }
 }
-function renderCompare(name){
-  const a = myStats(), b = friendStats(name);
+
+function userRowHTML(name){
   const u = USERS[name];
-  const row = (label, va, vb, unit="") => `
-    <div class="ct-row"><span class="l">${label}</span>
-      <span class="v ${va>=vb?"win":""}">${va}${unit}</span>
-      <span class="v ${vb>=va?"win":""}">${vb}${unit}</span>
-    </div>`;
-  compareView.innerHTML = `
-    <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
-    <div class="page-head" style="padding-top:0">
-      <div class="eyebrow">Premium · Comparaison</div>
-      <h1 class="page-title">Vous vs ${name}</h1>
+  const self = name === ME;
+  return `
+  <div class="user-row">
+    ${avatar(name)}
+    <div class="u-info" data-user="${name}">
+      <div class="u-name">${self ? "Vous" : name} <span class="u-sub">${u.handle}</span></div>
+      <div class="u-bio">${u.bio}</div>
     </div>
-    <div class="compare-table">
-      <div class="ct-head">
-        <span style="font-size:12px;color:var(--faint)">Statistique</span>
-        <span class="ct-who">${avatar(ME,"avatar sm")}Vous</span>
-        <span class="ct-who">${avatar(name,"avatar sm")}${name}</span>
-      </div>
-      ${row("Jeux dans la bibliothèque", a.games, b.games)}
-      ${row("Jeux terminés", a.done, b.done)}
-      ${row("Heures de jeu totales", a.hours, b.hours, " h")}
-      ${row("Trophées platine", a.plat, b.plat)}
-      ${row("Niveau Playbond", USERS[ME].level, u.level)}
-    </div>
-    <p class="page-sub" style="padding:0 2px">Les valeurs gagnantes sont en bleu. Comparaison alimentée par vos bibliothèques synchronisées.</p>
-  `;
+    ${self ? "" : `<button class="btn-follow ${followState[name]?"is-on":""}" data-followtoggle="${name}">${followState[name]?"Suivi ✓":"Suivre"}</button>`}
+  </div>`;
 }
 function renderFollows(name, tab="followers"){
   const f = FOLLOWS[name];
@@ -2044,7 +1766,7 @@ function renderFollows(name, tab="followers"){
       <button class="tab ${tab==="followers"?"is-active":""}" data-ftabswitch="followers">Abonnés (${f.followers.length})</button>
       <button class="tab ${tab==="following"?"is-active":""}" data-ftabswitch="following">Abonnements (${f.following.length})</button>
     </div>
-    <div style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;flex-direction:column;gap:10px" id="follows-list">
       ${f[tab].map(userRowHTML).join("") || `<div class="grid-empty"><strong>Personne ici pour l'instant</strong></div>`}
     </div>
   `;
@@ -2058,63 +1780,9 @@ function renderFollows(name, tab="followers"){
     b.textContent = followState[n] ? "Suivi ✓" : "Suivre";
   }));
 }
-/* — personnalisation (Premium) — */
-function renderCustomize(){
-  const u = USERS[ME];
-  customizeView.innerHTML = `
-    <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
-    <div class="page-head" style="padding-top:0">
-      <div class="eyebrow">Premium · Personnalisation</div>
-      <h1 class="page-title">Personnaliser le profil</h1>
-    </div>
-    <div class="panel">
-      <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-image"/></svg>Bannière du profil</h3>
-      <div class="banner" style="${u.banner ? "" : `background:${u.g}`};height:96px">${u.banner ? `<img class="banner-img" src="${u.banner}" alt="">` : ""}</div>
-      <div class="modal-foot" style="margin-top:12px;justify-content:flex-start">
-        <label class="btn-primary" style="cursor:pointer">Importer une bannière<input type="file" id="banner-file" accept="image/*" hidden></label>
-        ${u.banner ? `<button class="btn-ghost" id="banner-reset">Réinitialiser</button>` : ""}
-      </div>
-    </div>
-    <div class="panel">
-      <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-star"/></svg>Badges affichés <span class="badge-count" style="font-size:11px">(${u.badges.length}/3)</span></h3>
-      <p class="page-sub" style="margin-bottom:12px">Choisissez jusqu'à 3 badges visibles par la communauté sur votre profil.</p>
-      <div class="badge-row" style="padding:0">
-        ${BADGE_DEFS.map(b => `<button class="badge-chip pick ${u.badges.includes(b.id)?"sel":""}" data-badge="${b.id}">${b.icon} ${b.name}</button>`).join("")}
-      </div>
-    </div>
-    <div class="panel">
-      <h3><svg width="16" height="16" style="color:var(--accent)"><use href="#i-user"/></svg>Photo de profil</h3>
-      <div class="row-line" style="border:none">
-        <div class="avatar my-avatar" style="background:${u.photo ? `url(${u.photo}) center/cover` : "var(--grad-brand)"}">${u.photo ? "" : u.init}</div>
-        <div class="grow s">Visible partout : feed, avis, notifications.</div>
-        <label class="btn-ghost" style="cursor:pointer">Changer la photo<input type="file" class="avatar-file-input" accept="image/*" hidden></label>
-      </div>
-    </div>
-  `;
-  document.getElementById("banner-file").addEventListener("change", e => readImage(e, url => { u.banner = url; renderCustomize(); }));
-  document.getElementById("banner-reset")?.addEventListener("click", () => { u.banner = null; renderCustomize(); });
-  customizeView.querySelectorAll("[data-badge]").forEach(b => b.addEventListener("click", () => {
-    const id = b.dataset.badge;
-    const i = u.badges.indexOf(id);
-    if(i >= 0) u.badges.splice(i,1);
-    else if(u.badges.length < 3) u.badges.push(id);
-    renderCustomize();
-  }));
-  customizeView.querySelector(".avatar-file-input").addEventListener("change", e =>
-    readImage(e, url => { u.photo = url; refreshMyAvatars(); renderCustomize(); }));
-}
-function readImage(e, cb){
-  const f = e.target.files?.[0];
-  if(!f) return;
-  const r = new FileReader();
-  r.onload = () => cb(r.result);
-  r.readAsDataURL(f);
-}
-
 
 /* ============================================================
-   Listes (perso + communauté), stats, premium, facturation,
-   plateformes, onboarding, défis
+   Listes : rendu, page, renommage, ajout de jeux
    ============================================================ */
 function listGames(l){
   return l.smart ? CATALOG.filter(g => g.owned && g.status === l.smart)
@@ -2124,47 +1792,23 @@ function renderLists(){
   document.getElementById("lists-nav").innerHTML = LISTS.map(l => `
     <button class="nav-item" data-openlist="${l.id}">
       <span class="list-dot" style="background:${l.color}"></span>${l.name}
-      ${l.pub ? `<svg class="pub-ic" width="11" height="11" title="Liste publique"><use href="#i-discover"/></svg>` : ""}
       <span class="spacer"></span><span class="badge-count">${listGames(l).length}</span>
     </button>`).join("");
 }
 function renderList(id){
-  const cl = clById(id);
-  if(cl){ // liste publique de la communauté
-    const games = cl.ids.map(byId).filter(Boolean);
-    const followed = !!followedCLists[id];
-    listView.innerHTML = `
-      <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
-      <div class="page-head" style="padding-top:0">
-        <div class="eyebrow" style="color:${cl.color}">Liste publique de la communauté</div>
-        <h1 class="page-title">${cl.name}</h1>
-        <p class="page-sub">par <span class="link-line" data-user="${cl.by}">${cl.by}</span> · ${games.length} jeux · ${cl.followers + (followed?1:0)} abonnés</p>
-      </div>
-      <div class="list-actions">
-        <button class="btn-follow ${followed?"is-on":""}" id="btn-follow-clist">${followed?"Liste suivie ✓":"Suivre cette liste"}</button>
-      </div>
-      <div class="grid">${games.map((g,i) => g.owned ? cardHTML(g,i) : discCardHTML(g,i)).join("")}</div>
-    `;
-    document.getElementById("btn-follow-clist").addEventListener("click", () => {
-      followedCLists[id] = !followedCLists[id];
-      renderList(id);
-    });
-    return;
-  }
   const l = LISTS.find(x => x.id === id);
   const games = listGames(l);
   listView.innerHTML = `
     <button class="back-btn js-back"><svg width="16" height="16"><use href="#i-back"/></svg>Retour</button>
     <div class="page-head" style="padding-top:0">
-      <div class="eyebrow" style="color:${l.color}">${l.smart ? "Liste automatique" : l.pub ? "Liste personnalisée · publique" : "Liste personnalisée · privée"}</div>
+      <div class="eyebrow" style="color:${l.color}">${l.smart ? "Liste automatique" : "Liste personnalisée"}</div>
       <h1 class="page-title">${l.name}</h1>
       <p class="page-sub">${games.length} jeu${games.length>1?"x":""}${l.smart ? " · mise à jour selon les statuts de votre bibliothèque" : ""}</p>
     </div>
     ${l.smart ? "" : `
     <div class="list-actions">
       <button class="chip" data-picklist="${l.id}"><svg width="13" height="13"><use href="#i-plus"/></svg>Ajouter des jeux</button>
-      <button class="chip" data-renamelist="${l.id}"><svg width="13" height="13"><use href="#i-gear"/></svg>Modifier</button>
-      <button class="chip" data-deletelist="${l.id}" style="color:var(--danger);border-color:rgba(255,93,108,.3)">Supprimer</button>
+      <button class="chip" data-renamelist="${l.id}"><svg width="13" height="13"><use href="#i-gear"/></svg>Renommer</button>
     </div>`}
     <div class="grid">${games.length
       ? games.map((g,i) => g.owned ? cardHTML(g,i) : discCardHTML(g,i)).join("")
@@ -2172,227 +1816,9 @@ function renderList(id){
   `;
 }
 
-/* — statistiques : paywall ou tableau de bord premium — */
-function renderStats(){
-  const body = document.getElementById("stats-body");
-  if(!STATE.premium){
-    body.innerHTML = `
-      <div class="locked-zone" style="margin-top:8px">
-        <div class="fake-stats" aria-hidden="true">
-          <div class="fake-kpi"><div class="k">1 248 h</div><div class="l">Temps de jeu global</div></div>
-          <div class="fake-kpi"><div class="k">61 %</div><div class="l">Taux de complétion</div></div>
-          <div class="fake-kpi"><div class="k">RPG</div><div class="l">Genre dominant</div></div>
-          <div class="fake-bars"><i style="height:40%"></i><i style="height:65%"></i><i style="height:50%"></i><i style="height:90%"></i><i style="height:72%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:35%"></i></div>
-        </div>
-        <div class="lock-overlay">
-          <div class="lock-card">
-            <div class="lock-ic"><svg width="22" height="22"><use href="#i-lock"/></svg></div>
-            <h3>Débloquez vos statistiques</h3>
-            <p>Temps de jeu global, graphiques de progression et comparaisons avec vos amis font partie de Playbond Premium.</p>
-            <button class="btn-premium" data-nav="premium"><svg width="15" height="15"><use href="#i-star"/></svg>Passer à Premium — 2,50 €/mois</button>
-          </div>
-        </div>
-      </div>`;
-    return;
-  }
-  const s = myStats();
-  const months = ["Jan","Fév","Mar","Avr","Mai","Juin"];
-  const heights = [38, 52, 70, 64, 88, 57];
-  body.innerHTML = `
-    <div class="g-stats" style="grid-template-columns:repeat(2,1fr)">
-      <div class="g-stat"><div class="k">${s.hours} h</div><div class="l">Temps de jeu global</div></div>
-      <div class="g-stat"><div class="k">${Math.round(s.done/s.games*100)} %</div><div class="l">Taux de complétion</div></div>
-      <div class="g-stat"><div class="k">RPG</div><div class="l">Genre dominant</div></div>
-      <div class="g-stat"><div class="k">${s.plat}</div><div class="l">Trophées platine</div></div>
-    </div>
-    <div class="panel" style="margin-top:14px">
-      <h3>Heures jouées — 6 derniers mois</h3>
-      <div class="fake-bars" style="border:none;padding:6px 0 0;background:none">
-        ${heights.map((h,i) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><i style="width:100%;height:${h}%;border-radius:6px 6px 2px 2px;background:var(--grad-brand)"></i><span style="font-family:var(--font-mono);font-size:9.5px;color:var(--faint)">${months[i]}</span></div>`).join("")}
-      </div>
-    </div>
-    <div class="panel" style="margin-top:14px">
-      <h3>Comparer avec un ami</h3>
-      <div class="badge-row" style="padding:0">
-        ${["Thomas","Sarah","Léa","Mehdi","Nina"].map(n => `<button class="friend-chip" data-compare="${n}">${avatar(n,"avatar sm")}${n}</button>`).join("")}
-      </div>
-    </div>`;
-}
-
-/* — page premium / souscription — */
-function renderPremiumPage(){
-  const offer = document.getElementById("premium-offer");
-  const active = document.getElementById("premium-active");
-  offer.hidden = STATE.premium;
-  active.hidden = !STATE.premium;
-  if(STATE.premium){
-    active.innerHTML = `
-      <div class="premium-banner">
-        <div class="pb-ic"><svg width="20" height="20"><use href="#i-star"/></svg></div>
-        <div style="flex:1">
-          <h4>Premium actif — plan ${STATE.plan === "annual" ? "annuel (25 €/an)" : "mensuel (2,50 €/mois)"}</h4>
-          <div class="s">Importation multi-plateforme, statistiques avancées, personnalisation et algorithme prédictif sont débloqués.</div>
-        </div>
-        <button class="btn-ghost" data-nav="billing">Gérer</button>
-      </div>
-      <div class="perks" style="margin-top:14px">
-        <div class="perk"><svg width="16" height="16" style="color:var(--accent)"><use href="#i-check"/></svg><div><b>Importation illimitée</b><span>Connectez PlayStation et Xbox dans Réglages → Plateformes.</span></div></div>
-        <div class="perk"><svg width="16" height="16" style="color:var(--accent)"><use href="#i-check"/></svg><div><b>Statistiques avancées</b><span>Votre tableau de bord est ouvert dans l'onglet Statistiques.</span></div></div>
-        <div class="perk"><svg width="16" height="16" style="color:var(--accent)"><use href="#i-check"/></svg><div><b>Personnalisation du profil</b><span>Bannière et badges via « Personnaliser le profil ».</span></div></div>
-        <div class="perk"><svg width="16" height="16" style="color:var(--accent)"><use href="#i-check"/></svg><div><b>Algorithme prédictif</b><span>La Découverte affiche vos recommandations personnalisées.</span></div></div>
-      </div>`;
-  }
-}
-function subscribe(plan){
-  STATE.premium = true;
-  STATE.plan = plan;
-  applyPremiumUI();
-  showToast(`Bienvenue dans Playbond Premium 🎉 Plan ${plan === "annual" ? "annuel" : "mensuel"} activé`);
-}
-function cancelPremium(){
-  STATE.premium = false;
-  STATE.plan = null;
-  STATE.platforms = { pc:true, ps:false, xbox:false };
-  applyPremiumUI();
-}
-function applyPremiumUI(){
-  /* sidebar + menu */
-  document.querySelector(".me-tag").textContent = STATE.premium ? "PLAN PREMIUM · NIV. 42" : "PLAN GRATUIT · NIV. 42";
-  const pmBadge = document.querySelector('.pm-item[data-action="billing"] .badge-premium');
-  if(pmBadge) pmBadge.innerHTML = `<svg width="9" height="9"><use href="#i-star"/></svg>${STATE.premium ? "Premium" : "Gratuit"}`;
-  const cuBadge = document.getElementById("pm-customize-badge");
-  if(cuBadge) cuBadge.style.display = STATE.premium ? "none" : "";
-  /* découverte */
-  document.getElementById("disc-blur").classList.toggle("locked-blur", !STATE.premium);
-  document.getElementById("disc-lock").style.display = STATE.premium ? "none" : "";
-  /* pages dynamiques */
-  renderStats(); renderPremiumPage(); renderBilling(); renderPlatforms(); renderOnboarding();
-  updateLibSub();
-}
-function renderBilling(){
-  const planEl = document.getElementById("billing-plan");
-  const payEl = document.getElementById("billing-pay");
-  const invEl = document.getElementById("billing-invoices");
-  if(STATE.premium){
-    const price = STATE.plan === "annual" ? "25,00 €" : "2,50 €";
-    planEl.innerHTML = `
-      <div class="plan-row">
-        <span class="plan-pill" style="color:var(--accent);border-color:var(--accent-line)">PREMIUM</span>
-        <div class="grow">
-          <div class="t">Premium ${STATE.plan === "annual" ? "annuel" : "mensuel"}</div>
-          <div class="s">Actif depuis le 12 juin 2026 · prochain renouvellement le ${STATE.plan === "annual" ? "12 juin 2027" : "12 juillet 2026"}</div>
-        </div>
-        <button class="btn-ghost" id="btn-cancel-premium" style="color:var(--danger);border-color:rgba(255,93,108,.3)">Résilier</button>
-      </div>`;
-    payEl.innerHTML = `
-      <div class="row-line">
-        <span class="ic"><svg width="17" height="17"><use href="#i-card"/></svg></span>
-        <div class="grow"><div>Visa •••• 4242</div><div class="s">Expire 09/29 · carte par défaut</div></div>
-        <span class="plan-pill" style="color:var(--ok);border-color:rgba(79,224,163,.3)">ACTIVE</span>
-      </div>`;
-    invEl.innerHTML = `
-      <div class="row-line">
-        <span class="ic"><svg width="17" height="17"><use href="#i-doc"/></svg></span>
-        <div class="grow"><div>Facture #2026-001 — Premium ${STATE.plan === "annual" ? "annuel" : "mensuel"}</div><div class="s">12 juin 2026 · ${price}</div></div>
-        <span class="plan-pill" style="color:var(--ok);border-color:rgba(79,224,163,.3)">PAYÉE</span>
-      </div>`;
-    document.getElementById("btn-cancel-premium").addEventListener("click", function(){
-      if(this.dataset.armed){ cancelPremium(); showToast("Abonnement résilié — retour au plan gratuit"); }
-      else { this.dataset.armed = "1"; this.textContent = "Confirmer la résiliation ?"; }
-    });
-  } else {
-    planEl.innerHTML = `
-      <div class="plan-row">
-        <span class="plan-pill">GRATUIT</span>
-        <div class="grow">
-          <div class="t">Plan Gratuit</div>
-          <div class="s">Membre depuis mars 2026 · 1 plateforme synchronisée sur 1 incluse</div>
-        </div>
-        <button class="btn-premium" data-nav="premium" style="margin-top:0;padding:9px 18px;font-size:13px"><svg width="13" height="13"><use href="#i-star"/></svg>Passer à Premium — 2,50 €/mois</button>
-      </div>`;
-    payEl.innerHTML = `
-      <div class="row-line">
-        <span class="ic"><svg width="17" height="17"><use href="#i-card"/></svg></span>
-        <div class="grow"><div>Aucun moyen de paiement</div><div class="s">Une carte sera requise au moment de l'activation de Premium.</div></div>
-      </div>`;
-    invEl.innerHTML = `<div class="empty-line">Aucune facture pour le moment — votre plan actuel est gratuit.</div>`;
-  }
-}
-/* — plateformes connectées (réglages) — */
-const PLATFORM_META = { pc:{name:"Steam", n:128}, ps:{name:"PlayStation Network", n:46}, xbox:{name:"Xbox Live", n:31} };
-function renderPlatforms(){
-  document.getElementById("platform-rows").innerHTML = ["pc","ps","xbox"].map(p => {
-    const meta = PLATFORM_META[p];
-    const on = STATE.platforms[p];
-    let right;
-    if(on) right = `<span class="plan-pill" style="color:var(--ok);border-color:rgba(79,224,163,.3)">ACTIF</span>`;
-    else if(STATE.premium) right = `<button class="btn-ghost" data-connect="${p}">Connecter</button>`;
-    else right = `<button class="btn-ghost" data-nav="premium" style="color:var(--accent);border-color:var(--accent-line)"><svg width="11" height="11" style="display:inline;vertical-align:-1px"><use href="#i-lock"/></svg> Premium</button>`;
-    return `
-    <div class="row-line">
-      <span class="ic"><svg width="17" height="17"><use href="${PLATFORM_ICON[p]}"/></svg></span>
-      <div class="grow"><div>${meta.name}</div><div class="s">${on ? `Connecté · ${meta.n} jeux importés` : STATE.premium ? "Prêt à connecter — import illimité inclus dans Premium." : "L'import multi-plateforme est réservé à Premium."}</div></div>
-      ${right}
-    </div>`;
-  }).join("");
-  document.querySelectorAll("[data-connect]").forEach(b => b.addEventListener("click", () => {
-    const p = b.dataset.connect;
-    STATE.platforms[p] = true;
-    renderPlatforms(); updateLibSub();
-    showToast(`${PLATFORM_META[p].name} connecté · import de ${PLATFORM_META[p].n} jeux lancé`);
-  }));
-}
-function updateLibSub(){
-  const n = Object.values(STATE.platforms).filter(Boolean).length;
-  document.getElementById("lib-sub").textContent =
-    `${CATALOG.filter(g=>g.owned).length + (STATE.platforms.ps?40:0) + (STATE.platforms.xbox?25:0)} jeux · ${n} plateforme${n>1?"s":""} synchronisée${n>1?"s":""} · 7 amis en ligne`;
-}
-/* — onboarding (compte gratuit uniquement) — */
-function renderOnboarding(){
-  const el = document.getElementById("onboarding");
-  if(STATE.premium || STATE.onboardingDone){ el.innerHTML = ""; return; }
-  const current = Object.keys(STATE.platforms).find(p => STATE.platforms[p]);
-  el.innerHTML = `
-  <div class="onboard">
-    <div class="ob-ic"><svg width="18" height="18"><use href="#i-sync"/></svg></div>
-    <div style="flex:1;min-width:0">
-      <h4>Bienvenue sur Playbond 👋</h4>
-      <p>Votre plan gratuit inclut la synchronisation d'<b>une seule plateforme</b>. Choisissez la vôtre — ou <span class="link-line" data-nav="premium">passez à Premium</span> pour toutes les réunir.</p>
-      <div class="chip-row">
-        ${["pc","ps","xbox"].map(p => `<button class="chip ${current===p?"is-active":""}" data-obp="${p}"><svg width="14" height="14"><use href="${PLATFORM_ICON[p]}"/></svg>${PLATFORM_META[p].name.split(" ")[0]}</button>`).join("")}
-      </div>
-    </div>
-    <button class="ob-close" id="ob-close" aria-label="Fermer"><svg width="14" height="14" style="transform:rotate(45deg)"><use href="#i-plus"/></svg></button>
-  </div>`;
-  el.querySelectorAll("[data-obp]").forEach(b => b.addEventListener("click", () => {
-    STATE.platforms = { pc:false, ps:false, xbox:false };
-    STATE.platforms[b.dataset.obp] = true;
-    renderOnboarding(); renderPlatforms(); updateLibSub(); renderGrid();
-    showToast(`${PLATFORM_META[b.dataset.obp].name.split(" ")[0]} définie comme plateforme synchronisée`);
-  }));
-  document.getElementById("ob-close").addEventListener("click", () => { STATE.onboardingDone = true; renderOnboarding(); });
-}
-/* — défis — */
-function renderChallenges(){
-  const el = document.getElementById("challenges");
-  el.innerHTML = CHALLENGES.map((c,i) => {
-    const g = byId(c.gameId);
-    return `
-    <div class="challenge">
-      <div class="stack">${avatar(ME,"avatar sm")}${avatar(c.with,"avatar sm")}</div>
-      <div class="c-txt"><b>Défi en cours</b> — qui finira <span class="hl" data-open="${g.id}" style="cursor:pointer">${g.title}</span> en premier, vous ou <span data-user="${c.with}" class="link-line">${c.with}</span> ?<div class="s">Lancé à l'instant · le premier statut « Terminé » l'emporte</div></div>
-      <button class="btn-ghost" data-dropchallenge="${i}">Abandonner</button>
-    </div>`;
-  }).join("");
-  el.querySelectorAll("[data-dropchallenge]").forEach(b => b.addEventListener("click", () => {
-    CHALLENGES.splice(+b.dataset.dropchallenge, 1);
-    renderChallenges();
-  }));
-}
-
 
 /* ============================================================
-   État, rendu initial, router, délégation
+   État, rendu initial, router
    ============================================================ */
 const grid = document.getElementById("grid");
 const discGrid = document.getElementById("disc-grid");
@@ -2400,9 +1826,6 @@ const gameView = document.getElementById("view-game");
 const profileView = document.getElementById("view-profile");
 const listView = document.getElementById("view-list");
 const followsView = document.getElementById("view-follows");
-const customizeView = document.getElementById("view-customize");
-const postView = document.getElementById("view-post");
-const compareView = document.getElementById("view-compare");
 const searchInput = document.getElementById("search-input");
 let currentFilter = "all";
 let currentDFilter = "all";
@@ -2422,11 +1845,9 @@ function renderDiscover(filter = "all"){
     ? items.map(discCardHTML).join("")
     : `<div class="grid-empty"><strong>Tout est dans votre bibliothèque</strong>Revenez bientôt pour de nouvelles recommandations.</div>`;
 }
-function renderFeeds(){
-  document.getElementById("feed-foryou").innerHTML  = RECO_POSTS.map(postHTML).join("");
-  document.getElementById("feed-friends").innerHTML = userPosts.map(postHTML).join("") + FRIEND_POSTS.map(postHTML).join("");
-}
-renderGrid(); renderDiscover(); renderLists(); renderFeeds(); renderChallenges();
+renderGrid(); renderDiscover(); renderLists();
+document.getElementById("feed-foryou").innerHTML  = RECO_POSTS.map(postHTML).join("");
+document.getElementById("feed-friends").innerHTML = FRIEND_POSTS.map(postHTML).join("");
 document.getElementById("ndrawer-notifs").innerHTML = NOTIFS.map(notifHTML).join("");
 document.getElementById("ndrawer-activity").innerHTML = ACTIVITY_FULL.map(eventHTML).join("");
 
@@ -2438,10 +1859,6 @@ const VIEWS = {
   profile:  profileView,
   list:     listView,
   follows:  followsView,
-  post:     postView,
-  compare:  compareView,
-  customize:customizeView,
-  premium:  document.getElementById("view-premium"),
   stats:    document.getElementById("view-stats"),
   billing:  document.getElementById("view-billing"),
   settings: document.getElementById("view-settings"),
@@ -2458,76 +1875,59 @@ function showView(state){
   if(state.v === "profile") renderProfile(state.id);
   if(state.v === "list") renderList(state.id);
   if(state.v === "follows") renderFollows(state.id, state.tab || "followers");
-  if(state.v === "post") renderPost(state.id);
-  if(state.v === "compare") renderCompare(state.id);
-  if(state.v === "customize") renderCustomize();
   Object.entries(VIEWS).forEach(([k, el]) => el.hidden = (k !== state.v));
   document.body.dataset.view = state.v;
   setNav(["library","feed","discover","stats"].includes(state.v) ? state.v : "");
   closeNdrawer(); closeMenu(); closeModals();
   window.scrollTo({top:0});
 }
-function visit(state){ navStack.push(curState); curState = state; showView(state); }
-function goTo(view){ navStack = []; curState = { v:view }; showView(curState); }
-function goBack(){ curState = navStack.pop() || { v:"library" }; showView(curState); }
+function visit(state){
+  navStack.push(curState);
+  curState = state;
+  showView(state);
+}
+function goTo(view){
+  navStack = [];
+  curState = { v:view };
+  showView(curState);
+}
+function goBack(){
+  curState = navStack.pop() || { v:"library" };
+  showView(curState);
+}
 const openGame    = id   => visit({ v:"game", id });
 const openProfile = name => visit({ v:"profile", id:name });
 const openList    = id   => visit({ v:"list", id });
-const openPost    = pid  => visit({ v:"post", id:pid });
 setNav("library");
 
 document.addEventListener("click", e => {
   if(e.target.closest(".js-back")){ goBack(); return; }
-  const cm = e.target.closest(".js-open-comments");
-  if(cm){ openPost(cm.dataset.post); return; }
   const fl = e.target.closest("[data-follows]");
   if(fl){ visit({ v:"follows", id:fl.dataset.follows, tab:fl.dataset.ftab }); return; }
-  const cmp = e.target.closest("[data-compare]");
-  if(cmp){ visit({ v:"compare", id:cmp.dataset.compare }); return; }
   const user = e.target.closest("[data-user]");
   if(user){
     e.stopPropagation();
     if(!(curState.v === "profile" && curState.id === user.dataset.user)) openProfile(user.dataset.user);
     return;
   }
-  const act = e.target.closest("[data-action]");
-  if(act && !act.classList.contains("pm-item")){
-    if(act.dataset.action === "customize"){ STATE.premium ? visit({v:"customize"}) : goTo("premium"); return; }
-  }
   const nav = e.target.closest("[data-nav]");
   if(nav){ goTo(nav.dataset.nav); return; }
-  const sub = e.target.closest("[data-subscribe]");
-  if(sub){ subscribe(sub.dataset.subscribe); return; }
-  const clist = e.target.closest("[data-openclist]");
-  if(clist){ openList(clist.dataset.openclist); return; }
   const list = e.target.closest("[data-openlist]");
   if(list){ openList(list.dataset.openlist); return; }
   const pick = e.target.closest("[data-picklist]");
   if(pick){ openPickModal(pick.dataset.picklist); return; }
   const ren = e.target.closest("[data-renamelist]");
   if(ren){ openListModal(ren.dataset.renamelist); return; }
-  const del = e.target.closest("[data-deletelist]");
-  if(del){
-    if(del.dataset.armed){
-      const i = LISTS.findIndex(x => x.id === del.dataset.deletelist);
-      const name = LISTS[i].name;
-      LISTS.splice(i,1);
-      renderLists(); goTo("library");
-      showToast(`Liste « ${name} » supprimée`);
-    } else { del.dataset.armed = "1"; del.textContent = "Confirmer la suppression ?"; }
-    return;
-  }
   const opener = e.target.closest("[data-open]");
   if(opener && !e.target.closest(".react")){
     if(!(curState.v === "game" && curState.id === opener.dataset.open)) openGame(opener.dataset.open);
-    return;
   }
-  const postEl = e.target.closest("[data-post]");
-  if(postEl && !e.target.closest(".react,[data-open],[data-user]")) openPost(postEl.dataset.post);
 });
+document.querySelector(".js-see-plans")?.addEventListener("click", () =>
+  document.getElementById("plans-anchor").scrollIntoView({behavior:"smooth", block:"start"}));
 
 /* ============================================================
-   Filtres, recherche, onglets, composer du feed
+   Filtres + recherche + onglets
    ============================================================ */
 document.querySelectorAll(".chip[data-filter]").forEach(chip => chip.addEventListener("click", () => {
   document.querySelector(".chip[data-filter].is-active")?.classList.remove("is-active");
@@ -2551,15 +1951,19 @@ document.querySelectorAll(".tab[data-tab]").forEach(tab => tab.addEventListener(
   tab.classList.add("is-active");
   Object.entries(tabPanes).forEach(([k, el]) => el.hidden = (k !== tab.dataset.tab));
 }));
+
+/* ============================================================
+   Composer du feed
+   ============================================================ */
 const composerInput = document.getElementById("composer-input");
 const publishBtn = document.getElementById("btn-publish");
 composerInput.addEventListener("input", () => publishBtn.disabled = composerInput.value.trim().length === 0);
 publishBtn.addEventListener("click", () => {
   const text = composerInput.value.trim();
   if(!text) return;
-  userPosts.unshift({ pid:"u"+Date.now(), who:ME, when:"à l'instant", text, likes:0, comments:0, reposts:0 });
+  tabPanes.friends.insertAdjacentHTML("afterbegin",
+    postHTML({ who:ME, when:"à l'instant", text, likes:0, comments:0, reposts:0 }));
   composerInput.value = ""; publishBtn.disabled = true;
-  renderFeeds();
   document.querySelector('.tab[data-tab="friends"]').click();
 });
 
@@ -2581,7 +1985,7 @@ document.querySelectorAll(".tab[data-ntab]").forEach(tab => tab.addEventListener
 }));
 
 /* ============================================================
-   Modals : ajout (avec autocomplétion), liste, sélection
+   Modals : ajout de jeu / liste (création + renommage) / picker
    ============================================================ */
 const modalAdd  = document.getElementById("modal-add");
 const modalList = document.getElementById("modal-list");
@@ -2598,43 +2002,12 @@ function showOnly(modal, focusEl){
 }
 document.getElementById("modal-veil").addEventListener("click", closeModals);
 
-/* — ajout manuel avec suggestions du catalogue — */
+/* — ajout manuel d'un jeu — */
 const addTitle = document.getElementById("add-title");
 const addConfirm = document.getElementById("add-confirm");
-const addSuggest = document.getElementById("add-suggest");
-let pickedSuggestion = null;   // {catalogId} | {extra}
-function suggestionPool(){
-  return CATALOG.filter(g => !g.owned).map(g => ({ catalogId:g.id, title:g.title, platform:g.platform, genre:g.genre, hue:g.hue }))
-    .concat(EXTRA_GAMES.map(g => ({ extra:g, title:g.title, platform:g.platform, genre:g.genre, hue:g.hue })));
-}
-function renderSuggestions(){
-  const q = addTitle.value.trim().toLowerCase();
-  pickedSuggestion = null;
-  if(q.length < 2){ addSuggest.innerHTML = q.length ? "" : `<div class="empty-line" style="padding:2px 2px 0">Tapez au moins 2 lettres pour chercher dans le catalogue Playbond.</div>`; return; }
-  const hits = suggestionPool().filter(s => s.title.toLowerCase().includes(q)).slice(0,6);
-  addSuggest.innerHTML = hits.map((s,i) => `
-    <div class="pick-row" data-suggest="${i}">
-      <div class="mini-cover" style="${coverStyle(s.hue)}">${s.title[0]}</div>
-      <div class="p-info"><div class="p-t">${s.title}</div><div class="p-s">${PLATFORM_NAME[s.platform]} · ${s.genre} · catalogue Playbond</div></div>
-      <svg class="lcheck" width="15" height="15" style="opacity:.4;color:var(--faint)"><use href="#i-chev"/></svg>
-    </div>`).join("") || `<div class="empty-line" style="padding:2px 2px 0">Aucun jeu connu — il sera créé en fiche manuelle.</div>`;
-  addSuggest.querySelectorAll("[data-suggest]").forEach(row => row.addEventListener("click", () => {
-    const s = hits[+row.dataset.suggest];
-    pickedSuggestion = s;
-    addTitle.value = s.title;
-    document.querySelectorAll("#add-platform .chip").forEach(c => c.classList.toggle("is-active", c.dataset.p === s.platform));
-    addSuggest.innerHTML = `
-      <div class="pick-row in-list">
-        <div class="mini-cover" style="${coverStyle(s.hue)}">${s.title[0]}</div>
-        <div class="p-info"><div class="p-t">${s.title}</div><div class="p-s">Sélectionné depuis le catalogue — métadonnées importées</div></div>
-        <svg class="lcheck" width="15" height="15"><use href="#i-check"/></svg>
-      </div>`;
-    addConfirm.disabled = false;
-  }));
-}
-document.getElementById("btn-add").addEventListener("click", () => { renderSuggestions(); showOnly(modalAdd, addTitle); });
+document.getElementById("btn-add").addEventListener("click", () => showOnly(modalAdd, addTitle));
 document.getElementById("add-cancel").addEventListener("click", closeModals);
-addTitle.addEventListener("input", () => { addConfirm.disabled = addTitle.value.trim().length === 0; renderSuggestions(); });
+addTitle.addEventListener("input", () => addConfirm.disabled = addTitle.value.trim().length === 0);
 ["add-platform","add-status"].forEach(id => {
   document.getElementById(id).addEventListener("click", e => {
     const chip = e.target.closest(".chip");
@@ -2646,42 +2019,29 @@ addTitle.addEventListener("input", () => { addConfirm.disabled = addTitle.value.
 addConfirm.addEventListener("click", () => {
   const title = addTitle.value.trim();
   if(!title) return;
-  const status = document.querySelector("#add-status .is-active").dataset.s;
-  if(pickedSuggestion?.catalogId){
-    const g = byId(pickedSuggestion.catalogId);
-    g.owned = true; g.status = status; g.hours = 0; g.ach = "—";
-    renderDiscover(currentDFilter);
-  } else {
-    const meta = pickedSuggestion?.extra;
-    CATALOG.unshift({
-      id:"manual-" + Date.now(), owned:true, title,
-      platform: document.querySelector("#add-platform .is-active").dataset.p,
-      status,
-      hue: meta ? meta.hue : Math.floor(Math.random()*360),
-      genre: meta ? meta.genre : "Ajout manuel", year:new Date().getFullYear(),
-      hours:0, ach:"—", community:null, votes:null, friends:[], myRating:0,
-      desc:`${title} a été ajouté ${meta ? "depuis le catalogue Playbond" : "manuellement"} à votre bibliothèque. Les métadonnées complémentaires seront récupérées lors de la prochaine synchronisation.`,
-    });
-  }
-  addTitle.value = ""; addConfirm.disabled = true; pickedSuggestion = null;
-  closeModals(); goTo("library"); renderGrid(); renderLists(); updateLibSub();
+  CATALOG.unshift({
+    id:"manual-" + Date.now(), owned:true, title,
+    platform: document.querySelector("#add-platform .is-active").dataset.p,
+    status:   document.querySelector("#add-status .is-active").dataset.s,
+    hue: Math.floor(Math.random()*360),
+    genre:"Ajout manuel", year:new Date().getFullYear(),
+    hours:0, ach:"—", community:null, votes:null, friends:[], myRating:0,
+    desc:`${title} a été ajouté manuellement à votre bibliothèque. Les métadonnées (genre, visuel, succès) seront récupérées automatiquement lors de la prochaine synchronisation.`,
+  });
+  addTitle.value = ""; addConfirm.disabled = true;
+  closeModals(); goTo("library"); renderGrid(); renderLists();
   showToast(`« ${title} » ajouté à votre bibliothèque`);
 });
-/* CTA « jeu manquant ? » */
-document.getElementById("missing-add").addEventListener("click", () => { renderSuggestions(); showOnly(modalAdd, addTitle); });
-document.getElementById("missing-sync").addEventListener("click", () => document.getElementById("btn-sync").click());
 
-/* — création / modification de liste (avec visibilité publique) — */
+/* — création / renommage de liste — */
 const listName = document.getElementById("list-name");
 const listConfirm = document.getElementById("list-confirm");
-const listPublic = document.getElementById("list-public");
 let editingListId = null;
 function openListModal(renameId = null){
   editingListId = renameId;
   const l = renameId ? LISTS.find(x => x.id === renameId) : null;
-  document.getElementById("list-modal-title").textContent = l ? "Modifier la liste" : "Nouvelle liste";
+  document.getElementById("list-modal-title").textContent = l ? "Renommer la liste" : "Nouvelle liste";
   listName.value = l ? l.name : "";
-  listPublic.checked = l ? l.pub : false;
   listConfirm.disabled = !listName.value.trim();
   document.querySelectorAll(".color-dot").forEach(d =>
     d.classList.toggle("is-active", l ? d.dataset.c.toLowerCase() === l.color.toLowerCase() : d.dataset.c === "#29A9CF"));
@@ -2702,11 +2062,11 @@ listConfirm.addEventListener("click", () => {
   const color = document.querySelector(".color-dot.is-active").dataset.c;
   if(editingListId){
     const l = LISTS.find(x => x.id === editingListId);
-    l.name = name; l.color = color; l.pub = listPublic.checked;
+    l.name = name; l.color = color;
     closeModals(); renderLists();
     if(curState.v === "list" && curState.id === l.id) renderList(l.id);
   } else {
-    const l = { id:"l" + Date.now(), name, color, ids:[], pub:listPublic.checked };
+    const l = { id:"l" + Date.now(), name, color, ids:[] };
     LISTS.push(l);
     closeModals(); renderLists(); openList(l.id);
   }
@@ -2714,7 +2074,7 @@ listConfirm.addEventListener("click", () => {
   editingListId = null;
 });
 
-/* — picker de jeux pour une liste — */
+/* — picker : ajouter des jeux à une liste — */
 const pickSearch = document.getElementById("pick-search");
 let pickingListId = null;
 function renderPickList(){
@@ -2725,7 +2085,10 @@ function renderPickList(){
     .map(g => `
     <div class="pick-row ${l.ids.includes(g.id)?"in-list":""}" data-pick="${g.id}">
       <div class="mini-cover" style="${coverStyle(g.hue)}">${g.title[0]}</div>
-      <div class="p-info"><div class="p-t">${g.title}</div><div class="p-s">${PLATFORM_NAME[g.platform]} · ${g.owned ? "Dans votre bibliothèque" : "Pas encore possédé"}</div></div>
+      <div class="p-info">
+        <div class="p-t">${g.title}</div>
+        <div class="p-s">${PLATFORM_NAME[g.platform]} · ${g.owned ? "Dans votre bibliothèque" : "Pas encore possédé"}</div>
+      </div>
       <svg class="lcheck" width="15" height="15"><use href="#i-check"/></svg>
     </div>`).join("");
 }
@@ -2766,18 +2129,15 @@ document.querySelectorAll(".pm-item[data-action]").forEach(item => item.addEvent
   if(a === "billing") goTo("billing");
   else if(a === "settings") goTo("settings");
   else if(a === "profile") openProfile(ME);
-  else if(a === "customize"){ STATE.premium ? visit({v:"customize"}) : goTo("premium"); }
 }));
 document.getElementById("btn-save-profile").addEventListener("click", () => {
-  const pseudo = document.getElementById("set-pseudo").value.trim() || "Antoine";
+  const pseudo = document.getElementById("set-pseudo").value.trim() || "Axel_Prime";
   document.querySelectorAll(".me-name").forEach(el => el.textContent = pseudo);
   showToast("Profil mis à jour");
 });
-document.getElementById("avatar-file").addEventListener("change", e =>
-  readImage(e, url => { USERS[ME].photo = url; refreshMyAvatars(); showToast("Photo de profil mise à jour"); }));
 
 /* ============================================================
-   Likes + popover + sync + toast + clavier
+   Likes + fermeture popover
    ============================================================ */
 document.addEventListener("click", e => {
   const like = e.target.closest("button.react.like");
@@ -2789,6 +2149,10 @@ document.addEventListener("click", e => {
 document.addEventListener("click", e => {
   if(!e.target.closest(".list-pop-wrap")) document.getElementById("list-pop")?.classList.remove("open");
 });
+
+/* ============================================================
+   Sync, toast, clavier
+   ============================================================ */
 const toast = document.getElementById("toast");
 let toastTimer;
 function showToast(msg){
@@ -2810,11 +2174,6 @@ document.addEventListener("keydown", e => {
   if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k"){ e.preventDefault(); searchInput.focus(); }
   if(e.key === "Escape"){ closeMenu(); closeNdrawer(); closeModals(); }
 });
-
-/* ============================================================
-   Initialisation premium / plateformes / onboarding
-   ============================================================ */
-applyPremiumUI();
 </script>
 </body>
 </html>
